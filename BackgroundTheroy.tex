@@ -13,10 +13,20 @@ where y is the pseudo-range, $h(x) = ||p_O - p||_2$, and $\beta$ is a stochastic
 Different estimation techniques that is used for position estimation. Least squares method is a simple estimation technique with good accuracy for a stationery target. However for a dynamical target a Kalman filter is more suited. Different Kalman filter, which is relevant for target tracking, and sensor fusion practise.
 
 \section{Least square}
+Apply the Moore-Penrose psudoinverse
+\begin{equation}
+\textbf{H}^{\dagger} = (\textbf{H}^T\textbf{W}\textbf{H})^{-1}\textbf{H}^T\textbf{W}
+\end{equation}
 
 \section{Kalman filter}
 The Kalman filter was presented in the paper (cite kalman) by Rudolf Kalman, and present a filter that in the present of noise. Separate signal from noise.
 Different filter that can be used. Present the linear kalman filter, EKF (Partical filter)?
 
-\section{Sensor Fussion}
+\section{Sensor Fusion}
 How to apply different sensors to find position.
+\section{Path}
+Feasbale path. Order of continuity.
+\section{Guidance}
+Different strategies that solves the flight approach problem. The problem is to ensure flight path feasibility from every direction.
+
+First apply LOS/ILSO for a traditonal approch. 
