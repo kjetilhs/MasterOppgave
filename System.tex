@@ -8,3 +8,12 @@ The base station position is received in the RTKGPS task in DUNE, were it's incl
 A task in the nest receive the gps position of the base, and the operator can monitor it in neptus. When the operator choose to fix the base station gps position a parameter update is send to the task, which will start to send a gpsfixrtk message to the uav. 
 
 TODO: Create figure that shows the information flow that is used to create the rtkfix message.
+
+\section{Path generation}
+The landing path is separated into three stages; AP, Decent and final approach. The decent path is constructed as a Dubins path, ensuring a smooth and optimal decent toward the final approach. The details for the path is given in the Msc thesis cite(), however a summary will be given.
+
+\section{Evasion}
+To ensure the safety of the operator a evasion controller is used to abort the landing when a successful landing is deemed infeasible.
+
+\section{Guidance system}
+The guidance system consist of two part. Sliding mode controller, and a los controller
