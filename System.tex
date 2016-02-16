@@ -17,3 +17,35 @@ To ensure the safety of the operator a evasion controller is used to abort the l
 
 \section{Guidance system}
 The guidance system consist of two part. Sliding mode controller, and a los controller
+
+\subsection{Sliding mode controller}
+For course control the system use a sliding mode controller that was proposed in the paper \citep{fortuna2015cascaded}, which USGES stability property.
+\begin{subequations}
+\begin{align}
+\dot{x} &= V_a\cos(\psi) + W_x = V_g\cos(\psi) \\
+\dot{y} &= V_a\sin(\psi) + W_y = V_g\sin(\psi) \\
+\dot{phi} &= \frac{g}{V_a}\tan(\varphi) \\
+\dot{\varphi} &= -\frac{\varphi-\varphi_{cmd}}{T_\varphi} \\
+W &= \sqrt{W_x^2 + W_y^2}
+\end{align}
+TODO: Continue with equations
+\end{subequations}
+\begin{equation}
+\epsilon(\varphi) = \begin{cases}
+\cos(\varphi), & \text{if}\ |\cos(\varphi)|\geq\epsilon'\\
+\epsilon', & \text{if}\ 0 \leq \cos(\varphi) < \epsilon' \\
+-\epsilon', & \text{if} -\epsilon'<\cos(\varphi) < 0
+\end{cases}
+\end{equation}
+\begin{equation}
+\chi = \tan^{-1}(\frac{\dot{y}}{\dot{x}})
+\end{equation}
+\begin{equation}
+\dot{\chi} = \frac{g\sin(\varphi)(V_a + \cos(\psi)W_x + \sin(\psi)W_y}{\epsilon(\varphi)V_g^2}
+\end{equation}
+\begin{equation}
+\tilde{\chi} = \chi - \chi_d
+\end{equation}
+\begin{equation}
+s = \dot{\tilde{\chi}} + \lambda\tilde{\chi}
+\end{equation}
