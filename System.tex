@@ -28,7 +28,6 @@ For course control the system use a sliding mode controller that was proposed in
 \dot{\varphi} &= -\frac{\varphi-\varphi_{cmd}}{T_\varphi} \\
 W &= \sqrt{W_x^2 + W_y^2}
 \end{align}
-TODO: Continue with equations
 \end{subequations}
 \begin{equation}
 \epsilon(\varphi) = \begin{cases}
@@ -43,9 +42,19 @@ TODO: Continue with equations
 \begin{equation}
 \dot{\chi} = \frac{g\sin(\varphi)(V_a + \cos(\psi)W_x + \sin(\psi)W_y}{\epsilon(\varphi)V_g^2}
 \end{equation}
+\begin{subequations}
+\begin{align}
+\chi_d &= \tan^{-1}(-\frac{t}{\Delta} \\
+\dot{\chi_d} &= -\frac{\Delta}{\Delta^2+y^2}\dot{y} \\
+\ddot{\chi} &= \frac{\Delta}{(\Delta^2 + y^2)^2}(2y\dot{y}^2 - (\Delta^2 + y^2)\ddot{y})
+\end{align}
+\end{subequations}
 \begin{equation}
 \tilde{\chi} = \chi - \chi_d
 \end{equation}
 \begin{equation}
 s = \dot{\tilde{\chi}} + \lambda\tilde{\chi}
+\end{equation}
+\begin{equation}
+u = -\lambda\dot{\tilde{\chi}} - \rho\text{sgn}(s) - K_ds
 \end{equation}
