@@ -8,7 +8,8 @@ The base station position is received in the RTKGPS task in DUNE, were it's incl
 A task in the nest receive the gps position of the base, and the operator can monitor it in neptus. When the operator choose to fix the base station gps position a parameter update is send to the task, which will start to send a gpsfixrtk message to the uav. 
 
 TODO: Create figure that shows the information flow that is used to create the rtkfix message.
-
+\subsection{Operator interface}
+The operator use the Neptus platform as operational interface during the landing. The console includes information about the position of the uav, as well as the source of the position measurement. The operator can monitor the status of the gps system, including what is accepted by the navigation system. During a autonmous landing the operator must be fully aware of the status of the navigation system, such that an abort due to lost gps fix. This system can be expanded to include other sensors, like a ranging system, IMU, camera ex. 
 \section{Path generation}
 The landing path is separated into three stages; AP, Decent and final approach. The decent path is constructed as a Dubins path, ensuring a smooth and optimal decent toward the final approach. The details for the path is given in the Msc thesis cite(), however a summary will be given.
 
