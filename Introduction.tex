@@ -8,13 +8,23 @@ Recent development of flying \glspl{uav} has been recognized to provide an attra
 An \gls{uav} can provide an attractive alternative for many maritime operation where today manned aircraft or satellites is the only solution. In the maritime sector \gls{uav} can be used in iceberg management, monitoring of oil spills, search and rescue and maritime traffic monitoring.
 
 An important premise for successful and safe \gls{uav} operation, in particular at sea, is the provision of a robust system for safe landing of the \gls{uav} on a vessel following completed operations. A autonomous landing system require a robust guidance and navigation system, as well as the ability to generate a the landing path during flight operation. A requirement for the system is that the operator is able to monitor the state of the uav, including the navigation system e.g gps system. The the gps system looses its fixed solution during a critical phase a abort with an evasive manoeuvre might be required. The decision of wheater the uav should perform a evasive manoeuvre will be further explored in section (REF:EVASIVE).
+
+Due to regulatory mandate there are restriction on the size of operational area for a uav. Different types of operation is LOS,EVLOS,BVLOS. During LOS the uav must be in line of sight of the operator, which restrict the area were a autonomous landing can take place. In addition there is the risk of loosing satellites during high dynamic behaviour which limits the type of landing path that are available. Therefore a flyable path must be generated for a arbitrary pose, which will provide a gentle landing for the uav. 
 Present UAV
 
 UAV in a maritime environment
 
 A robust navigation system, which include two position estimation system for relative position determination of the UAV. 
 
+The scope of this thesis is the design, implementation and testing of an autonomous landing system for a uav. The main focus in this thesis will be on the navigation and path planning of the landing system. A fellow master student had the main focus of developing the control and guidance system, which will be explain in section ref.
+
+
 This thesis contain a concept of a robust navigation system for autonomous landing of a UAV, and the implementation of the autonomous landing system. The landing system has been implemented together with a other student, and is a continuation of the master thesis from \citep{Froelich}. The navigation system that has been implemented apply rtk-gps for position estimation, and the robust navigation system apply range measurement from local transmitters together with the rtk-gps for position estimation. The range measurement hardware was not ready by the time this master thesis was written, however this thesis will explore different methods that can be applied in order to achieve a robust navigation system.
+
+
+
+\section{Related work}
+A disadvantage with a net recovery system that is stationary on the deck of a ship is the space requirement for the net, including the safty zone for the personnel required for the uav operation. The paper (Ref multicopter paper when published) addresses this problem by moving the net away from the ship by the means of multirotor uavs. The proposed net recovery system has the advantage that motion induced by the sea is removed, however there is the risk of losing the uav when colliding with the net. A solution that is currently explored is the use of hooks on the uav, which will allow it to grip the net.
 
 %\section{Background and motivation}
 %Recent development of flying \glspl{uav} has been recognized to provide an attractive alternative to work previously performed by manned operations. Typical work which has attracted attention includes inspection, aerial photography, environmental surveillance and search and rescue. Today \glspl{uav} are mostly operated over land, however in the future this will include over sea as well. This will give some challenges which must be overcome. One of these challenges is that the \gls{uav} need to be able to perform a automatic landing.
