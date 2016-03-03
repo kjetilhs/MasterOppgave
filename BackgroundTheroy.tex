@@ -26,6 +26,11 @@ Different filter that can be used. Present the linear kalman filter, EKF (Partic
 How to apply different sensors to find position.
 \section{Path}
 Feasbale path. Order of continuity.
+
+\subsection{Straight lines}
+The simplest for of creating a path is a straight line between two waypoints. The advantage with a straight line is that it's easy for a guidance system to follow the line, however it will experience a jump in reference when transitioning to another straight line
+\subsection{Dubins path}
+Dubins path is the shortest path from from one waypoint to the other which is continues.
 \section{Guidance}
 Different strategies that solves the flight approach problem. The problem is to ensure flight path feasibility from every direction.
 
