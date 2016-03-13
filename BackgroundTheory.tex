@@ -1,0 +1,37 @@
+\chapter{Background theory}
+\section{Position calculation with range measurement}
+
+Position estimation with the use of range measurement apply the pseudo-range measurement, which is defined as the geometrical range in addition to all errors that has affected the measurement. A pseudo-range model can be:
+
+\begin{equation}
+y = h(x) + \beta
+\end{equation}
+
+where y is the pseudo-range, $h(x) = ||p_O - p||_2$, and $\beta$ is a stochastic disturbance in the measurement.
+
+\section{Estimation}
+Different estimation techniques that is used for position estimation. Least squares method is a simple estimation technique with good accuracy for a stationery target. However for a dynamical target a Kalman filter is more suited. Different Kalman filter, which is relevant for target tracking, and sensor fusion practise.
+
+\section{Least square}
+Apply the Moore-Penrose psudoinverse
+\begin{equation}
+\textbf{H}^{\dagger} = (\textbf{H}^T\textbf{W}\textbf{H})^{-1}\textbf{H}^T\textbf{W}
+\end{equation}
+
+\section{Kalman filter}
+The Kalman filter was presented in the paper (cite kalman) by Rudolf Kalman, and present a filter that in the present of noise. Separate signal from noise.
+Different filter that can be used. Present the linear kalman filter, EKF (Partical filter)?
+
+\section{Sensor Fusion}
+How to apply different sensors to find position.
+\section{Path}
+Feasbale path. Order of continuity.
+
+\subsection{Straight lines}
+The simplest for of creating a path is a straight line between two waypoints. The advantage with a straight line is that it's easy for a guidance system to follow the line, however it will experience a jump in reference when transitioning to another straight line
+\subsection{Dubins path}
+Dubins path is the shortest path from from one waypoint to the other which is continues.
+\section{Guidance}
+Different strategies that solves the flight approach problem. The problem is to ensure flight path feasibility from every direction.
+
+First apply LOS/ILSO for a traditonal approch. 
