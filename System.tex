@@ -84,6 +84,10 @@ were $\psi_{net}$ is the heading of the net.
 
 \subsection{The landing path approach}
 Given that the length of the landing path, and the angle of descent is given the start pose is defined. That require the uav the to be given a flyable path such that it can start its landing. The landing path system generates an flyable path with a descent angle equal to the glide slope angle for an arbitrary start pose within the uav operational area. The landing path consists of two part, the lateral and the longitudinal. The lateral path is a Dubins path between two way points. This ensure that the path given to to uav will be the shortest continues path from the uav start position. The longitudinal path is a glide slope with a constant angle, expect when the path reach the desired hight which is the heigh of $WP4$.
+
+The landing path approach can be generated in to different way. One mode allow for manual deciding which side the start and finish circle should be in respect on the start pose, and the net landing approach. This allow the operator full control over the landing path, and can choose a landing path that is operation feasible and not necessary the shortest path.
+
+The other mode generate a landing path which is the shortest path from the start pose to the finish pose. That means that the algorithm must consider four different option in regard to the chosen path.
 \subsubsection{Extra way point}
 To ensure that the path generation system will generate å flyable path an extra way point is added in the case of the start pose in cause an infeasable dubins path, or an spesial case of Dubins path which has not been implemented. The two case are
 \begin{subequations}
