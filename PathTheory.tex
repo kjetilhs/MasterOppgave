@@ -1,10 +1,51 @@
-\chapter{Path theory}
-A common problem with a vehicle is how to move from A to B, and in what direction should the vehicle be in when at B. 
+\chapter{Path planning theory}
+An autonomous system that is tasked to move from one position to an other require a planed path that is feasible for the system. Therefore a minimum requirement for the plan is that it is connected. The connection level can be described by the paths smoothness. Geometric continuity is a relaxed from of parametric continuity in witch discontinuousness in speed is allowed. Geometric continuity is sufficient for a path following system, witch is the main focus of this thesis. Geometric continuity is denoted as $G^n$ were n is the order of continuity.
+
+Smoothness level in this thesis is follow the the definition given by Anastasios M. Lekkas Lecture 1.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{| l | | l |}
+\hline
+\textbf{Geometrical smoothness level} & \textbf{Description} \\ \hline
+$G^0$ & All subpaths are connected \\ \hline
+$G^1$ & The path-tangential angle is continuous \\ \hline
+$G^2$ & The center of curvature is continuous \\ \hline
+\textbf{Parametric smoothness level} & \textbf{Description} \\ \hline
+$C^0$ & All subpaths are connected \\ \hline
+$C^1$ & The velocity is continuous \\ \hline
+$C^2$ & The acceleration is continuous
+\end{tabular}
+\end{center}
+\caption{Smoothness definitions}
+\label{TB:SmoothnessDescriptions}
+\end{table} 
+
+A the definition that is used for path in this thesis is:
+\begin{equation}
+P_s(x_s,y_s,z_s,\psi_s) \rightarrow P_f(x_f,y_f,z_f,\psi_f)
+\end{equation}
+were the subscripts $s$ and $f$ denaontes the start pose and finish pose respectfully. This is an relaxed form of the start and finish pose since the pitch and roll angle is assumed stable, and therefore a desired start and finish value is not required.
 
 \section{Straight lines}
-A simple solution to a path problem is a straight line between the waypoints. The advantage with straight lines is that the implementation is simple, however a straight line path is only piecewise continuity which is not smooth.
+The simplest form on path is a straight line between $P_s$ and $p_f$. The straight line is given as 
+\begin{subequations}
+\begin{align}
+& x(t) = a_xt + b_x \\
+& y(t) = a_yt + b_y 
+\end{align}
+\end{subequations}
+with $ t \in [0,1] $. Then the parametrisation of the straight line is:
+\begin{subequations}
+\begin{align}
+& x(0) = b_x \rightarrow b_x = x_s \\
+& x(1) = x_f = a_x + b_x \rightarrow a_x = x_f - b_x \\
+& y(0) = b_y \rightarrow b_y = y_s \\
+& y(1) = y_f = a_y + b_y \rightarrow a_y = y_f - b_y \\
+\end{align}
+\end{subequations}
+A path constructed by straight lines is $G^0$ and $C^0$, however since the tangential vector is discontinuous between two line segments with different heading it's not $G^1$ or $C^1$.
+The simplest for of creating a path is a straight line between two waypoints. The advantage with a straight line is that it's easy for a guidance system to follow the line, however it will experience a jump in reference when transitioning to another straight line
 \section{Dubins path}
-Dubins path is considered the shortest path between two waypoints. However it's (problem i overgangen mellom sirkel og rett linje)
-\section{Fermat curves}
-Something about fermat curves
-\section{Pyhagorean Hodograph}
+An alternative to a straight line path is a path constructed by straight lines and circle. Dubins path \citep{dubins1957curves}. The path is considered as the shortest path from $P_s$ to $P_f$, however the curvature is discontinues, which gives a smoothness level of $G^1$ and $C^0$. 
+Dubins path is the shortest path from from one waypoint to the other which is continues. Dubins path can be created for a three dimensional case, however a simplification is made in which only a planar version of the Dubins path is examined. 
