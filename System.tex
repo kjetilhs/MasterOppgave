@@ -1,7 +1,7 @@
 \chapter{System}
 
 \section{Navigation system}
-The navigation system apply RTKGPS for position and velocity measurement. The output from the RTKGPS software contains only the relative position from the base station, and not the position of the base station. Therefore a task was created to send send the global base station location to the navigation system, which enable the rest of the system to calculate the global position of the uav. 
+The navigation system apply RTKGPS for position and velocity measurement. The RTKGPS solution is calculated by the open source program RtkLib. The output from the RTKGPS software contains only the relative position from the base station, and not the position of the base station. Therefore a task was created to send send the global base station location to the navigation system, which enable the rest of the system to calculate the global position of the uav. 
 
 The base station position is received in the RTKGPS task in DUNE, were it's included in the GpsFixRtk message.
 
