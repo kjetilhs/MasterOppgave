@@ -68,6 +68,7 @@
 \RequirePackage{tabularx}
 \RequirePackage{booktabs}
 \RequirePackage{multirow}
+\usepackage{adjustbox}
 \renewcommand{\arraystretch}{1.2}
 
 % Links
