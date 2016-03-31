@@ -50,7 +50,8 @@ The simplest for of creating a path is a straight line between two waypoints. Th
 An alternative to a straight line path is a path constructed by straight lines and circle. Dubins path \citep{dubins1957curves}. The path is considered as the shortest path from $P_s$ to $P_f$, however the curvature is discontinues, which gives a smoothness level of $G^1$ and $C^0$. 
 Dubins path is the shortest path from from one waypoint to the other which is continues. Dubins path can be created for a three dimensional case, however a simplification is made in which only a planar version of the Dubins path is examined. A Dubin path with fixed end orientiation can be constructed in four different way.
 \begin{table}[H]
-\begin{center}
+\centering
+\begin{adjustbox}{max width=\textwidth}
 \begin{tabular}{ | l |}
 \hline
 Right to Right \\
@@ -58,6 +59,34 @@ Right to left \\
 Left to Right \\
 Left to left \\ \hline
 \end{tabular}
+\end{adjustbox}
+\end{table}
+
+Allowing the finish orientation to be free will add four more variants of the Dubins path.
+The path consist of two arcs and a straight line. The straight line is tangential to both arcs. The start and end point of the straight line can be found with
+\begin{subequations}
+\begin{align}
+& \alpha = \arcsin(\frac{\rho_f-\rho_s}{|c|}) \\
+& \beta = \arctan(\frac{y_{cf}-y_{cs}}{x_{cf}-x_{cs}})
+\end{align}
+\end{subequations}
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ | l | | l |}
+\hline
+& \textbf{Turn angle} \\ \hline
+$\phi_{right}$ & $\alpha + \beta + \frac{\pi}{2}$ \\
+$\phi_{left}$ & $\beta - \alpha + \frac{3\pi}{2}$ \\ \hline
+\end{tabular}
 \end{center}
 \end{table}
-Allowing the finish orientation to be free will add four more variants of the Dubins path.
+
+\begin{subequations}
+\begin{align}
+& x_{P_\chi} = x_{cs} + R_s\cos(\phi) \\
+& y_{P_\chi} = x_{cs} + R_s\sin(\phi) \\
+& x_{P_N} = x_{cf} + R_f\cos(\phi) \\
+& y_{P_N} = x_{cf} + R_f\sin(\phi)
+\end{align}
+\end{subequations}
