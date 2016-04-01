@@ -1,4 +1,20 @@
 \chapter{RTKGPS}
+This chapter present some of the basic theory behind rtkgps.
+
+
+\section{Real time kinematic GPS}\label{ss:rtk-gps}
+RTKGPS solution can be obtain by a dual frequency receiver, or two single frequency receivers that are
+\acrfull{rtk-gps} is a variant of \gls{dgps} where raw data is sent from the base station to the rover, where the distance between them is calculated in real time.
+The distance between the rover and base station is referred to as a baseline. The difficulty with \gls{rtk-gps} is the ability to estimate the integer ambiguities while the rover is moving. A fixed integer ambiguities solution results in a accurate baseline estimate.
+
+\gls{rtk-gps} can either provide a kinematic setting or a moving baseline setting. The difference between the two is that in kinematic the base station has a known stationary position, while in moving baseline the base station position is unknown and allowed to move. The unknown base station position is calculated with a single receiver, with the accuracy that entails. Therefore the \gls{rtk-gps} system with a moving baseline configuration can never have better global accuracy then what it will get with a single receiver. The advantage with the moving baseline configuration is that \gls{rtk-gps} can be used to find the relative position between two dynamical system using \gls{gnss} in real time. This will be the case in automatic ship landing system, where the base station is on a ship, thus must be allowed to move. The advantage with kinematic mode is that it can give a more accurate position estimate, where the relative position of the rover can be given in either the \gls{ned} or \gls{enu} frame.
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=0.7\textwidth]{figs/DGPS.png}
+		\caption{Concept figure of \acrfull{dgps}}
+		\label{figure:DGPS}
+\end{figure}
 \section{Error sources}
 In order to get high accuracy in the position estimation the different error sources must be identified and removed if possible. This section will identify some of the most significant error sources that can affect the \gls{gps} signal, and how to remove or mitigate them in the estimation.
 \subsection{Clock error}
@@ -22,19 +38,10 @@ One of the primary source of error in in a GNSS receiver is multipath. Multipath
 In this project work only carrier phase measurements will be considered for position estimation method.
 The problem with precise relative positioning with carrier phase measurement is problem of estimation of integer ambiguities.
 
-\begin{figure}[H]
-	\centering
-		\includegraphics[width=0.7\textwidth]{figs/DGPS.png}
-		\caption{Concept figure of \acrfull{dgps}}
-		\label{figure:DGPS}
-\end{figure}
+
 \subsection{Error mitigation in DGPS} \label{ss: Error mitigation DGPS}
 In \gls{dgps} the rover considers that both the rover and base station receive \gls{gps} signal that has experienced the same delay. Thus the rover can remove all error sources that is correlated with the base station. This assumption holds given that the baseline is not to long. For longer baseline other methods must be applied to correct for atmospheric delay. \gls{dgps} error mitigation do not include multipath. Multipath is an uncorrelated error, and thus must be corrected locally by both the rover and base station.
 
 
-\section{Real time kinematic GPS}\label{ss:rtk-gps}
-\acrfull{rtk-gps} is a variant of \gls{dgps} where raw data is sent from the base station to the rover, where the distance between them is calculated in real time.
-The distance between the rover and base station is referred to as a baseline. The difficulty with \gls{rtk-gps} is the ability to estimate the integer ambiguities while the rover is moving. A fixed integer ambiguities solution results in a accurate baseline estimate.
 
-\gls{rtk-gps} can either provide a kinematic setting or a moving baseline setting. The difference between the two is that in kinematic the base station has a known stationary position, while in moving baseline the base station position is unknown and allowed to move. The unknown base station position is calculated with a single receiver, with the accuracy that entails. Therefore the \gls{rtk-gps} system with a moving baseline configuration can never have better global accuracy then what it will get with a single receiver. The advantage with the moving baseline configuration is that \gls{rtk-gps} can be used to find the relative position between two dynamical system using \gls{gnss} in real time. This will be the case in automatic ship landing system, where the base station is on a ship, thus must be allowed to move. The advantage with kinematic mode is that it can give a more accurate position estimate, where the relative position of the rover can be given in either the \gls{ned} or \gls{enu} frame.
 \cleardoublepage
