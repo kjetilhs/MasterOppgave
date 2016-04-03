@@ -1,8 +1,18 @@
 \chapter{Software}
-The software used in the uav is mainly based on the LSTS toolchain \citep{pinto2013lsts}, which is a modular architecture
+This chapter contain the software that is used for developing and testing the autonomous landing system for uav. 
+
+The software that is mainly used in the uav system is based on a open-source software toolchain developed by the Underwater System and Technology Laboratory (LSTS). The toolchain supports air and ocean vehicle systems. The different components in the toolchain is IMC, DUNE, NEPTUS and Glued, which will be presented in later in this chapter. 
+
+The rtkgps solution in the system is calculated in the open-source software RtkLib \citep{takasu2009development}. The desceription of the program is given in section \ref{s:Rtklib}.
+
+The low level control system in the uav is controlled by Ardupilot, which is a 
 \section{IMC}
+IMC \citep{martins2009imc} is the communication protocol that is used for all communication within and between DUNE and Neptus. The message protocol is oriented around the message. All messages is pre-set  The entire complete protocol is defined in one XML document. 
 \section{Dune}
+Dune is a open-source software framework in which each Dune tasks are run in a separated threads. Each task communicate with an other with IMC messages. 
 \section{Neptus}
 \section{Glued}
-\section{Rtklib}
+\section{Rtklib}\label{s:Rtklib}
+Rtklib is a open-source software able to calculate the RTKGPS solution from a set of gnss receivers given that they are able to send out raw gnss data to the program. 
 \section{Ardopilot}
+\section{JSBsim}
