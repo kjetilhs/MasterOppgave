@@ -64,7 +64,7 @@ were the description of the parameters used is given in table \ref{Tb:Approach P
 \begin{center}
     \begin{tabular}{ | l | l |}
     \hline
-    \textbf{Parameter} & \textbf{description} \\ \hline
+    \textbf{Parameter} & \textbf{Description} \\ \hline
     $a0$ & The distance behind the net \\ \hline
     $a1$ & The distance in front of the net \\ \hline
     $a2$ & The length of the glide slope \\ \hline
@@ -81,6 +81,10 @@ The way point vectors are rotated into the NED frame by a rotation around the z-
 WP^n = R(\psi_{net})WP^b
 \end{equation}
 were $\psi_{net}$ is the heading of the net.
+\begin{figure}
+\def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
+\input{InkFig/LandingPhase.pdf_tex}
+\end{figure}
 
 \subsection{The landing path approach}
 Given that the length of the landing path, and the angle of descent is given the start pose is defined. That require the uav the to be given a flyable path such that it can start its landing. The landing path system generates an flyable path with a descent angle equal to the glide slope angle for an arbitrary start pose within the uav operational area. The landing path consists of two part, the lateral and the longitudinal. The lateral path is a Dubins path between two way points. This ensure that the path given to to uav will be the shortest continues path from the uav start position. The longitudinal path is a glide slope with a constant angle, expect when the path reach the desired hight which is the heigh of $WP4$.
