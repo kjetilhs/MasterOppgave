@@ -14,23 +14,17 @@ The operator use the Neptus platform as operational interface during the landing
 The highly dynaimcal nature of the uav create a challenge for the navigation system due to the blocking of the gps antenna from the satellite constellation. The problem was reduced by using a gps receiver that has a high performance in satellite tracking, however this does not remove the problem. A float solution from the gps system is valid for some seconds after fix is lost, due to the predictive nature of the Extended Kalman filter in rtklib. However after a seartin amount of time the navigation system swithces over to use the position estimate from the pixhawk, which has a lower accuracy level then the rtk gps system. To increase the accuracy level a offset solution is proposed. By calculating the difference between the fixed rtk gps solution and the position solution from the pixhawk a offset can be found. If the offset can be assumed constant or quasi stationary it can be used to increase to accuracy level for the navigation system enough to allow for completion of critical phases of a manoeuvre. However tests showed that the offset was not constant nor quasi stationary. By applying the offset to the pixhawk position solution the accuracy level will increase, but not enough to allow for execution of critical manoeuvres.
 In order to make the navigation system more robust, some methods was explored. 
 \section{Path generation}
-The area where the uav can operate is limited by the operator, which restrict the design of a landing path. In addition to the spacial limitation, the operator may choose the rate of descent which the uav should have during landing. The landing path system that has been design allows the operator to specify the length of the landing approach, including the angle of descent. The landing path follows the Dubins path (ref til teori) in the lateral plane, and straight lines in the longitudinal plane. The path is generated from an apitary start positing, and will create a contiues path toward the landing approach where the hight is given by:
-\begin{equation}
-h1 = 
-\end{equation}
-LIST opp ligningene for WP
+The landing plan is design with the assumption that the aerial space in which the uav operates is limited. The limitation can be the range of the uav, regulatory limits or weather. In addition the autonomous landing system must be able to perform a safe landing from any initial position. Furthermore the size of the virtual run way should be constructed by the operator. The type of uav operation dictates the maximum size of the landing path. Different types of uav operation is LOS, ELOS, BLOS and BRLOS. Only the first is considered in this thesis, which means that the pilot must have the uav in view during the entire flight. The operator must also be able to control the angle which the uav is descending, which means that the height of the landing path is fixed. Therefore the uav must be at the correct altitude before it can start descending toward the landing net.
 
+A landing plan that is proposed consist of Dubins path \ref{S:DubinsPath} in the lateral plane, and straight lines in the longitudinal plane. The path is generated from an arbitrary start positing, and will create a continuous path toward the landing approach. The design is inspired by the work done in \citep{Skulstad&Syversen} were way-points was used to guide the uav toward the landing approach.
 
-The landing path is design with the assumption that the aerial space in which the uav operates is limited. The limitation can be the range of the uav, regulatory limits or weather. In addition the autonomous landing system must be able to perform a safe landing from any initial position. Furthermore the size of the virtual run way should be constructed by the operator. The type of uav operation dictates the maximum size of the landing path. Different types of uav operation is LOS, ELOS, BLOS and BRLOS. Only the first is considered in this thesis, which means that the pilot must have the uav in view during the entire flight. The operator must also be able to control the angle which the uav is descending, which means that the height of the landing path is fixed. Therefore the uav must be at the correct altitude before it can start descending toward the landing net.
+The plan is generated in a Dune task which receive a plan generation request from Neptus. Then a plan is created, which is sent to the Dune task Plan manager, which in turn sent desired state to the guidance system. The plan is decoupled from the guidance system, which allow for use of different control design when executing the landing plan.
 
-A landing algorithm that is proposed consist of glideslopes that forms a staircase, of which the uav can ascend or descend in order to reach the correct heigh to start the landing. The path itself consist of straight lines between waypoints, however the landing path is not generated for a specific controller.
+The Dubin path is constructed with a followPath manoeuvre.
 
-TODO: INSERT ALGORITHM HERE 
-
-The controller apply a goto manoeuvre in DUNE, which make a path manager task responsible for following the path. The advantage with this approach is the use of a module that has been thoroughly tested, which limits the source of error is the guidance system. The disadvantage is the path is picewise continues, which will introduce sudden changes in desired state for the controller. A curved path will remove this behaviour, however this will required a controller which is created specially for this path. I addition the autonomous landing achieved in \citep{Skulstad&Syversen} was performed with a straight line path.
-
+The landing plan generated by the Dune task can be requested for review by the operator in Neptus. The plan will not start before the operator has reviewed the plan, and approved by uploading it to the uav. In the uploaded version a specification list on which controller that should be used is included.  
 \subsection{The net approach}
-The net approach path consist a straight line in the lateral plain, and straight lines in the longitudinal plane. The net approach is defined by four way points which is defined as follows:
+The net approach path consist a straight line in the lateral plain, and straight lines in the longitudinal plane. The net approach way-points are defined relative to the position of the net, which has been defined as origo. The four way-points in the net approach is defined as follows:
 \begin{subequations}
 \begin{align}
 &\mathbf{WP1} = 
@@ -92,6 +86,10 @@ Given that the length of the landing path, and the angle of descent is given the
 The landing path approach can be generated in to different way. One mode allow for manual deciding which side the start and finish circle should be in respect on the start pose, and the net landing approach. This allow the operator full control over the landing path, and can choose a landing path that is operation feasible and not necessary the shortest path.
 
 The other mode generate a landing path which is the shortest path from the start pose to the finish pose. That means that the algorithm must consider four different option in regard to the chosen path.
+\subsubsection{Automatic mode}
+The resulting path is based on the shortest path from the point were a landing plan was requested. In automatic mode all four version of the Dubins path is calculated, from which the shortest is chosen.
+\subsubsection{Manuel mode}
+Can manually desied the path towards the landing approach by giving the rotation direction for the start and finish circle. 
 \subsubsection{Extra way point}
 To ensure that the path generation system will generate å flyable path an extra way point is added in the case of the start pose in cause an infeasable dubins path, or an spesial case of Dubins path which has not been implemented. The two case are
 \begin{subequations}
