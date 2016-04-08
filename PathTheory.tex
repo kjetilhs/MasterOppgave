@@ -1,7 +1,11 @@
 \chapter{Path planning theory}
-An autonomous system must be able to create a plan on how the system should move around in the surrounding environment in a feasible way. A minimum requirement for a path is that it is connected. The connection level can be described by the paths smoothness. Geometric continuity is a relaxed from of parametric continuity in witch discontinuousness in speed is allowed. Geometric continuity is sufficient for a path following system, witch is the main focus of this thesis. Geometric continuity is denoted as $G^n$ were n is the order of continuity.
-
-Smoothness level in this thesis is follow the the definition given by Anastasios M. Lekkas Lecture 1.
+An autonomous system must be able to create a plan on how the system should move around in the surrounding environment in a feasible way. A minimum requirement for a path is that it is connected. The connection level can be described by the paths smoothness.
+Parametric continuity is denoted $C^n$ were n is the degree of smoothness. The order of n implies that the n first parametric derivatives match at a common point for two subsequent paths \citep{barsky1989geometric}. Geometric continuity is a relaxed from of parametric continuity in witch discontinuousness in speed is allowed. A table of geometric and parametric continuity lists the requirement for each smoothness level \ref{TB:SmoothnessDescriptions}. Geometric continuity level is based on theorem 1 in \citep{barsky1989geometric} which state the following
+\begin{theorem}
+Two parametrizations meet with $G^1$ continuity if and only if they have a common unit tangent vector; they meet with $G^2$ continuity if and only if they have a common unit tangent and curvature vectors
+\caption{Theorem 1 from \citep{barsky1989geometric}} 
+\end{theorem}
+Geometric continuity is sufficient for a path following system, witch is the main focus of this thesis. Geometric continuity is denoted as $G^n$ were n is the order of continuity.
 
 \begin{table}[H]
 \begin{center}
@@ -25,7 +29,7 @@ A the definition that is used for path in this thesis is:
 \begin{equation}
 P_s(x_s,y_s,z_s,\psi_s) \rightarrow P_f(x_f,y_f,z_f,\psi_f)
 \end{equation}
-were the subscripts $s$ and $f$ denaontes the start pose and finish pose respectfully. This is an relaxed form of the start and finish pose since the pitch and roll angle is assumed stable, and therefore a desired start and finish value is not required.
+were the subscripts $s$ and $f$ denotes the start pose and finish pose respectfully. This is an relaxed form of the start and finish pose since the pitch and roll angle is neglected in the path definition.
 
 \section{Straight lines}
 The simplest form on path is a straight line between $P_s$ and $p_f$. The straight line is given as 
