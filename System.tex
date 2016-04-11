@@ -90,16 +90,12 @@ In order for the \gls{uav} to be able to start the landing approach the \gls{uav
 
 A desired behaviour in the lateral plane is that the \gls{uav} should have a controlled decent. Given this desired behaviour it was decided that the lateral plane should be a glide slope, which means that the decent angle can be considered small. The strategy chosen to solve this problem is the use of straight lines in the lateral plane. The straight lines are is included with Dubins path such that the turn in Dubins path becomes a spiral.
 
-At the end of Dubins path the path is checked if the correct height has been reach. If the correct height has not been reached the path will create a spiral that converge to the correct height.
-Given that the length of the landing path, and the angle of descent is given the start pose is defined. That require the uav the to be given a flyable path such that it can start its landing. The landing path system generates an flyable path with a descent angle equal to the glide slope angle for an arbitrary start pose within the uav operational area. The landing path consists of two part, the lateral and the longitudinal. The lateral path is a Dubins path between two way points. This ensure that the path given to to uav will be the shortest continues path from the uav start position. The longitudinal path is a glide slope with a constant angle, expect when the path reach the desired hight which is the heigh of $WP4$.
+At the end of Dubins path the path is checked if the correct height has been reach. If the correct height has not been reached the path will create a spiral that converge to the correct height. When the correct height has been reach a last arc is created in order for the \gls{uav} to get the correct orientation.
 
-The landing path approach can be generated in to different way. One mode allow for manual deciding which side the start and finish circle should be in respect on the start pose, and the net landing approach. This allow the operator full control over the landing path, and can choose a landing path that is operation feasible and not necessary the shortest path.
+The landing path can be created in two modes, which is manual or automatic. The manual mode allow the operator to design the landing path by defined the turning direction for the start and final circle. This enable the operator to specify a path that fills a operational demand, which would not necessary be the path when in automatic.
 
-The other mode generate a landing path which is the shortest path from the start pose to the finish pose. That means that the algorithm must consider four different option in regard to the chosen path.
-\subsubsection{Automatic mode}
-The resulting path is based on the shortest path from the point were a landing plan was requested. In automatic mode all four version of the Dubins path is calculated, from which the shortest is chosen.
-\subsubsection{Manuel mode}
-Can manually desied the path towards the landing approach by giving the rotation direction for the start and finish circle. 
+In automatic mode all four variants, which is given in table \ref{Tb:DubinsTurningDirection}, calculated. After the length of the paths are calculated, where the shortest path is chosen to be the landing path.
+The landing path approach can be generated in to different way. One mode allow for manual deciding which side the start and finish circle should be in respect on the start pose, and the net landing approach. This allow the operator full control over the landing path, and can choose a landing path that is operation feasible and not necessary the shortest path. 
 \subsubsection{Extra way point}
 To ensure that the path generation system will generate å flyable path an extra way point is added in the case of the start pose in cause an infeasable dubins path, or an spesial case of Dubins path which has not been implemented. The two case are
 \begin{subequations}
