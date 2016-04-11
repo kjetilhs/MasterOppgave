@@ -5,8 +5,8 @@ This chapter present some of the basic theory behind rtkgps.
 \section{Real time kinematic GPS}\label{ss:rtk-gps}
 The prinsiple of \arcfull{rtk-gps} is the use of a base station and a rover, where the distance between them are calculated in real time. The distance between the base station and the rover is refereed to a base line. The length of the base line effect the accuracy of the \gls{rtk-gps} solution, however with a base line less then $1-2 km$ the solution can be considered with centimetre level accuracy.
 
-The base station sends raw \gls{gps} data over a radio link to the rover. An important feature for \gls{rtk-gps} is the ability to estimate the integer ambiguity while the rover is in motion. A well used method was purposed in the article \citep{teunissen1994new} which decorrelate the ambiguities such that a efficient computation of the least square estimate of the integer ambiguities can be performed. The type of solution can be categorised as either a fixed or float solution. NEED REF
-\acrfull{rtk-gps} consists of a base station and a rover, from which the base station sends raw gps data over a radio link to the rover.  
+The base station sends raw \gls{gps} data over a radio link to the rover. An important feature for \gls{rtk-gps} is the ability to estimate the integer ambiguity while the rover is in motion. A well used method was purposed in the article \citep{teunissen1994new} which decorrelate the integer ambiguities such that a efficient computation of the least square estimate can be performed. The type of solution can be categorised as either a fixed or float solution. NEED REF When the solution is categorised as fixed the accuracy of the solution is considered on centimetre level
+ 
 \acrfull{rtk-gps} is a variant of \gls{dgps} where raw data is sent from the base station to the rover, where the distance between them is calculated in real time. 
 The distance between the rover and base station is referred to as a baseline. The difficulty with \gls{rtk-gps} is the ability to estimate the integer ambiguities while the rover is moving. A fixed integer ambiguities solution results in a accurate baseline estimate.
 
