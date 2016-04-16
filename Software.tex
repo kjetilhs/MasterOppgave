@@ -6,12 +6,26 @@ The software that is mainly used in the uav system is based on a open-source sof
 The rtkgps solution in the system is calculated in the open-source software RtkLib \citep{takasu2009development}. The desceription of the program is given in section \ref{s:Rtklib}.
 
 The low level control system in the uav is controlled by Ardupilot, which is a 
-\section{IMC}
-IMC \citep{martins2009imc} is the communication protocol that is used for all communication within and between DUNE and Neptus. The message protocol is oriented around the message. All messages is pre-set  The entire complete protocol is defined in one XML document. 
-\section{Dune}
+\section{LSTS toolchain}
+The software that the system is based on was developed by the Underwater Systems and Technology Laboratory (LSTS), which is called the LSTS toolchain \citep{pinto2013lsts}. The toolchain was developed for support of networked heterogeneous air and ocean vehicle systems. The toolchain supports interactions over wireless network, and is supports interaction with different system responseable for the low end control. The toolchain contain four different modules, namely \arcfull{imc}, DUNE, NEPTUS and Glued.
+\subsection{IMC}
+\arcfull{imc} \citep{martins2009imc} is design to enable interconnections between systems of vehicles, sensors and human operators, which enable the pursuit of common goal by cooperatively exchange real-time information about the environment and updated objectives. The message protocol is oriented around the message, which abstracts hardware and communication heterogeneity with a provided shared set of messages that can be serialized and transferred over different means. The \gls{imc} protocol is defined in a single eXtensible Markup Language (XML) document, which simplify the definition of exiting messages and the creation of new messages. A single XML document ease communication between two node when both node use the same document for message definition. 
+\subsection{Dune}
 Dune is a open-source software framework in which each Dune tasks are run in a separated threads. Each task communicate with an other with IMC messages. 
-\section{Neptus}
-\section{Glued}
+\subsection{Neptus}
+\subsection{Glued}
+
+\subsubsection{Glued}
+Glued is a minimal Linux operating system distribution, and design with embedded system in mind. It is platform independent, easy to configure and contain only the necessary packages to run on a embedded system. This makes GLUED a light and fast distribution. GLUED is configured through a single configuration file that which can be created for a specific system. 
+\subsubsection{Dune}
+Dune (DUNE Uniform Navigation Environment) is a runtime environment for unmanned systems. DUNE is operating system independent and can run on the embedded computer. It can interact with the sensors, actuators and payload. In addition it can be used for tasks like communication, navigation, control, manoeuvring, plan execution and supervision.
+Dune works by setting up individual task that can dispatch and subscribe to different \gls{imc} messages.
+\subsubsection{IMC}\label{ss:IMC}
+The \acrfull{imc} protocol is build to interconnect systems of vehicles,sensors and human operators. The protocol is a messages-oriented protocol that enable exchange of real-time information about the environment and updated objectives, such that the participant in the communication can pursue a common goal cooperatively.
+\gls{imc} has a standard way of dispatching and consuming messages, which abstracts hardware configuration from the software. All \gls{imc} messages are logged by DUNE.
+
+
+
 
 \section{RTKLIB}\label{ss:Rtklib}
 \acrfull{rtklib}\citep{takasu2009development} is a open source program package for standard and precise positioning with \gls{gnss} developed by T. Takasu. \gls{rtklib} can be configured to apply \gls{rtk-gps}, such that raw \gls{gnss} data is used estimate the relative position of the rover with respect to the base station in real time. Figure \ref{figure:RTKLIB_STRUCTURE} shows how \gls{rtklib} can be used in a \gls{rtk-gps} mode. The two main modules here is str2str and rtkrcv. Both will be explained more closely in the following sections. The version of \gls{rtklib} used in this thesis is \gls{rtklib}2.4.2 \citep{Rtklib242}.
