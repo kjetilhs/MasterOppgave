@@ -103,6 +103,7 @@
 \RequirePackage{amssymb}
 \RequirePackage{mathtools}
 \RequirePackage{needspace}
+\DeclareMathOperator{\atan}{atan}
 
 \newtheoremstyle{atheorem}%               % Name
   {}%                                     % Space above
