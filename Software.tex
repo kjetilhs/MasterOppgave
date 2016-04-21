@@ -56,6 +56,5 @@ Str2str is used as a base station program that can receive raw \gls{gnss} data a
 \section{Ardupilot}
 
 \section{JSBsim}
-JSBsim\citep{jsbsim2016} is an open-source flight dynamic model that simulate a physical model of a aircraft, which is affected by external forces and moments. The external forces can be various control mechanism or environmental forces. JSBsim is able to receive control input from external program like ardupilot, which allows for testing of various control design in an external program.
-
-JSBsim is configured through a XML configuration file 
+JSBSim \citep{berndt2004jsbsim} is an open-source flight dynamic model that is able to simulate a physical model of an arbitrary aircraft without the need of specific compiled and linked program code. The simulator is design such that a third party software e.g. Ardupilot can expose the model to external forces and moments. This enable \arcfull{sil} testing of system that is able to run in a hardware configuration with only minor configuration alteration.
+\cleardoublepage
