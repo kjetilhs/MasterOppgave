@@ -1,6 +1,22 @@
 \chapter{System}
 This chapter contain the description for the system used in the autonomous landing system.
 \section{Navigation system}
+The navigation system receive state information mainly from the pixhawk, however the the system is able to receive position and velocity from a \gls{rtk-gps} subsystem were the solution is calculated in RTKLib . The system decide if it should use \gls{rtk-gps} through a DUNE task which manage the the source of the navigation data, which will be referred to as the navigation task.
+
+The operator can monitor which source is used in the navigation task through a interface that indicate which source is available.
+
+\subsection{RTK-GPS system}
+The navigation system receive its \gls{rtk-gps} solution from a DUNE task, which is connected to the open-source program RTKLib \citep{takasu2009development}. RTKLib contains several separated program that can be used in the field of \gls{rtk-gps}, where the program rtkrcv is used in the \gls{uav} to calculate the \gls{rtk-gps} solution. The program that is used in the base station is str2str, which retrieve the raw data from a GNSS receiver and transmits the data over tcp to the \gls{uav}. The GPS receivers that is used in both the \gls{uav} and base station is a Ublox Lea M8T.
+
+The output solution from R
+
+
+
+
+
+
+The \gls{rtk-gps} system has its solution calculated in 
+
 The navigation system used in the autonomous landing system consist of two sensor packages. The first is part of the pixhawk (REF TIL PIXHAWK), and the other is a Ublox Lea M8T \gls{gnss} receiver suplemented with the open source program RtkLib. The system apply RtkLib for more accurate position and velocity estimation through the use of \gls{rtk-gps}. The output from the RTKGPS software contains only the relative position from the base station, and not the position of the base station. Therefore a task was created to send the global base station location to the navigation system, which enable the rest of the system to calculate the global position of the uav.
 
 The base station position is received in the RTKGPS task in DUNE, were it's included in the GpsFixRtk message.
