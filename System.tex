@@ -134,7 +134,9 @@ A desired behaviour in the lateral plane is that the \gls{uav} should have a con
 
 At the end of Dubins path the path is checked if the correct height has been reach. If the correct height has not been reached the path will create a spiral that converge to the correct height. When the correct height has been reach a last arc is created in order for the \gls{uav} to get the correct orientation.
 \subsection{Transition into the net approach}
+In order to fully control when the \gls{uav} should start its decent the landing plan can include a loiter at the end of the approach. The loiter manoeuvre can be enabled such that the operator is able to make final preparation with the runway, or used together with a moving net to ease coordination. The loiter manoeuvre is exited when a end manoeuvre signal is sent from Neptus.
 \subsection{Plan generation}\label{SS:PlanGeneration}
+The plan is configured and generated thought a plug-in in Neptus. In the plug-in the operator can choose how the plan should be generated, as well as the length of the run way and the desired decent rate.
 \section{Guidance system}
 The guidance system consist of two part. Sliding mode controller, and a los controller
 
