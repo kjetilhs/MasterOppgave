@@ -54,8 +54,9 @@ A path constructed by straight lines is $G^0$, however since the tangential vect
 \end{figure}
 The simplest for of creating a path is a straight line between two way-points. The advantage with a straight line is that it's easy for a guidance system to follow the line, however it will experience a jump in reference when transitioning to another straight line due to discontinuous tangential vector.
 \section{Dubins path}\label{S:DubinsPath}
-An alternative to a straight line path is a path constructed by straight lines and circle. Rudolf Dubin showed \citep{dubins1957curves} that the shortest possible path for a particle that moved with unit speed with maximum curvature would consist of three pieces. The path is considered as the shortest path from $P_s$ to $P_f$, however the curvature is discontinues, which gives a smoothness level of $G^1$ and $C^0$. 
-Dubins path is the shortest path from from one way-point to the other which is continues. Dubins path can be created for a three dimensional case, however a simplification is made in which only a planar version of the Dubins path is examined. A Dubin path with fixed end orientation can be constructed in four different way.
+An alternative to a straight line path is a path constructed by straight lines and circle. Such a path is Dubins path\citep{dubins1957curves}, which showed that the shortest possible path for a particle that moved with unit speed with maximum curvature would consist of two circles and a straight line. The path consist of two arcs and a straight line. The straight line is tangential to both arcs. A disadvantage with Dubins path is that the curvature is discontinues, which gives a path from $P_s$ to $P_f$ with smoothness level of $G^1$.
+
+A Dubins path that is constructed where the final orientation is fixed has four different ways to be constructed, which is determined by the rotation directions. The four types of Dubins path that is used in this thesis is given in table \ref{Tb:DubinsTurningDirection}.
 \begin{table}[H]
 \centering
 \begin{adjustbox}{max width=\textwidth}
@@ -70,16 +71,15 @@ Left to left \\ \hline
 \caption{Turning direction for Dubins path with fixed final orientation}
 \label{Tb:DubinsTurningDirection}
 \end{table}
-
-Allowing the finish orientation to be free will add four more variants of the Dubins path.
-The path consist of two arcs and a straight line. The straight line is tangential to both arcs. The start and end point of the straight line can be found with
+The equations that is used to construct the path is found in \citep{tsourdos2010cooperative} section 2.2.1. The path parameters is found by first finding the angle 
+The start and end point of the straight line can be found with
 \begin{subequations}
 \begin{align}
-& \alpha = \arcsin\big(\frac{\rho_f-\rho_s}{|c|}\big) \\
+& \alpha = \arcsin\big(\frac{\R_f-\R_s}{|c|}\big) \\
 & \beta = \arctan\big(\frac{y_{cf}-y_{cs}}{x_{cf}-x_{cs}}\big)
 \end{align}
 \end{subequations}
-
+which is used to find the tangent exit and entry point, where $\alpha$ is the angle between the length of the center line between the two circles, and the length of the line from the start circle to the exit tangent point. $\beta$ is the angle of the center line. The exit and entry tangent point is found with the use of table \ref{Tb:ExitEntyrTangent}.
 \begin{table}[H]
 \begin{center}
 \begin{tabular}{ | l | | l |}
@@ -89,8 +89,9 @@ $\phi_{right}$ & $\alpha + \beta + \frac{\pi}{2}$ \\
 $\phi_{left}$ & $\beta - \alpha + \frac{3\pi}{2}$ \\ \hline
 \end{tabular}
 \end{center}
+\label{Tb:ExitEntyrTangent}
 \end{table}
-
+With the angle of the exit and entry tangent point the point is given as:
 \begin{subequations}
 \begin{align}
 & x_{P_\chi} = x_{cs} + R_s\cos(\phi) \\
@@ -102,3 +103,8 @@ $\phi_{left}$ & $\beta - \alpha + \frac{3\pi}{2}$ \\ \hline
 \begin{figure}[H]
 \includegraphics[width=0.7\textwidth]{figs/TheoryPlot/DubinsPath.eps}
 \end{figure}
+The length of the path is calculated in three parts. The first the is the arc length from the start pose to the exit tangent point, then the length of the straight line before the arc length from the entry point to the final pose. The length of the path is given as: 
+\begin{equation}
+d = R_s\phi_s + d_t + R_f\phi_f
+\end{equation}
+where $d_t$ is the length of the straight line between the two circles, $\phi_s$ and $\phi_f$ is the arc angle for the start and final circle respectfully. 
