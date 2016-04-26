@@ -73,9 +73,10 @@ Left to left \\ \hline
 \end{table}
 The equations that is used to construct the path is found in \citep{tsourdos2010cooperative} section 2.2.1. The path parameters is found by first finding the angle 
 The start and end point of the straight line can be found with
+
 \begin{subequations}
 \begin{align}
-& \alpha = \arcsin\big(\frac{\R_f-\R_s}{|c|}\big) \\
+& \alpha = \arcsin\big(\frac{R_f-R_s}{|c|}\big) \\
 & \beta = \arctan\big(\frac{y_{cf}-y_{cs}}{x_{cf}-x_{cs}}\big)
 \end{align}
 \end{subequations}
@@ -108,3 +109,7 @@ The length of the path is calculated in three parts. The first the is the arc le
 d = R_s\phi_s + d_t + R_f\phi_f
 \end{equation}
 where $d_t$ is the length of the straight line between the two circles, $\phi_s$ and $\phi_f$ is the arc angle for the start and final circle respectfully. 
+\begin{figure}\label{Fig:LandingPhase}
+\def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
+\input{InkFig/DubinsPath.pdf_tex}
+\end{figure}
