@@ -22,8 +22,12 @@ As part of the \gls{rtk-gps} system the base station has it's own DUNE task runn
 \subsection{Navigation source}
 The source of the position and velocity solution which is the output from the navigation system is decided in a DUNE task that consume both sensor data from the \gls{rtk-gps} system and the pixhawk. A requirement for use of \gls{rtk-gps} is that the position of the base station is fixed and included in the \gls{imc} message from the \gls{rtk-gps} task, in addition that the operator has decided that \gls{rtk-gps} should be used if available and the \gls{rtk-gps} solution is fixed.
 
-The navigation allows for use of float solution of \gls{rtk-gps} given that it has previous been fixed, for a limited time. 
+The navigation allows for use of float solution of \gls{rtk-gps} given that it has previous been fixed, for a limited time.
 
+In the event of \gls{rtk-gps} drop out a offset can be added to the position solution in order to prevent a sudden change in position. The offset is defined as the average difference between the $N$ latest position solution from the \gls{rtk-gps} and the external navigation system:
+\begin{equation}
+offset = \frac{1}{N}\sum_{n=0}^N(RTKGPS(n)-External(n))
+\end{equation}
 \subsection{Operator interface}
 A interface for navigation source monitoring has been created in Neptus in order to ease monitoring of which source the \gls{uav} is using as position and velocity source. The interfaced apply a color code to indicate which source is currently in use in addition to all sensor system that are available, as seen in table \ref{Tb:Color Code}.
 
