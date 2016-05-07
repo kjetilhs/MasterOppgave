@@ -71,6 +71,12 @@
 \usepackage{adjustbox}
 \renewcommand{\arraystretch}{1.2}
 
+% State machine
+\RequirePackage{pgf}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows,automata}
+%\RequirePackage[latin1]{inputenc}
+
 % Links
 \RequirePackage{hyperref}
 \RequirePackage{memhfixc}
