@@ -4,59 +4,12 @@ The software that is used in the autonomous landing system is based on the LSTS 
 DUNE (DUNE Uniform Navigation Environment) is a runtime environment for unmanned systems on-board software written in C++. DUNE is capable to interact with sensors, payload and actuators, in addition to communication, navigation, control, manoeuvring, plan execution and vehicle supervision. The software separate operations into different task that each has there own thread of execution. DUNE apply a message bus that is responsible for forwarding \gls{imc} message from the producer to all registered receivers.
 
 Neptus is a Command and Control software which is used to command and monitor unmanned systems that is written in Java. Neptus is able to provide coherent visual interface to command despite the heterogeneity in the controlled system that it is interacting with.  This allow the operator to command and control unmanned system without the need to dwell into specific command and control software in the unmanned system.
-\section{Navigation system}
-The navigation system receive state information mainly from the pixhawk, however the the system is able to receive position and velocity from a \gls{rtk-gps} subsystem were the solution is calculated in RTKLib. The system decide if it should use \gls{rtk-gps} through a DUNE task which manage the the source of the navigation data, which will be referred to as the navigation task.
-
-The operator can monitor which source is used in the navigation task through a interface that indicate which source is available.
-\subsection{RTK-GPS system}
-The navigation system receive its \gls{rtk-gps} solution from a DUNE task, which is connected to the open-source program RTKLib \citep{takasu2009development}. RTKLib contains several separated program that can be used in the field of \gls{rtk-gps}, where the program rtkrcv is used in the \gls{uav} to calculate the \gls{rtk-gps} solution. The program that is used in the base station is str2str, which retrieve the raw data from a GNSS receiver and transmits the data over tcp to the \gls{uav}. The GPS receivers that is used in both the \gls{uav} and base station is a Ublox Lea M8T. The structure of the RTKLib software configured with a rover and base station is shown in figure \ref{figure:RTKLIB_STRUCTURE}.
-\clearpage
-\begin{figure}[H]
-	\centering
-		\includegraphics[width=1\textwidth]{figs/RTKLIB.png}
-		\caption{The communication structure of \gls{rtklib}}
-		\label{figure:RTKLIB_STRUCTURE}
-\end{figure}
-\clearpage
-As part of the \gls{rtk-gps} system the base station has it's own DUNE task running that calculate the position of the base station. The operator has to decide when the the \gls{gps} position of the base station should be considered as fixed, which will result in that the \gls{rtk-gps} DUNE task can include the base station in it's \gls{imc} message. This is require since RTKLib does not include the base position in it's output message. 
-\subsection{Navigation source}
-The source of the position and velocity solution which is the output from the navigation system is decided in a DUNE task that consume both sensor data from the \gls{rtk-gps} system and the pixhawk. A requirement for use of \gls{rtk-gps} is that the position of the base station is fixed and included in the \gls{imc} message from the \gls{rtk-gps} task, in addition that the operator has decided that \gls{rtk-gps} should be used if available and the \gls{rtk-gps} solution is fixed.
-
-The navigation allows for use of float solution of \gls{rtk-gps} given that it has previous been fixed, for a limited time.
-
-\subsubsection{Short loss of RTKGPS}
-In the event of \gls{rtk-gps} drop out a offset can be added to the position solution in order to prevent a sudden change in position. The offset is defined as the average difference between the $N$ latest position solution from the \gls{rtk-gps} and the external navigation system:
-\begin{equation}
-offset = \frac{1}{N}\sum_{n=0}^N(RTKGPS(n)-External(n))
-\end{equation}
-where the \gls{rtk-gps} solution is displaced into the External nav system. The implantation required that the current displace function is DUNE had to be altered. [TODO: Skal denne setningen vaere med].
-\subsection{Operator interface}
-A interface for navigation source monitoring has been created in Neptus in order to ease monitoring of which source the \gls{uav} is using as position and velocity source. The interfaced apply a color code to indicate which source is currently in use in addition to all sensor system that are available, as seen in table \ref{Tb:Color Code}.
-
-\begin{table}[H]
-\begin{center}
-    \begin{tabular}{ | l | l |}
-    \hline
-    \textbf{Color} & \textbf{Description} \\ \hline
-    White & Not available \\ \hline
-    Yellow & Available, but not in use \\ \hline
-    Green & Available, and in use \\ \hline
-    \end{tabular}
-\end{center}
-\caption{Net approach parameters }
-\label{Tb:Color Code}
-\end{table}
-
-%\subsection{Position correction}%Flytt til resultat
-%The highly dynaimcal nature of the uav create a challenge for the navigation system due to the blocking of the gps antenna from the satellite constellation. The problem was reduced by using a gps receiver that has a high performance in satellite tracking, however this does not remove the problem. A float solution from the gps system is valid for some seconds after fix is lost, due to the predictive nature of the Extended Kalman filter in rtklib. However after a seartin amount of time the navigation system swithces over to use the position estimate from the pixhawk, which has a lower accuracy level then the rtk gps system. To increase the accuracy level a offset solution is proposed. By calculating the difference between the fixed rtk gps solution and the position solution from the pixhawk a offset can be found. If the offset can be assumed constant or quasi stationary it can be used to increase to accuracy level for the navigation system enough to allow for completion of critical phases of a manoeuvre. However tests showed that the offset was not constant nor quasi stationary. By applying the offset to the pixhawk position solution the accuracy level will increase, but not enough to allow for execution of critical manoeuvres.
-%In order to make the navigation system more robust, some methods was explored. 
 \section{Path generation}
 The autonomous landing system is designed such that the \gls{uav} is able to landing is a stationary or moving net. This thesis will focus on landing in a stationary net, however the system that has been created can be used to land into a moving net. To be able to hit the net a virtual run way is created as a glide slope towards the net, which is divided into four phases. This phase will be described in section \ref{SS:netApproach}.
 
 In order of start the landing approach the \gls{uav} must be at the correct height in order to start the approach toward the net. Therefore a plan has to be created such that the \gls{uav} is able to reach the correct height in a controlled manor. The plan that creates a path for the \gls{uav} is described in section \ref{SS:LandingApproach}.
 
 The operator should be able to control all parameters which is critical for the path generation. This is done through Neptus, where a plugin is used for parameter setting and plan generation. The plug-in is described in section \ref{SS:PlanGeneration}.
-
 
 The landing plan is design with the assumption that the aerial space in which the uav operates is limited. The limitation can be the range of the uav, regulatory limits or weather. In addition the autonomous landing system must be able to perform a safe landing from any initial position. Furthermore the size of the virtual run way should be constructed by the operator. The type of uav operation dictates the maximum size of the landing path. Different types of uav operation is LOS, ELOS, BLOS and BRLOS. Only the first is considered in this thesis, which means that the pilot must have the uav in view during the entire flight. The operator must also be able to control the angle which the uav is descending, which means that the height of the landing path is fixed. Therefore the uav must be at the correct altitude before it can start descending toward the landing net.
 
@@ -143,7 +96,77 @@ At the end of Dubins path the path is checked if the correct height has been rea
 In order to fully control when the \gls{uav} should start its decent the landing plan can include a loiter at the end of the approach. The loiter manoeuvre can be enabled such that the operator is able to make final preparation with the runway, or used together with a moving net to ease coordination. The loiter manoeuvre is exited when a end manoeuvre signal is sent from Neptus.
 \subsection{Plan generation}\label{SS:PlanGeneration}
 The plan is configured and generated thought a plug-in in Neptus. In the plug-in the operator can choose how the plan should be generated, as well as the length of the run way and the desired decent rate.
+\section{Navigation system}
+The navigation system apply \gls{rtk-gps} for position and velocity measurement, which provide higher position accuracy then a standalone \gls{gps}. However the state of the \gls{rtk-gps} can change before or during a mission. Therefore the operator must be able to monitor the state of the \gls{rtk-gps} in Neptus, which is a command and control software used to create and monitor missions. In addition to monitoring the navigation system must be able to handle a drop out of the \gls{rtk-gps}. This is handled in two steps. The first is a short loss compensator stage, where the backup standalone \gls{gps} is compensated to get a position solution closer to the \gls{rtk-gps} solution. The second stage fully disconnect the \gls{rtk-gps}.
+\subsection{RTK-GPS system}
+The \gls{rtk-gps} solution is calculated in the open-source program liberary RTKLib \citep{takasu2009development}.
+The X8 runs the rover program rtkrcv which is connected over TCP/IP with the base station program str2str. Both programs are connected to a Ublox Lea M8T GNSS receiver. The GNSS receiver is programmed to send raw GNSS data to both programs, where the base station program str2str transmits without alteration the raw data to the rover program rtkrcv. The structure of the RTKLib software configured with a rover and base station is shown in figure \ref{figure:RTKLIB_STRUCTURE}.
+\clearpage
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=1\textwidth]{figs/RTKLIB.png}
+		\caption{The communication structure of \gls{rtklib}}
+		\label{figure:RTKLIB_STRUCTURE}
+\end{figure}
+\clearpage
+The navigation system require to now the reference position of the base station in order to use the \gls{rtk-gps} solution. However the base station position is currently not part of the output message from rtkrcv. This is resolved by allowing the base station to calculate it's own position as a standalone \gls{gps}. The \gls{gps} position is transmitted to a local Dune task on the base station, where the operator can decide when the base station can be considered as fixed. When the base station is considered fixed the position is sent to the X8, where it's included in the \gls{rtk-gps} solution message.
+\subsection{Navigation state}
+The navigation system consists of five states, which is controlled by a state machine. The state transitions is determined by what's available and what the operator has specified should be used. The output from the state machine is the IMC message EstimatedState, which is the only state source used in the Dune control and guidance system. The state machine also dispatch a IMC message that informs which the source used in the navigation system, and which sources is available. Currently only the \gls{rtk-gps} system is considered as a internal system, however this can be expanded to include other sensors used in the Dune system.
+
+The input to the navigation system is IMC message ExternalNav and GpsRtkFix. The ExternalNav message is the primary state source when the \gls{rtk-gps} is not in use, and it's receive the state information from the Pixhawk mounted in the X8.
+
+During a short loss of the \gls{rtk-gps} the position solution in the ExternalNav message is compensated to avoid sudden change in position. The short loss compensator is explain further in \ref{ss:ShortLoss}. The short loss system is implemented to avoid drop out of the \gls{rtk-gps} when a message is delayed, or its struggling due to the dynamic behaviour of the \gls{uav}.
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=red,draw=none,text=white]
+
+  \node[initial,state] (A)                    {$q_a$};
+  \node[state]         (B) [above right of=A] {$q_b$};
+  \node[state]         (D) [below right of=A] {$q_d$};
+  \node[state]         (C) [below right of=B] {$q_c$};
+  \node[state]         (E) [below of=D]       {$q_e$};
+
+  \path (A) edge              node {0,1,L} (B)
+            edge              node {1,1,R} (C)
+        (B) edge [loop above] node {1,1,L} (B)
+            edge              node {0,1,L} (C)
+        (C) edge              node {0,1,L} (D)
+            edge [bend left]  node {1,0,R} (E)
+        (D) edge [loop below] node {1,1,R} (D)
+            edge              node {0,1,R} (A)
+        (E) edge [bend left]  node {1,0,R} (A);
+\end{tikzpicture}
+
+\subsubsection{Short loss of RTKGPS}\label{ss:ShortLoss}
+In the event of \gls{rtk-gps} drop out a offset can be added to the position solution in order to prevent a sudden change in position. The offset is defined as the average difference between the $N$ latest position solution from the \gls{rtk-gps} and the external navigation system:
+\begin{equation}
+offset = \frac{1}{N}\sum_{n=0}^N(RTKGPS(n)-External(n))
+\end{equation}
+where the \gls{rtk-gps} solution is displaced into the External nav system. However during the implantation it was discovered that the standard displace function in the DUNE literary was inaccurate in correctly calculating the hight of a offset point. The problem was that the geodetic latitude calculation was calculate assuming that the Earth has a spheric shape. This was solved by creating a new displace function where the geodetic latitude is calculated in according to
+
+[FYLL INN LIGNING]
+
+
+\subsection{Operator interface}
+The state of the navigation system is monitored though a interface in Neptus. The interface indicate which source the Dune system is using for state information. The interfaced apply a color code to indicate which source is currently in use in addition to all sensor system that are available, as seen in table \ref{Tb:Color Code}.
+\begin{table}[H]
+\begin{center}
+    \begin{tabular}{ | l | l |}
+    \hline
+    \textbf{Color} & \textbf{Description} \\ \hline
+    White & Not available \\ \hline
+    Yellow & Available, but not in use \\ \hline
+    Green & Available, and in use \\ \hline
+    \end{tabular}
+\end{center}
+\caption{Net approach parameters }
+\label{Tb:Color Code}
+\end{table}
+\section{Base station}
+
 \section{Guidance and control system system}
+The control and guidance system that is used to achive t
+The navigation and path generation system is independent of the guidance and control system used in the \gls{uav}. However this section 
 The guidance system consist of two part. Sliding mode controller, and a los controller
 
 \subsection{Sliding mode controller}
