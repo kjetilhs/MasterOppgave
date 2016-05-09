@@ -1,0 +1,71 @@
+%% Creator: Inkscape 0.91_64bit, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'StateMachine.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{341.41119094bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,1.89886171)%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{InkFig/StateMachine.pdf}}%
+    \put(0.15163737,1.70492921){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Initialize}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{InkFig/StateMachine.pdf}}%
+    \put(0.05473802,1.49310625){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Using external}}}%
+    \put(0.06242846,1.2282087){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Rtk ready}}}%
+    \put(0.06550458,0.94324322){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Using rtk}}}%
+    \put(0.05935227,0.70242732){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Using short rtk loss compensator}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{InkFig/StateMachine.pdf}}%
+    \put(0.15625155,1.59745984){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{A}}}%
+    \put(0.05781421,1.3472788){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{B}}}%
+    \put(0.29620179,1.34769965){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{C}}}%
+    \put(0.05781421,1.07167836){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{D}}}%
+    \put(0.29467911,1.07167895){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{E}}}%
+    \put(0.05781354,0.80276721){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{F}}}%
+    \put(0.29620179,0.80321961){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{G}}}%
+    \put(0.5376475,1.18508857){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{H}}}%
+    \put(0.68996677,1.14258529){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{I}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{InkFig/StateMachine.pdf}}%
+  \end{picture}%
+\endgroup%
