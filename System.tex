@@ -1,3 +1,5 @@
+\part{Method}
+
 \chapter{System}
 The software that is used in the autonomous landing system is based on the LSTS toolchain \citep{pinto2013lsts}, with \gls{rtk-gps} solution calculated in RTKLib. The toolchain was developed for support of networked heterogeneous air and ocean vehicle systems. The toolchain supports interactions over wireless network, and is supports interaction with different system responseable for the low end control. The toolchain contain four different modules, namely \gls{imc}, DUNE, NEPTUS and Glued.
 
@@ -108,26 +110,34 @@ The navigation system consists of five states, which is controlled by a state ma
 The input to the navigation system is IMC message ExternalNav and GpsRtkFix. The ExternalNav message is the primary state source when the \gls{rtk-gps} is not in use, and it's receive the state information from the Pixhawk mounted in the X8.
 
 During a short loss of the \gls{rtk-gps} the position solution in the ExternalNav message is compensated to avoid sudden change in position. The short loss compensator is explain further in \ref{ss:ShortLoss}. The short loss system is implemented to avoid drop out of the \gls{rtk-gps} when a message is delayed, or its struggling due to the dynamic behaviour of the \gls{uav}.
-\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3.8cm,
-                    semithick]
-  \tikzstyle{every state}=[fill=red,draw=none,text=white]
 
-  \node[initial,state] (A)                    {Init};
-  \node[state]         (B) [below right of=A] {Using External};
-  \node[state]         (D) [below right of=B] {RtkReady};
-  \node[state]         (C) [below of=D] {Using Rtk};
-  \node[state]         (E) [below of=C]       {Using short rtk loss\\ compensator};
+The state machine is depicted in figure \ref{Fig:NavState}, with the edge describtino given in table \ref{Tb:Nav state edge}.
 
-  \path (A) edge              node {0,1,L} (B)
-  		(B) edge			  node {0,1,L} (D)
-        (D) edge              node {0,1,L} (C)
-            edge [bend left]  node {1,0,R} (B)
-        (C) edge [bend left]  node {1,0,R} (D)
-        	edge 			  node {1,0,L} (E)
-        	edge [bend left]  node {1,0,R} (B)
-        (E) edge [bend right] node {1,1,R} (C)
-        	edge [bend left] node {0,0,L} (B);
-\end{tikzpicture}
+\begin{figure}\label{Fig:NavState}
+\def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
+\input{InkFig/StateMachine.pdf_tex}
+\end{figure}
+\begin{table}[H]
+
+    \begin{tabular}{ | p{1cm} | p{8cm} | | p{4cm} |}
+    \hline
+    \textbf{Edge} 	& \textbf{Event} 										& \textbf{Guard} \\ \hline
+    A 				& Event: Received External Nav message 					& None \\ \hline
+    B 				& Time out: Fix \gls{rtk-gps} solution for $x$ seconds 	& None \\ \hline
+    C 				& Time out: $x$ seconds since last valid GpsFixRtk 		& None \\ \hline
+    D 				& Flag: Using Rtk is set true& None \\ \hline
+    E 				& Flag: Using Rtk is set false& None \\ \hline
+    F 				& Time out: $x$ seconds since last valid GpsFixRtk 		& Short loss compensator:\\ 
+      				& Event: Received GpsRtkFix with $type==None$ 			& Enabled\\ \hline
+    G 				& Event: Received valid GpsFixRtk message				& None \\ \hline
+    H 				& Time out: $x$ seconds since last valid GpsFixRtk 		& Short loss compensator:\\
+    				& Event: Received GpsRtkFix with $type==None$			& Disabled \\ \hline
+    I 				& Time out: $x$ seconds since last valid GpsFixRtk 		& None \\ \hline
+    \end{tabular}
+
+\caption{Net approach parameters }
+\label{Tb:Nav state edge}
+\end{table}
 
 \subsubsection{Short loss of RTKGPS}\label{ss:ShortLoss}
 In the event of \gls{rtk-gps} drop out a offset can be added to the position solution in order to prevent a sudden change in position. The offset is defined as the average difference between the $N$ latest position solution from the \gls{rtk-gps} and the external navigation system:
@@ -136,8 +146,12 @@ offset = \frac{1}{N}\sum_{n=0}^N(RTKGPS(n)-External(n))
 \end{equation}
 where the \gls{rtk-gps} solution is displaced into the External nav system. However during the implantation it was discovered that the standard displace function in the DUNE literary was inaccurate in correctly calculating the hight of a offset point. The problem was that the geodetic latitude calculation was calculate assuming that the Earth has a spheric shape. This was solved by creating a new displace function where the geodetic latitude is calculated in according to
 
-[FYLL INN LIGNING]
-
+%\begin{subequations}
+%\begin{align}
+%N = \frac{•}{•}
+%&\mu = 
+%\end{align}
+%\end{subequations}
 
 \subsection{Operator interface}
 The state of the navigation system is monitored though a interface in Neptus. The interface indicate which source the Dune system is using for state information. The interfaced apply a color code to indicate which source is currently in use in addition to all sensor system that are available, as seen in table \ref{Tb:Color Code}.
