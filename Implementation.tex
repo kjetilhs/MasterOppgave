@@ -1,0 +1,48 @@
+\chapter{Implementation}
+This chapter contain the technical specification of the navigation system and landing path system, in addition to the payload installed in the X8 and both nests.
+\section{Landing path}
+The landing path is specified through the Neptus plug-in LandmapLayer, which allow for real time setting of the parameters used to create the landing path. In addition the plug-in display the position of the net in the graphical map interface which is a part of Neptus. The plug-in dispatch the \gls{imc} message, LandingPlanGeneration, which has been created specifically for landing path purpose.
+
+The \gls{imc} LandingPlanGeneration message is dispatch to the Dune system, where it's picked up by the Dune task LandingPlan. This trigger the generation of the landing path, and depending on the configuration of the Dune task and desired setting in the LandingPlanGeneration message different landing path is generated. The different variants is categorised into two groups; configuration of the Dubins path, and configuration of the virtual runway. The configuration option that result in different variants of the landing path is given in table \ref{Tb:DubinConfig}. In addition the Dune task can be configured for a dynamical landing. When configured as dynamical it's assumed that an other task is responsible for the final landing part. Therefore the vertical runway is not part of the plan, however the first part of the path is still included.
+\begin{table}
+\centering
+\begin{tabular}{| p{2.7cm} | | p{6cm} |}
+\hline
+\textbf{Parameter name} 							& \textbf{Action} \\ \hline
+ Automatic (boolean)								& If true a standard path where the shortest Dubins path is chosen. Otherwise a user specific path is chosen \\ \hline
+Start circle turning counter clockwise (boolean)	& If true the start arc is created such that the turning direction is counter clockwise. Otherwise clockwise. Require Automatic==false \\ \hline
+Finish circle turning counter clockwise (boolean)	& If true the finish arc is created such that the turning direction is counter clockwise. Otherwise clockwise. Require Automatic==false \\ \hline
+Wait at loiter (boolean)							& If true a unlimited loiter is included in the path before the path continue with the path along the virtual runway. \\ \hline
+
+\end{tabular}
+\label{Tb:DubinConfig}
+\end{table}
+When generated the plan must be started from Neptus, where the desired control configuration is added to the path.
+
+A loiter manoeuvre can be included in the landing plan before the start of the path along the virtual runway. The loiter manoeuvre can be used to control when the \gls{uav} should start it's final approach, which is practical when performing a dynamical landing.
+\section{Navigation system}
+The navigation system is control by a state machine \ref{S:NavState}, which is used to control the content of the output \gls{imc} messages EstimatedState and NavSources. Depending on which state the navigation system is in the EstimatedState message will either have position solution form the \gls{rtk-gps} system or the external navigation system. During a short loss of the RTK the external navigation position is compensated with the average difference between the RTK solution and the external navigation solution.
+\subsection{Operator interface}
+The state of the navigation system is monitored though a interface in Neptus. The interface indicate which source the Dune system is using for state information. The interfaced apply a color code to indicate which source is currently in use in addition to all sensor system that are available, as seen in table \ref{Tb:Color Code}.
+\begin{table}[H]
+\begin{center}
+    \begin{tabular}{ | l | l |}
+    \hline
+    \textbf{Color} & \textbf{Description} \\ \hline
+    White & Not available \\ \hline
+    Yellow & Available, but not in use \\ \hline
+    Green & Available, and in use \\ \hline
+    \end{tabular}
+\end{center}
+\caption{Net approach parameters }
+\label{Tb:Color Code}
+\end{table}
+\section{Nest system}
+A nest system is a stationary unit with the sole purpose of providing it's position to the rest of the Dune System. As part of the navigation system the base station is defined as a nest, where the \gls{gps} position is sent to the \gls{rtk-gps} system when fixed.
+An other nest has been created to obtain the \gls{gps} position of the stationary net. The net nest is configured as a rover in \gls{rtk-gps} configuration, such that the position relative to the base station is in the same frame as the X8.
+\section{X8 and nest payload}
+The X8 and both nests are installed with a BeagleBone embedded computer which is used to run the Dune system, as well as rtklib. Rtklib is connected to Ublox Lea M8T GNSS receiver with a uart cable, which is configured with a output rate of 10Hz in all systems.
+
+The Ublox GNSS receiver in the X8 is connected to a [NAVN ANTENNE] which is mounted on top of the X8. The Ublox in the base station nest is connected to [NAVN ANTENNE], and the ublox in the net nest is connected to [NAVN ANTENNE].
+
+The autopilot is a Pixhawk, which runs ArduPilot. The pixhawk is connected to the beaglebone. The connection between the X8 and the nest relay on wifi connection with M5 Rockets which is mounted all systems. The communication is done with both TCP and UDP depending which message is sent.

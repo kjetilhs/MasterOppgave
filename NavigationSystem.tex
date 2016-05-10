@@ -1,0 +1,43 @@
+\chapter{Navigation system}
+The navigation system apply \gls{rtk-gps} for position and velocity measurement, which provide higher position accuracy then a standalone \gls{gps}. However the state of the \gls{rtk-gps} can change before or during a mission. Therefore the operator must be able to monitor the state of the \gls{rtk-gps} in Neptus, which is a command and control software used to create and monitor missions. In addition to monitoring the navigation system must be able to handle a drop out of the \gls{rtk-gps}. This is handled in two steps. The first is a short loss compensator stage, where the backup standalone \gls{gps} is compensated to get a position solution closer to the \gls{rtk-gps} solution. The second stage fully disconnect the \gls{rtk-gps}.
+\section{Navigation state}\label{S:NavState}
+The navigation system consists of five states, which is controlled by a state machine. The state transitions is determined by what's available and what the operator has specified should be used. The output from the state machine is the IMC message EstimatedState, which is the only state source used in the Dune control and guidance system. The state machine also dispatch a IMC message that informs which the source used in the navigation system, and which sources is available. Currently only the \gls{rtk-gps} system is considered as a internal system, however this can be expanded to include other sensors used in the Dune system.
+
+The input to the navigation system is IMC message ExternalNav and GpsRtkFix. The ExternalNav message is the primary state source when the \gls{rtk-gps} is not in use, and it's receive the state information from the Pixhawk mounted in the X8.
+
+During a short loss of the \gls{rtk-gps} the position solution in the ExternalNav message is compensated to avoid sudden change in position. The short loss compensator is explain further in \ref{ss:ShortLoss}. The short loss system is implemented to avoid drop out of the \gls{rtk-gps} when a message is delayed, or its struggling due to the dynamic behaviour of the \gls{uav}.
+
+The state machine is depicted in figure \ref{Fig:NavState}, with the edge describtino given in table \ref{Tb:Nav state edge}.
+
+\begin{figure}\label{Fig:NavState}
+\def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
+\input{InkFig/StateMachine.pdf_tex}
+\end{figure}
+\begin{table}[H]
+
+    \begin{tabular}{ | p{1cm} | p{8cm} | | p{4cm} |}
+    \hline
+    \textbf{Edge} 	& \textbf{Event} 										& \textbf{Guard} \\ \hline
+    A 				& Event: Received External Nav message 					& None \\ \hline
+    B 				& Time out: Fix \gls{rtk-gps} solution for $x$ seconds 	& None \\ \hline
+    C 				& Time out: $x$ seconds since last valid GpsFixRtk 		& None \\ \hline
+    D 				& Flag: Using Rtk is set true& None \\ \hline
+    E 				& Flag: Using Rtk is set false& None \\ \hline
+    F 				& Time out: $x$ seconds since last valid GpsFixRtk 		& Short loss compensator:\\ 
+      				& Event: Received GpsRtkFix with $type==None$ 			& Enabled\\ \hline
+    G 				& Event: Received valid GpsFixRtk message				& None \\ \hline
+    H 				& Time out: $x$ seconds since last valid GpsFixRtk 		& Short loss compensator:\\
+    				& Event: Received GpsRtkFix with $type==None$			& Disabled \\ \hline
+    I 				& Time out: $x$ seconds since last valid GpsFixRtk 		& None \\ \hline
+    \end{tabular}
+
+\caption{Net approach parameters }
+\label{Tb:Nav state edge}
+\end{table}
+
+\subsection{Short loss of RTKGPS}\label{ss:ShortLoss}
+In the event of \gls{rtk-gps} drop out a offset can be added to the position solution in order to prevent a sudden change in position. The offset is defined as the average difference between the $N$ latest position solution from the \gls{rtk-gps} and the external navigation system:
+\begin{equation}
+offset = \frac{1}{N}\sum_{n=0}^N(RTKGPS(n)-External(n))
+\end{equation}
+where the \gls{rtk-gps} solution is displaced into the External nav system. However during the implantation it was discovered that the standard displace function in the DUNE literary was inaccurate in correctly calculating the hight of a offset point. The problem was that the geodetic latitude calculation was calculate assuming that the Earth has a spheric shape. This was solved by creating a new displace function where the geodetic latitude is calculated in according to

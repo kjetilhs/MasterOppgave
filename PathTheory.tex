@@ -1,6 +1,6 @@
 \chapter{Path planning theory}
 An autonomous system must be able to create a plan on how the system should move around in the surrounding environment in a feasible way. A minimum requirement for a path is that it is connected. The connection level can be described by the paths smoothness. Parametric continuity is denoted $C^n$ were n is the degree of smoothness. The order of n implies that the n first parametric derivatives match at a common point for two subsequent paths \citep{barsky1989geometric}. Geometric continuity is a relaxed from of parametric continuity in witch discontinuousness in speed is allowed. A table of geometric and parametric continuity lists the requirement for each smoothness level \ref{TB:SmoothnessDescriptions}, which is based definitions presented in \citep{barsky1989geometric}.
-Geometric continuity is sufficient for a path following system, witch is the main focus of this thesis. Geometric continuity is denoted as $G^n$ were n is the order of continuity.
+Geometric continuity is sufficient for a path following system, which is the main focus of this thesis. Geometric continuity is denoted as $G^n$ were n is the order of continuity.
 
 \begin{table}[H]
 \begin{center}
@@ -50,6 +50,7 @@ The tangential vector for a straight line is given as:
 A path constructed by straight lines is $G^0$, however since the tangential vector is discontinuous between two line segments with different heading it's not $G^1$. The disadvantage with a path which is $G^0$ is that large discontinuity between two tangential vectors will cause problem for a control system. 
 \begin{figure}[H]
 \includegraphics[width=0.7\textwidth]{figs/TheoryPlot/StraightLine.eps}
+\caption{Straight line path}
 \end{figure}
 The simplest for of creating a path is a straight line between two way-points. The advantage with a straight line is that it's easy for a guidance system to follow the line, however it will experience a jump in reference when transitioning to another straight line due to discontinuous tangential vector.
 \section{Dubins path}\label{S:DubinsPath}
@@ -100,9 +101,9 @@ With the angle of the exit and entry tangent point the point is given as:
 & y_{P_N} = x_{cf} + R_f\sin(\phi)
 \end{align}
 \end{subequations}
-\begin{figure}[H]
-\includegraphics[width=0.7\textwidth]{figs/TheoryPlot/DubinsPath.eps}
-\end{figure}
+%\begin{figure}[H]
+%\includegraphics[width=0.7\textwidth]{figs/TheoryPlot/DubinsPath.eps}
+%\end{figure}
 The length of the path is calculated in three parts. The first the is the arc length from the start pose to the exit tangent point, then the length of the straight line before the arc length from the entry point to the final pose. The length of the path is given as: 
 \begin{equation}
 d = R_s\phi_s + d_t + R_f\phi_f
@@ -111,4 +112,5 @@ where $d_t$ is the length of the straight line between the two circles, $\phi_s$
 \begin{figure}\label{Fig:LandingPhase}
 \def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
 \input{InkFig/DubinsPath.pdf_tex}
+\caption{Dubins path}
 \end{figure}
