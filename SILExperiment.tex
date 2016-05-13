@@ -2,7 +2,8 @@
 
 \chapter{SIL test}
 The system was tested through a Software In the Loop (SIL) simulation. In a SIL simulation the same code that runs in the hardware is tested against a simulator which behave similarly to the real system.
-
+\section{Setup}
+When performing a SIL test the Dune system is locally connected to ardupilot, which is communicating with JSBsim instead of the real \gls{uav}. The simulation is performed with a mathematical model of the X8 developed in the Master thesis [ref master thesis]. The purpose with the SIL test is to test the same software which will run in the X8 during a experimental test, and is used to verified that the system works. However since it's a simulated environment the results can only be considered as ideal results.
 \section{Path planing SIL}
 The landing path is tested in both guided and FBWA. 
 \section{Navigation SIL}
