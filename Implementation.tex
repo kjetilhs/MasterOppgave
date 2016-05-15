@@ -1,5 +1,11 @@
 \chapter{Implementation}
 This chapter contain the technical specification of the navigation system and landing path system, in addition to the payload installed in the X8 and both nests.
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=1\textwidth]{figs/DUNESystem.png}
+		\caption{A simplified figure of the Dune auto land system}
+		\label{figure:RTKLIB_STRUCTURE}
+\end{figure}
 \section{Landing path}
 The landing path is specified through the Neptus plug-in LandmapLayer, which allow for real time setting of the parameters used to create the landing path. In addition the plug-in display the position of the net in the graphical map interface which is a part of Neptus. The plug-in dispatch the \gls{imc} message, LandingPlanGeneration, which has been created specifically for landing path purpose.
 

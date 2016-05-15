@@ -1,7 +1,7 @@
 \part{Method}
 
-\chapter{Landing path}
-The path generator in the  autonomous landing system is designed to enable \gls{uav} landing in both a stationary or moving net. The path is created in two main stages. The first is the creation of the virtual runway, which is defined as a straight line along the heading of the net. The second stage apply a lateral Dubins path \ref{S:DubinsPath} and longitudinal straight line path to create a path that ensures that the \gls{uav} is able to enter the straight line along the virtual runway at the correct height and attitude. The design is inspired by the work done in \citep{Skulstad&Syversen} were way-points was used to guide the \gls{uav} toward the landing approach.
+\chapter{Landing path}\label{Ch:LandingPath}
+The path generator in the  autonomous landing system is designed to enable \gls{uav} landing in both a stationary and a moving net. The path is created in two main stages. The first is the creation of the virtual runway, which is defined as a straight line along the heading of the net, as shown in figure \ref{Fig:LandingPhase}. The second stage apply a lateral Dubins path \ref{S:DubinsPath} and longitudinal straight line path to create a path that ensures that the \gls{uav} is able to enter the straight line along the virtual runway at the correct height and attitude. The design is inspired by the work done in \citep{Skulstad&Syversen} were way-points was used to guide the \gls{uav} toward the landing approach.
 \section{The virtual runway}\label{SS:netApproach}
 The virtual runway is inspired by the work done in \citep{Skulstad&Syversen} where waypoint was used to create a straight line path towards the net. This method proved successful, and since the \gls{uav} descent towards the net should be as controlled as possible only small angles is used when transitioning between way-points. The straight line path is constructed relative to the net as shown in figure \ref{Fig:LandingPhase}, with way-points given as:
 \begin{subequations}
@@ -57,17 +57,28 @@ were $\psi_{net}$ is the heading of the net, and $R(\psi_{net})$ is the rotation
 \begin{figure}\label{Fig:LandingPhase}
 \def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
 \input{InkFig/LandingPhase.pdf_tex}
+\caption{The virtual runway}
 \end{figure}
 
-\section{The landing approach}\label{SS:LandingApproach}
-In order to ensure that the \gls{uav} follows the path along the virtual runway it must be at the correct height with the correct attitude from any initial position. In addition it's desirable the the decent angle is kept small to ease the strain on the control system.
-
-The landing approach consist of a Dubins path in the lateral plane and a straight line path in longitudinal plane.
-
+\section{The landing path}\label{SS:LandingApproach}
+The landing path is separated into two parts, which is a lateral and longitudinal path. The path is designed to ensure that the \gls{uav} follows the path along the virtual runway it must be at the correct height with the correct attitude from any initial position. In addition it's desirable that the decent angle is kept small to ease the strain on the control system, and reduce chance of overshoot of way-points.
 \subsection{Lateral path}
-Dubins path was chosen due to it's simplicity in description and it fulfils the requirement that it's smooth enough for path following.
+The lateral path is designed as a Dubins path, where the initial position is the start pose and the final pose is the start of the virtual runway. Dubins path was chosen due to it's simplicity in description and it fulfils the requirement that it's smooth enough for path following.
 \subsection{Longitudinal path}
-
+The longitudinal path is designed as a straight line along the lateral path, which results in a spiral path in the arcs created by Dubins path. The path hold a constant decent angle until the correct height is reached, which is defined as the start height for the virtual runway.
+\begin{equation}
+r(i+1) = r(i) +
+\begin{bmatrix}
+0\\
+0\\
+||p(i)||_2\tan(\gamma_d)
+\end{bmatrix}
+\end{equation}
+where $r(i)$ is the landing path and 
+$p = \begin{bmatrix}
+x(i) & y(i)
+\end{bmatrix}^T
+$
 
 The lateral path was chosen for the autonomous landing system is Dubins path, due to it's simplicity in description and it fulfils the requirement that it's smooth enough for path following. Since it's desired for the \gls{uav} to decent with small decent angle the longitudinal path is constructed with straight lines. Combined with Dubins path, the circles in the start and end of the path becomes spirals. This increase the demands on the controllers used, since they has to both control the heading in addition to the decent rate with the same control surface. This is the main reason for small angles in the longitudinal path.
 

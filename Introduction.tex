@@ -15,19 +15,21 @@ The Skywalker X8 is fixed wing \gls{uav} in a flying wing configuration, which i
 \section{Previous work}
 There exits today autoland system for fixed wing \gls{uav} that apply INS/GPS\citep{SkyHook}, however this system require expensive equipment and is limited to a few \gls{uav} systems. The limitation on type of \gls{uav} and high cost restricts the usage of the recovery system, and motivates the research of a low cost recovery system for fixed wing \gls{uav}.
 
-A low cost recovery system for fixed wing \glS{uav} is purposed in the paper \citep{kim2013fully}, where computer vision is used to find and identify the recovery net. The system was successful in performing a autonomous landing, however it require that the visual image is sent from the \gls{uav} to a ground station. In addition the system require a clear image in order to calculate guidance command for the \gls{uav}, which restricts when the system can used.
+A low cost recovery system for fixed wing \gls{uav} is purposed in the paper \citep{kim2013fully}, where computer vision is used to find and identify the recovery net. The system was successful in performing a autonomous landing, however it require that the visual image is sent from the \gls{uav} to a ground station. In addition the system require a clear image in order to calculate guidance command for the \gls{uav}, which restricts when the system can used.
 
 A low-cost net recovery system for \gls{uav} with single-frequency \gls{rtk-gps} was described in the paper \citep{skulstad2015net}, which was a result of the work done in the master thesis \citep{Skulstad&Syversen}. The system presented applied RTKLIB together with low-cost single frequency \gls{gps} receivers as navigation system with a customized Ardupilot software. The complete system was able to perform a net landing, however the result showed that further work would require better controllers, and a more robust navigation system.
 
 A continuation of the work done in \citep{Skulstad&Syversen} was done in \citep{Froelich}. The work simulated a autonomous net landing, however no physical experiment was perform. The result in the work indicated that further work on the controllers was required, in addition to the landing path which was not suited for a Visual Line Of Sight  (VLOS) \gls{uav} operation due to no spacial restrictions.
 \section{Contributions}
-This thesis focus on the navigation system and generation of landing path in the autonomous landing system. The navigation system apply \gls{rtk-gps} to provide high accuracy position estimation, which is needed to perform a autonomous landing. The landing path provide a flyable path from any initial position, where the length and direction of the virtual runway is determind by the operator. Through this work, the following contributions has been made:
+This thesis focus on the navigation system and generation of landing path in the autonomous landing system. The navigation system apply \gls{rtk-gps} to provide high accuracy position estimation, which is needed to perform a autonomous landing. The landing path provide a flyable path from any initial position, where the length and direction of the virtual runway is determined by the operator. Through this work, the following contributions has been made:
 \begin{itemize}
-\item A landing path has been created, which provide a flyable path from any initial position.[INKULDER REF]
-\item The landing path has been implemented in the DUNE runtime environment, which is capable to be used in both a stationary and moving net landing. As by product, the plug-in developed by Marcus Frølich \citep{Froelich} was altered and used to specify the parameters used to create the landing path[INKULDER REF]
-\item A net nest has been constructed to provide the GPS coordinates for the stationary net, in addition to the heading of the net.[INKULDER REF]
-\item A navigation state machine, which is used to control which position solution source should be used in the payload computer. The state machine will try to keep the \gls{rtk-gps} available as long as possible by adding the average difference to the position solution from the Pixhawk for a short duration of time until a new viable \gls{rtk-gps} message is received.[INKULDER REF]
+\item A landing path generator has been created, which guaranty a flyable path with controlled decent from any initial position \ref{Ch:LandingPath}.
+\item The landing path has been implemented in the DUNE runtime environment, which is capable to be used in both a stationary and moving net landing.
+\item A new \gls{imc} message has been created to contain the landing path specifications.
+\item A net nest has been constructed to provide the GPS coordinates for the stationary net.
+\item A navigation state machine, which is used to control which position solution source should be used in the payload computer. The state machine will try to keep the \gls{rtk-gps} available as long as possible by adding the average difference to the position solution from the Pixhawk for a short duration of time until a new viable \gls{rtk-gps} message is received.
 \item  A navigation source interface has been created to provide a visual indicator of which navigation system that is used in the DUNE environment.
-\item Finally statistical data on the performance of the X8 during landing during landing has been gather to be used in further work in further developing the landing system.
+\item Physical experiments of the navigation system and landing path generator.
+%\item Finally statistical data on the performance of the X8 during landing during landing has been gather to be used in further work in further developing the landing system.
 \end{itemize}
 \cleardoublepage
