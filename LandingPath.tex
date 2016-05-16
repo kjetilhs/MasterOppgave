@@ -64,8 +64,10 @@ were $\psi_{net}$ is the heading of the net, and $R(\psi_{net})$ is the rotation
 The landing path is separated into two parts, which is a lateral and longitudinal path. The path is designed to ensure that the \gls{uav} follows the path along the virtual runway it must be at the correct height with the correct attitude from any initial position. In addition it's desirable that the decent angle is kept small to ease the strain on the control system, and reduce chance of overshoot of way-points.
 \subsection{Lateral path}
 The lateral path is designed as a Dubins path, where the initial position is the start pose and the final pose is the start of the virtual runway. Dubins path was chosen due to it's simplicity in description and it fulfils the requirement that it's smooth enough for path following.
+
+The lateral path is constructed following the equations in section \ref{S:DubinsPath}. In order to start to determine the parameters of the lateral path the rotation directions of the start and final circle must be chosen. This is done by calculating all four variants listed in table \ref{Tb:DubinsTurningDirection}. Then the length of each path is calculated, where the shortest is chosen as the lateral path.
 \subsection{Longitudinal path}
-The longitudinal path is designed as a straight line along the lateral path, which results in a spiral path in the arcs created by Dubins path. The path hold a constant decent angle until the correct height is reached, which is defined as the start height for the virtual runway.
+The longitudinal path is designed as a straight line along the lateral path, which results in a spiral path in the arcs created by lateral path. The path hold a constant decent angle until the correct height is reached, which is defined as the start height for the virtual runway.
 \begin{equation}
 r(i+1) = r(i) +
 \begin{bmatrix}
@@ -78,8 +80,4 @@ where $r(i)$ is the landing path and
 $p = \begin{bmatrix}
 x(i) & y(i)
 \end{bmatrix}^T
-$
-
-The lateral path was chosen for the autonomous landing system is Dubins path, due to it's simplicity in description and it fulfils the requirement that it's smooth enough for path following. Since it's desired for the \gls{uav} to decent with small decent angle the longitudinal path is constructed with straight lines. Combined with Dubins path, the circles in the start and end of the path becomes spirals. This increase the demands on the controllers used, since they has to both control the heading in addition to the decent rate with the same control surface. This is the main reason for small angles in the longitudinal path.
-
-The path generation system is designed such that the operator can choose how the path should be generated. The system allows for manual creating of the path, or simply create the shortest path from the start pose to the end pose, which is the first way-point in the path towards the net.
+$. During each iteration the algorithm checks if the next step can reach the correct height with a decent angel greater or equal to the maximum decent angel $\gamma_d}$. In the case where the the height at the end of the lateral path is not the same height as the start height for the virtual runway, the landing path will enter a spiral which decent towards the correct height. The spiral is centred in the same circle that is used to create the arc for the final turn in the lateral path. The spiral is exited when the correct height is reached, and a arc is created from the spiral exit point towards the lateral path final point.

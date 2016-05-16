@@ -23,6 +23,10 @@ Wait at loiter (boolean)							& If true a unlimited loiter is included in the p
 \end{tabular}
 \label{Tb:DubinConfig}
 \end{table}
+
+A design choice allows for user determined rotation direction. By setting the "automatic" flag to false in the \gls{imc} message LandingPlanGeneration the rotation direction is determined by the flags "startCounterClockwise" and "finishCounterClockwise".
+
+
 When generated the plan must be started from Neptus, where the desired control configuration is added to the path.
 
 A loiter manoeuvre can be included in the landing plan before the start of the path along the virtual runway. The loiter manoeuvre can be used to control when the \gls{uav} should start it's final approach, which is practical when performing a dynamical landing.

@@ -71,16 +71,47 @@ Left to left \\ \hline
 \caption{Turning direction for Dubins path with fixed final orientation}
 \label{Tb:DubinsTurningDirection}
 \end{table}
-The equations that is used to construct the path is found in \citep{tsourdos2010cooperative} section 2.2.1. The path parameters is found by first finding the angle 
-The start and end point of the straight line can be found with
+The equations that is used to construct the path is found in \citep{tsourdos2010cooperative} section 2.2.1, with a constructed path shown in figure \ref{Fig:DubinsPath}. 
+\begin{figure}\label{Fig:DubinsPath}
+\def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
+\input{InkFig/DubinsPath.pdf_tex}
+\caption{Dubins path}
+\end{figure}
+The first step if to determine the start and final turning circle center. The center is found with the equations:
+\begin{subequations}
+\begin{align}
+& X_{cs} = X_s - R_s\cos(\psi_s \pm \frac{\pi}{2}) \\
+& Y_{cs} = Y_s - R_s\sin(\psi_s \pm \frac{\pi}{2}) \\
+& X_{cf} = X_f - R_f\cos(\psi_f \pm \frac{\pi}{2}) \\
+& Y_{cf} = Y_f - R_f\sin(\psi_f \pm \frac{\pi}{2})
+\end{align}
+\end{subequations}
+where $R_s$ and $R_f$ is the radius of the start and final turning circle respectfully, with $\psi_s$ and $\psi_f$ the start and final heading. The centres for the start and final turning circle is defined as:
 
+\begin{align}
+& O_{cs} =
+\begin{bmatrix}
+X_{cs} \\
+Y_{cs}
+\end{bmatrix} \\
+& O_{cf} =
+\begin{bmatrix}
+X_{cf} \\
+Y_{cf}
+\end{bmatrix}
+\end{align}
+Continuing the centres $O_{cs}$ and $O_{cf}$ is connected with a centreline $c$, where the length is:
+\begin{equation}
+|c| = \sqrt{(X_{cs}-X_{cf})^2+(Y_{cs}-Y_{cf})^2}
+\end{equation}
+The arc exit and entry point for the start and final circle is calculated by first applying the equations:
 \begin{subequations}
 \begin{align}
 & \alpha = \arcsin\big(\frac{R_f-R_s}{|c|}\big) \\
-& \beta = \arctan\big(\frac{y_{cf}-y_{cs}}{x_{cf}-x_{cs}}\big)
+& \beta = \arctan\big(\frac{X_{cf}-X_{cs}}{X_{cf}-X_{cs}}\big)
 \end{align}
 \end{subequations}
-which is used to find the tangent exit and entry point, where $\alpha$ is the angle between the length of the center line between the two circles, and the length of the line from the start circle to the exit tangent point. $\beta$ is the angle of the center line. The exit and entry tangent point is found with the use of table \ref{Tb:ExitEntyrTangent}.
+where $\alpha$ is the angle between the length of the center line between the two circles, and the length of the line from the start circle to the exit tangent point. $\beta$ is the angle of the center line. The exit and entry tangent point is found with the use of table \ref{Tb:ExitEntyrTangent}.
 \begin{table}[H]
 \begin{center}
 \begin{tabular}{ | l | | l |}
@@ -108,9 +139,4 @@ The length of the path is calculated in three parts. The first the is the arc le
 \begin{equation}
 d = R_s\phi_s + d_t + R_f\phi_f
 \end{equation}
-where $d_t$ is the length of the straight line between the two circles, $\phi_s$ and $\phi_f$ is the arc angle for the start and final circle respectfully. 
-\begin{figure}\label{Fig:LandingPhase}
-\def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
-\input{InkFig/DubinsPath.pdf_tex}
-\caption{Dubins path}
-\end{figure}
+where $d_t = ||P_N-P_{\chi}||_2$, $\phi_s$ and $\phi_f$ is the arc angle for the start and final circle respectfully.
