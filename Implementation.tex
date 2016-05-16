@@ -28,6 +28,14 @@ When generated the plan must be started from Neptus, where the desired control c
 A loiter manoeuvre can be included in the landing plan before the start of the path along the virtual runway. The loiter manoeuvre can be used to control when the \gls{uav} should start it's final approach, which is practical when performing a dynamical landing.
 \section{Navigation system}
 The navigation system is control by a state machine \ref{S:NavState}, which is used to control the content of the output \gls{imc} messages EstimatedState and NavSources. Depending on which state the navigation system is in the \gls{imc} EstimatedState message will either have position solution form the \gls{rtk-gps} system or the external navigation system. During a short loss of the RTK the external navigation position is compensated with the average difference between the RTK solution and the external navigation solution.
+\subsection{RTK-GPS system}
+The \gls{rtk-gps} solution is calculated in the open-source program library RTKLib \citep{takasu2009development}.
+The X8 runs the rover program rtkrcv which is connected over TCP/IP with the base station program str2str. Both programs are connected to a Ublox Lea M8T GNSS receiver. The GNSS receiver is programmed to send raw GNSS data to both programs, where the base station program str2str transmits without alteration the raw data to the rover program rtkrcv. The structure of the RTKLib software configured with a rover and base station is shown in figure \ref{figure:RTKLIB_STRUCTURE}.
+
+The navigation system require to now the reference position of the base station in order to use the \gls{rtk-gps} solution. However the base station position is currently not part of the output message from rtkrcv. This is resolved by allowing the base station to calculate it's own position as a standalone \gls{gps}. The \gls{gps} position is transmitted to a local Dune task on the base station, where the operator can decide when the base station can be considered as fixed. When the base station is considered fixed the position is sent to the X8, where it's included in the \gls{rtk-gps} solution message.
+\subsubsection{Nest system}
+A nest system is a stationary unit with the sole purpose of providing it's position to the rest of the Dune System. As part of the navigation system the base station is defined as a nest, where the \gls{gps} position is sent to the \gls{rtk-gps} system when fixed.
+An other nest has been created to obtain the \gls{gps} position of the stationary net. The net nest is configured as a rover in \gls{rtk-gps} configuration, such that the position relative to the base station is in the same frame as the X8.
 \subsection{Operator interface}
 The state of the navigation system is monitored though a interface in Neptus. The interface indicate which source the Dune system is using for state information. The interfaced apply a color code to indicate which source is currently in use in addition to all sensor system that are available, as seen in table \ref{Tb:Color Code}.
 \begin{table}[H]
@@ -43,12 +51,3 @@ The state of the navigation system is monitored though a interface in Neptus. Th
 \caption{Net approach parameters }
 \label{Tb:Color Code}
 \end{table}
-\section{Nest system}
-A nest system is a stationary unit with the sole purpose of providing it's position to the rest of the Dune System. As part of the navigation system the base station is defined as a nest, where the \gls{gps} position is sent to the \gls{rtk-gps} system when fixed.
-An other nest has been created to obtain the \gls{gps} position of the stationary net. The net nest is configured as a rover in \gls{rtk-gps} configuration, such that the position relative to the base station is in the same frame as the X8.
-\section{X8 and nest payload}
-The X8 and both nests are installed with a BeagleBone embedded computer which is used to run the Dune system, as well as rtklib. Rtklib is connected to Ublox Lea M8T GNSS receiver with a uart cable, which is configured with a output rate of 10Hz in all systems.
-
-The Ublox GNSS receiver in the X8 is connected to a [NAVN ANTENNE] which is mounted on top of the X8. The Ublox in the base station nest is connected to [NAVN ANTENNE], and the ublox in the net nest is connected to [NAVN ANTENNE].
-
-The autopilot is a Pixhawk, which runs ArduPilot. The pixhawk is connected to the beaglebone. The connection between the X8 and the nest relay on wifi connection with M5 Rockets which is mounted all systems. The communication is done with both TCP and UDP depending which message is sent.
