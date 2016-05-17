@@ -81,3 +81,10 @@ $p = \begin{bmatrix}
 x(i) & y(i)
 \end{bmatrix}^T
 $. During each iteration the algorithm checks if the next step can reach the correct height with a decent angel greater or equal to the maximum decent angel $\gamma_d}$. In the case where the the height at the end of the lateral path is not the same height as the start height for the virtual runway, the landing path will enter a spiral which decent towards the correct height. The spiral is centred in the same circle that is used to create the arc for the final turn in the lateral path. The spiral is exited when the correct height is reached, and a arc is created from the spiral exit point towards the lateral path final point.
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=1\textwidth]{figs/SysPlot/LandingPath.eps}
+		\caption{Landing path connected to the virtual runway}
+		\label{Fig:LandingPath}
+\end{figure}
