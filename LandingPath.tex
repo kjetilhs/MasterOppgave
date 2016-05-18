@@ -65,7 +65,14 @@ The landing path is separated into two parts, which is a lateral and longitudina
 \subsection{Lateral path}
 The lateral path is designed as a Dubins path, where the initial position is the start pose and the final pose is the start of the virtual runway. Dubins path was chosen due to it's simplicity in description and it fulfils the requirement that it's smooth enough for path following.
 
-The lateral path is constructed following the equations in section \ref{S:DubinsPath}. In order to start to determine the parameters of the lateral path the rotation directions of the start and final circle must be chosen. This is done by calculating all four variants listed in table \ref{Tb:DubinsTurningDirection}. Then the length of each path is calculated, where the shortest is chosen as the lateral path.
+The lateral path is constructed following the equations in section \ref{S:DubinsPath}. In order to start to determine the parameters of the lateral path the rotation directions of the start and final circle must be chosen. This is done by calculating all four variants listed in table \ref{Tb:DubinsTurningDirection}. Then the length of each path is calculated, where the shortest is chosen as the lateral path. The resulting the path is shown in figure \ref{Fig:LateralPath}
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=1\textwidth]{figs/SysPlot/DubinsPath.eps}
+		\caption{Lateral Dubins path}
+		\label{Fig:LateralPath}
+\end{figure}
 \subsection{Longitudinal path}
 The longitudinal path is designed as a straight line along the lateral path, which results in a spiral path in the arcs created by lateral path. The path hold a constant decent angle until the correct height is reached, which is defined as the start height for the virtual runway.
 \begin{equation}
@@ -79,8 +86,17 @@ r(i+1) = r(i) +
 where $r(i)$ is the landing path and 
 $p = \begin{bmatrix}
 x(i) & y(i)
-\end{bmatrix}^T
-$. During each iteration the algorithm checks if the next step can reach the correct height with a decent angel greater or equal to the maximum decent angel $\gamma_d}$. In the case where the the height at the end of the lateral path is not the same height as the start height for the virtual runway, the landing path will enter a spiral which decent towards the correct height. The spiral is centred in the same circle that is used to create the arc for the final turn in the lateral path. The spiral is exited when the correct height is reached, and a arc is created from the spiral exit point towards the lateral path final point.
+\end{bmatrix}^T$
+. During each iteration the algorithm checks if the next step can reach the correct height with a decent angel greater or equal to the maximum decent angel $\gamma_d$. In the case where the the height at the end of the lateral path is not the same height as the start height for the virtual runway, the landing path will enter a spiral which decent towards the correct height. The spiral is centred in the same circle that is used to create the arc for the final turn in the lateral path. The spiral is exited when the correct height is reached, and a arc is created from the spiral exit point towards the lateral path final point.
+
+The height profile of the landing path is shown in figure \ref{Fig:HeightProfile},with the resulting path connected to the virtual runway shown in figure \ref{Ch:LandingPath}.
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=1\textwidth]{figs/SysPlot/heightProfile.eps}
+		\caption{Height profile of the landing path}
+		\label{Fig:HeightProfile}
+\end{figure}
 
 \begin{figure}[H]
 	\centering

@@ -1,0 +1,70 @@
+\chapter{Basis and modelling}
+
+\begin{subequations}
+\begin{align}
+& \begin{bmatrix}
+\dot{x} \\
+\dot{y} \\
+\dot{z}
+\end{bmatrix}
+=
+ \bm{R}(\bm{\theta})_b^n\begin{bmatrix}
+ u \\
+ v \\
+ w
+ \end{bmatrix} \\
+& \begin{bmatrix}
+\dot{\phi} \\
+\dot{\theta} \\
+\dot{psi}
+\end{bmatrix}
+= 
+\bm{T}(\bm{\theta}_{nb})\begin{bmatrix}
+p \\
+q \\
+r
+\end{bmatrix}
+\end{align}
+\end{subequations}
+
+\begin{subequations}
+\begin{align}
+& \begin{bmatrix}
+F_x \\
+F_y \\
+F_z
+\end{bmatrix}
+ = 
+ \bm{R}(\bm{\theta})^b_n\begin{bmatrix}
+ 0 \\
+ 0 \\
+ mg
+ \end{bmatrix}
+ + \frac{1}{2}\rhoV_a^2SR(\alpha)_s^b\begin{bmatrix}
+ F_{Drag} \\
+ 0 \\
+ F_{Lift}
+ \end{bmatrix}
+ + \frac{1}{2}\rhoV_a^2S\begin{bmatrix}
+ 0 \\
+ C_y(\beta,p,r,\delta_a,\delta_r)
+ 0
+ \end{bmatrix}
+ + \frac{1}{2}\rhoS_{Prop}C_{Prop}\begin{bmatrix}
+ (K_{Motor}\delta_t)^2-V_a^2 \\
+ 0 \\
+ 0
+ \end{bmatrix} \\
+ & \begin{bmatrix}
+ L \\
+ M \\
+ N 
+ \end{bmatrix}
+ =
+ \frac{1}{2}\rhoV_a^2S\begin{bmatrix}
+ C_L(\beta,p,r,\delta_a,\delta_r) \\
+ C_M(\alpha,q,\delta_e) \\
+ C_N(\beta,p,r,\delta_a,\delta_r)
+ \end{bmatrix}
+\end{align}
+\end{subequations}
