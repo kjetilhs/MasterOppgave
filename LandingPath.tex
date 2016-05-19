@@ -1,4 +1,3 @@
-\part{Method}
 
 \chapter{Landing path}\label{Ch:LandingPath}
 The path generator in the  autonomous landing system is designed to enable \gls{uav} landing in both a stationary and a moving net. The path is created in two main stages. The first is the creation of the virtual runway, which is defined as a straight line along the heading of the net, as shown in figure \ref{Fig:LandingPhase}. The second stage apply a lateral Dubins path \ref{S:DubinsPath} and longitudinal straight line path to create a path that ensures that the \gls{uav} is able to enter the straight line along the virtual runway at the correct height and attitude. The design is inspired by the work done in \citep{Skulstad&Syversen} were way-points was used to guide the \gls{uav} toward the landing approach.

@@ -1,7 +1,6 @@
 %===================================== CHAP 1 =================================
-\part{Introduction and background theory}
 \chapter{Introduction}
-\section{Motivation}
+\section{Background}
 Recent development of flying \glspl{uav} has been recognized to provide an attractive alternative to work previously performed by manned operations. Typical work which has attracted attention includes inspection, aerial photography, environmental surveillance and search and rescue. Today \glspl{uav} are mostly operated over land, however in the future this will include over sea as well. This will give some challenges which must be overcome. One of these challenges is that the \gls{uav} need to be able to perform a autonomous landing.
 
 An \gls{uav} can provide an attractive alternative for many maritime operation where today manned aircraft or satellites is the only solution. In the maritime sector \gls{uav} can be used in iceberg management, monitoring of oil spills, search and rescue and maritime traffic monitoring.
@@ -10,13 +9,12 @@ An important premise for successful and safe \gls{uav} operation, in particular 
 
 Due to regulatory mandate there are restriction on the size of operational area for a \gls{uav}. This thesis will only review a Line Of Sight (LOS) operation where the \gls{uav} must within view of the pilot during the duration of flight, which restrict the area were a autonomous landing can take place.
 
-\section{Skywalker X8}
-The Skywalker X8 is fixed wing \gls{uav} in a flying wing configuration, which indicate that the \gls{uav} has no tail and clear distinction between the wings and fuselage. The X8 is a popular choice for experimental missions at the \gls{uav}-lab at the Deparment of Engineering Cybernetic since it's durable, cheap and enough space to carry experimental payload. The X8 is used to test the landing path discussed in this thesis, however the navigation system has been tested in both the X8 and a multicopter system.
-\section{Previous work}
+\section{Literature review}
 There exits today autoland system for fixed wing \gls{uav} that apply INS/GPS\citep{SkyHook}, however this system require expensive equipment and is limited to a few \gls{uav} systems. The limitation on type of \gls{uav} and high cost restricts the usage of the recovery system, and motivates the research of a low cost recovery system for fixed wing \gls{uav}.
 
-A low cost recovery system for fixed wing \gls{uav} is purposed in the paper \citep{kim2013fully}, where computer vision is used to find and identify the recovery net. The system was successful in performing a autonomous landing, however it require that the visual image is sent from the \gls{uav} to a ground station. In addition the system require a clear image in order to calculate guidance command for the \gls{uav}, which restricts when the system can used.
+A low cost recovery system for fixed wing \gls{uav} is proposed in the paper \citep{kim2013fully}, where computer vision is used to find and identify the recovery net. The system was successful in performing a autonomous landing, however it require that the visual image is sent from the \gls{uav} to a ground station. In addition the system require a clear image in order to calculate guidance command for the \gls{uav}, which restricts when the system can used.
 
+\section{Previous work}
 A low-cost net recovery system for \gls{uav} with single-frequency \gls{rtk-gps} was described in the paper \citep{skulstad2015net}, which was a result of the work done in the master thesis \citep{Skulstad&Syversen}. The system presented applied RTKLIB together with low-cost single frequency \gls{gps} receivers as navigation system with a customized Ardupilot software. The complete system was able to perform a net landing, however the result showed that further work would require better controllers, and a more robust navigation system.
 
 A continuation of the work done in \citep{Skulstad&Syversen} was done in \citep{Froelich}. The work simulated a autonomous net landing, however no physical experiment was perform. The result in the work indicated that further work on the controllers was required, in addition to the landing path which was not suited for a Visual Line Of Sight  (VLOS) \gls{uav} operation due to no spacial restrictions.

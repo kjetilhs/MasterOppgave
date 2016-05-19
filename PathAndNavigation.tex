@@ -1,0 +1,149 @@
+\chapter{Path and Navigation}
+\section{Landing path}\label{Ch:LandingPath}
+The path generator in the  autonomous landing system is designed to enable \gls{uav} landing in both a stationary and a moving net. The path is created in two main stages. The first is the creation of the virtual runway, which is defined as a straight line along the heading of the net, as shown in figure \ref{Fig:LandingPhase}. The second stage apply a lateral Dubins path \ref{S:DubinsPath} and longitudinal straight line path to create a path that ensures that the \gls{uav} is able to enter the straight line along the virtual runway at the correct height and attitude. The design is inspired by the work done in \citep{Skulstad&Syversen} were way-points was used to guide the \gls{uav} toward the landing approach.
+\subsection{The virtual runway}\label{SS:netApproach}
+The virtual runway is inspired by the work done in \citep{Skulstad&Syversen} where waypoint was used to create a straight line path towards the net. This method proved successful, and since the \gls{uav} descent towards the net should be as controlled as possible only small angles is used when transitioning between way-points. The straight line path is constructed relative to the net as shown in figure \ref{Fig:LandingPhase}, with way-points given as:
+\begin{subequations}
+\begin{align}
+&\mathbf{WP4} = 
+\begin{bmatrix}
+-a0 \\
+0 \\
+h_{nc} + a1\tan(\gamma_a) 
+\end{bmatrix}\\
+&\mathbf{WP3} = 
+\begin{bmatrix}
+a1 \\
+0 \\
+h_{nc} - a1\tan(\gamma_a)
+\end{bmatrix}\\
+&\mathbf{WP2} = \mathbf{WP3} + 
+\begin{bmatrix}
+a2 \\
+0 \\
+a2\tan(\gamma_d)
+\end{bmatrix}\\
+&\mathbf{WP1} = \mathbf{WP2} + 
+\begin{bmatrix}
+a3 \\
+0 \\
+0 \\
+\end{bmatrix}
+\end{align}
+\end{subequations}
+were the description of the parameters used is given in table \ref{Tb:Approach Parameters}. The net is placed between the fourth and third way points such that transitional behaviour do not occur during the finale stage of the net landing. In addition the path has been made with the assumption that the $\gamma_a$ and $\gamma_d$ is considered small. This assumption is made to ease the demand of the controllers used in the landing system.
+\begin{table}[H]
+\begin{center}
+    \begin{tabular}{ | l | l |}
+    \hline
+    \textbf{Parameter} & \textbf{Description} \\ \hline
+    $h_{nc}$ & The height from ground to the net center \\ \hline
+    $a0$ & The distance behind the net \\ \hline
+    $a1$ & The distance in front of the net \\ \hline
+    $a2$ & The length of the glide slope \\ \hline
+    $a3$ & The length of the approach towards the glide slope \\ \hline
+    $\gamma_a$ & The net attack angle \\ \hline
+    $\gamma_d$ & The glide slope angle \\ \hline
+    \end{tabular}
+\end{center}
+\caption{Net approach parameters }
+\label{Tb:Approach Parameters}
+\end{table}
+The way point vectors are rotated into the NED frame by a rotation around the z-axes.
+\begin{equation}
+WP^n = R(\psi_{net})WP^b
+\end{equation}
+were $\psi_{net}$ is the heading of the net, and $R(\psi_{net})$ is the rotation matrix around the z-axis.
+\begin{figure}\label{Fig:LandingPhase}
+\def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
+\input{InkFig/LandingPhase.pdf_tex}
+\caption{The virtual runway}
+\end{figure}
+
+\subsection{The landing path}\label{SS:LandingApproach}
+The landing path is separated into two parts, which is a lateral and longitudinal path. The path is designed to ensure that the \gls{uav} follows the path along the virtual runway it must be at the correct height with the correct attitude from any initial position. In addition it's desirable that the decent angle is kept small to ease the strain on the control system, and reduce chance of overshoot of way-points.
+\subsubsection{Lateral path}
+The lateral path is designed as a Dubins path, where the initial position is the start pose and the final pose is the start of the virtual runway. Dubins path was chosen due to it's simplicity in description and it fulfils the requirement that it's smooth enough for path following.
+
+The lateral path is constructed following the equations in section \ref{S:DubinsPath}. In order to start to determine the parameters of the lateral path the rotation directions of the start and final circle must be chosen. This is done by calculating all four variants listed in table \ref{Tb:DubinsTurningDirection}. Then the length of each path is calculated, where the shortest is chosen as the lateral path. The resulting the path is shown in figure \ref{Fig:LateralPath}
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=1\textwidth]{figs/SysPlot/DubinsPath.eps}
+		\caption{Lateral Dubins path}
+		\label{Fig:LateralPath}
+\end{figure}
+\subsubsection{Longitudinal path}
+The longitudinal path is designed as a straight line along the lateral path, which results in a spiral path in the arcs created by the lateral path. The path hold a constant decent angle until the correct height is reached, which is defined as the start height for the virtual runway. The resulting height profile of the approach path becomes a straight line path shown in figure \ref{Fig:HeightProfile}. The longitudinal path is given as:
+\begin{equation}
+r(i+1) = r(i) +
+\begin{bmatrix}
+0\\
+0\\
+||p(i)||_2\tan(\gamma_d)
+\end{bmatrix}
+\end{equation}
+where $r(i)$ is the landing path and 
+$p = \begin{bmatrix}
+x(i) & y(i)
+\end{bmatrix}^T$ is the lateral path. During each iteration the algorithm checks if the next step can reach the correct height with a decent angel greater or equal to the maximum decent angel $\gamma_d$. In the case where the the height at the end of the lateral path is not the same height as the start height for the virtual runway, the landing path will enter a spiral which decent towards the correct height. The spiral is centred in the same circle that is used to create the arc for the final turn in the lateral path. The spiral is exited when the correct height is reached, and a arc is created from the spiral exit point towards the lateral path final point.
+
+The height profile of the landing path is shown in figure \ref{Fig:HeightProfile},with the resulting path connected to the virtual runway shown in figure \ref{Ch:LandingPath}.
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=1\textwidth]{figs/SysPlot/heightProfile.eps}
+		\caption{Height profile of the landing path}
+		\label{Fig:HeightProfile}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=1\textwidth]{figs/SysPlot/LandingPath.eps}
+		\caption{Landing path connected to the virtual runway}
+		\label{Fig:LandingPath}
+\end{figure}
+
+\section{Navigation system}
+The navigation system apply \gls{rtk-gps} for position and velocity measurement, which provide higher position accuracy then a standalone \gls{gps}. However the \gls{rtk-gps} is subject to drop out, which create a situation where the navigation system should switch to standalone \gls{gps} or wait for the \gls{rtk-gps} to return. A state machine has been created to handle the state switching between \gls{rtk-gps} and the external navigation data, which is navigation data from the Pixhawk. This is handled in two steps. The first is a short loss compensator stage, where the backup standalone \gls{gps} is compensated to get a position solution closer to the \gls{rtk-gps} solution. The second stage fully disconnect the \gls{rtk-gps}.
+\subsection{Navigation state}\label{S:NavState}
+The navigation system consists of five states, which is controlled by a state machine. The state transitions are determined by what's available and what the operator has specified should be used. The output from the state machine is the IMC message EstimatedState, which is the only state source used in the Dune system. The state machine also dispatch a IMC message that informs which the source used in the navigation system, and which sources is available. Currently only the \gls{rtk-gps} system is considered as a internal system, however this can be expanded to include other sensors used in the Dune system.
+
+The input to the navigation system is IMC message ExternalNav and GpsRtkFix. The ExternalNav message is the primary state source when the \gls{rtk-gps} is not in use, and it's receive the state information from the Pixhawk mounted in the X8.
+
+During a short loss of the \gls{rtk-gps} the position solution in the ExternalNav message is compensated to avoid sudden change in position. The short loss compensator is explain further in \ref{ss:ShortLoss}. The short loss system is implemented to avoid drop out of the \gls{rtk-gps} when a message is delayed, or its struggling due to the dynamic behaviour of the \gls{uav}.
+
+The state machine is depicted in figure \ref{Fig:NavState}, with the edge description given in table \ref{Tb:Nav state edge}.
+
+\begin{figure}\label{Fig:NavState}
+\def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
+\input{InkFig/StateMachine.pdf_tex}
+\end{figure}
+\begin{table}[H]
+
+    \begin{tabular}{ | p{1cm} | p{8cm} | | p{4cm} |}
+    \hline
+    \textbf{Edge} 	& \textbf{Event} 										& \textbf{Guard} \\ \hline
+    A 				& Event: Received External Nav message 					& None \\ \hline
+    B 				& Time out: Fix \gls{rtk-gps} solution for $x$ seconds 	& None \\ \hline
+    C 				& Time out: $x$ seconds since last valid GpsFixRtk 		& None \\ \hline
+    D 				& Flag: Using Rtk is set true& None \\ \hline
+    E 				& Flag: Using Rtk is set false& None \\ \hline
+    F 				& Time out: $x$ seconds since last valid GpsFixRtk 		& Short loss compensator:\\ 
+      				& Event: Received GpsRtkFix with $type==None$ 			& Enabled\\ \hline
+    G 				& Event: Received valid GpsFixRtk message				& None \\ \hline
+    H 				& Time out: $x$ seconds since last valid GpsFixRtk 		& Short loss compensator:\\
+    				& Event: Received GpsRtkFix with $type==None$			& Disabled \\ \hline
+    I 				& Time out: $x$ seconds since last valid GpsFixRtk 		& None \\ \hline
+    \end{tabular}
+
+\caption{Net approach parameters }
+\label{Tb:Nav state edge}
+\end{table}
+
+\subsubsection{Short loss of RTKGPS}\label{ss:ShortLoss}
+In the event of \gls{rtk-gps} drop out a offset can be added to the position solution in order to prevent a sudden change in position. The offset is defined as the average difference between the $N$ latest position solution from the \gls{rtk-gps} and the external navigation system:
+\begin{equation}
+offset = \frac{1}{N}\sum_{n=0}^N(RTKGPS(n)-External(n))
+\end{equation}
+where the \gls{rtk-gps} solution is displaced into the External nav system. However during the implantation it was discovered that the standard displace function in the DUNE literary was inaccurate in correctly calculating the hight of a offset point. The problem was that the geodetic latitude calculation was calculate assuming that the Earth has a spheric shape. This was solved by creating a new displace function where the geodetic latitude is calculated in according to
