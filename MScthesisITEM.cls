@@ -109,7 +109,10 @@
 \RequirePackage{amssymb}
 \RequirePackage{mathtools}
 \RequirePackage{needspace}
+\RequirePackage{esvect}
 \DeclareMathOperator{\atan}{atan}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 
 \newtheoremstyle{atheorem}%               % Name
   {}%                                     % Space above

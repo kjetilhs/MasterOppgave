@@ -36,7 +36,7 @@
   }%
   \providecommand\rotatebox[2]{#2}%
   \ifx\svgwidth\undefined%
-    \setlength{\unitlength}{373.19797363bp}%
+    \setlength{\unitlength}{481.67548065bp}%
     \ifx\svgscale\undefined%
       \relax%
     \else%
@@ -48,17 +48,25 @@
   \global\let\svgwidth\undefined%
   \global\let\svgscale\undefined%
   \makeatother%
-  \begin{picture}(1,0.48670728)%
+  \begin{picture}(1,0.41402334)%
     \put(0,0){\includegraphics[width=\unitlength,page=1]{InkFig/LandingPhase.pdf}}%
-    \put(0.18183611,0.14114552){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\gamma_a$}}}%
-    \put(0.05329318,0.1921609){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Net}}}%
+    \put(0.26247589,0.14576283){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\gamma_a$}}}%
+    \put(0.16288194,0.1852891){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Net}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=2]{InkFig/LandingPhase.pdf}}%
-    \put(0.33125966,0.20516373){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\gamma_d$}}}%
-    \put(0.02863181,0.05769832){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$a0$}}}%
-    \put(0.14191953,0.05769898){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$a1$}}}%
-    \put(0.41328756,0.05769898){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$a2$}}}%
-    \put(0.73527592,0.05769898){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$a3$}}}%
+    \put(0.37975389,0.19989247){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\gamma_d$}}}%
+    \put(0.14377453,0.08110866){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$a0$}}}%
+    \put(0.23154887,0.08110917){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$a1$}}}%
+    \put(0.44180246,0.08110917){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$a2$}}}%
+    \put(0.69127624,0.08110917){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$a3$}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=3]{InkFig/LandingPhase.pdf}}%
-    \put(0.05399893,0.13894541){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\gamma_a$}}}%
+    \put(0.16342875,0.14405819){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\gamma_a$}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{InkFig/LandingPhase.pdf}}%
+    \put(0.07202612,0.12484322){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\mathbf{WP4}$}}}%
+    \put(0.23242169,0.20424985){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\mathbf{WP3}$}}}%
+    \put(0.56487385,0.35673189){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\mathbf{WP2}$}}}%
+    \put(0.78244883,0.35725281){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\mathbf{WP1}$}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{InkFig/LandingPhase.pdf}}%
+    \put(0.26936441,0.11874148){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\vv{x}$}}}%
+    \put(0.22210321,0.04861882){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\vv{z}$}}}%
   \end{picture}%
 \endgroup%

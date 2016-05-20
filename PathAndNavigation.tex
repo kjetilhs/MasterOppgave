@@ -1,8 +1,8 @@
 \chapter{Path and Navigation}
-\section{Landing path}\label{Ch:LandingPath}
-The path generator in the  autonomous landing system is designed to enable \gls{uav} landing in both a stationary and a moving net. The path is created in two main stages. The first is the creation of the virtual runway, which is defined as a straight line along the heading of the net, as shown in figure \ref{Fig:LandingPhase}. The second stage apply a lateral Dubins path \ref{S:DubinsPath} and longitudinal straight line path to create a path that ensures that the \gls{uav} is able to enter the straight line along the virtual runway at the correct height and attitude. The design is inspired by the work done in \citep{Skulstad&Syversen} were way-points was used to guide the \gls{uav} toward the landing approach.
-\subsection{The virtual runway}\label{SS:netApproach}
-The virtual runway is inspired by the work done in \citep{Skulstad&Syversen} where waypoint was used to create a straight line path towards the net. This method proved successful, and since the \gls{uav} descent towards the net should be as controlled as possible only small angles is used when transitioning between way-points. The straight line path is constructed relative to the net as shown in figure \ref{Fig:LandingPhase}, with way-points given as:
+\section{Path system}\label{Ch:LandingPath}
+The path system is designed to enable \gls{uav} landing in both a stationary and a moving net. The path is created in two main stages. The first is the creation of the landing path, which is defined as a straight line along the heading of the net, as shown in figure \ref{Fig:LandingPhase}. The second stage is the approach path, which apply a lateral Dubins path and longitudinal straight line path to create a path that ensures that the \gls{uav} is able to enter the landing path at the correct height and attitude.
+\subsection{Landing Path}\label{SS:netApproach}
+The landing path is inspired by the work done in \citep{Skulstad&Syversen} where waypoint was used to create a straight line path towards the net. This method proved successful, and since the \gls{uav} descent towards the net should be as controlled as possible only small angles is used when transitioning between way-points. The straight line path is constructed relative to the net as shown in figure \ref{Fig:LandingPhase}, with way-points given as:
 \begin{subequations}
 \begin{align}
 &\mathbf{WP4} = 
@@ -51,28 +51,77 @@ were the description of the parameters used is given in table \ref{Tb:Approach P
 \end{table}
 The way point vectors are rotated into the NED frame by a rotation around the z-axes.
 \begin{equation}
-WP^n = R(\psi_{net})WP^b
+\mathbf{WP}^n = \mathbf{R}(\psi_{net})\mathbf{WP}^b
 \end{equation}
-were $\psi_{net}$ is the heading of the net, and $R(\psi_{net})$ is the rotation matrix around the z-axis.
-\begin{figure}\label{Fig:LandingPhase}
+were $\psi_{net}$ is the heading of the net, and $\mathbf{R}(\psi_{net})$ is the rotation matrix around the z-axis.
+\begin{figure}
 \def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
 \input{InkFig/LandingPhase.pdf_tex}
 \caption{The virtual runway}
+\label{Fig:LandingPhase}
 \end{figure}
 
-\subsection{The landing path}\label{SS:LandingApproach}
+\subsection{Approach path}\label{SS:LandingApproach}
 The landing path is separated into two parts, which is a lateral and longitudinal path. The path is designed to ensure that the \gls{uav} follows the path along the virtual runway it must be at the correct height with the correct attitude from any initial position. In addition it's desirable that the decent angle is kept small to ease the strain on the control system, and reduce chance of overshoot of way-points.
 \subsubsection{Lateral path}
-The lateral path is designed as a Dubins path, where the initial position is the start pose and the final pose is the start of the virtual runway. Dubins path was chosen due to it's simplicity in description and it fulfils the requirement that it's smooth enough for path following.
+The lateral path is designed as a Dubins path, where the initial position is the start pose, $P_s$, and the final pose $P_f$ is the start of the landing path. Dubins path was chosen due to it's simplicity in description and it fulfils the requirement that it's smooth enough for path following.
 
-The lateral path is constructed following the equations in section \ref{S:DubinsPath}. In order to start to determine the parameters of the lateral path the rotation directions of the start and final circle must be chosen. This is done by calculating all four variants listed in table \ref{Tb:DubinsTurningDirection}. Then the length of each path is calculated, where the shortest is chosen as the lateral path. The resulting the path is shown in figure \ref{Fig:LateralPath}
-
+The lateral path is constructed following the equations in section \ref{S:DubinsPath}, however the rotation direction in each circle must first be determined. The desired behaviour is to find the shortest path of the four different variants given in table \ref{Tb:DubinsTurningDirection}. The shortest path is determined by calculating the length of each variants, where the shortest is chosen. The resulting the path is shown in figure \ref{Fig:LateralPath}.
 \begin{figure}[H]
 	\centering
 		\includegraphics[width=1\textwidth]{figs/SysPlot/DubinsPath.eps}
 		\caption{Lateral Dubins path}
 		\label{Fig:LateralPath}
 \end{figure}
+
+\begin{subequations}
+\begin{align}
+\psi_0 &= \begin{cases}
+\atan2(Y_s-Y_{cs},X_s-X_{cs}) & \text{if start circle} \\
+\atan2(Y_{P_N}-Y_{cf},X_{P_N}-X_{cf}) & \text{otherwise}
+\end{cases}\\
+\psi_1 &= \begin{cases}
+\atan2(Y_{P_\chi}-Y_{cs},X_{P_{\chi}}-X_{cs}) & \text{if start circle} \\
+\atan2(Y_{f}-Y_{cf},X_{f}-X_{cf}) & \text{otherwise}
+\end{cases}
+\end{align}
+\end{subequations}
+
+\begin{equation}
+\psi_{max} = \begin{cases}
+-|\psi_1 - \psi_0| & \text{if counter clockwise rotation and } \psi_1 - \psi_0 \leq 0 \\
+-(2\pi - |\psi_1-\psi_0|) & \text{ if counter clockwise rotation and } \psi_1 - \psi_0 > 0 \\
+|\psi_1 - \psi_0| & \text{if clockwise rotation and } \psi_1 - \psi_0 \geq 0 \\
+(2\pi - |\psi_1-\psi_0|) & \text{ if clockwise rotation and } \psi_1 - \psi_0 < 0
+\end{cases}
+\end{equation}
+where $psi_1-\psi_0 \in(-\pi,\pi]$.
+\begin{subequations}
+\begin{align}
+h &= \frac{d_{arc}}{R} \\
+N &= \ceil[\Bigg]{\frac{\text{sign}(\psi_{max})\psi_{max}}{h}} + 1 \\
+h &= \text{sign}(\psi_{max})h
+\end{align}
+\end{subequations}
+where $h$ is arc angle step and $N$ the total number of steps in the arc.
+\begin{equation}
+\psi(\varpi) = \begin{cases}
+\psi_{max} & \varpi = N-1 \\
+\varpi h & \text{otherwise}
+\end{cases}
+\end{equation}
+where $\varpi = 1,...,N-1$.
+\begin{equation}
+\mathbf{r}(\varpi) = \begin{bmatrix}
+\mathbf{O}_c \\
+0
+\end{bmatrix} + R\begin{bmatrix}
+\cos(\psi_0 + \psi(\varpi)) \\
+\sin(\psi_0 + \psi(\varpi)) \\
+0
+\end{bmatrix}
+\end{equation}
+
 \subsubsection{Longitudinal path}
 The longitudinal path is designed as a straight line along the lateral path, which results in a spiral path in the arcs created by the lateral path. The path hold a constant decent angle until the correct height is reached, which is defined as the start height for the virtual runway. The resulting height profile of the approach path becomes a straight line path shown in figure \ref{Fig:HeightProfile}. The longitudinal path is given as:
 \begin{equation}
@@ -141,6 +190,17 @@ The state machine is depicted in figure \ref{Fig:NavState}, with the edge descri
 \label{Tb:Nav state edge}
 \end{table}
 
+\begin{table}
+\begin{tabular}{ | p{3cm} | p{8cm} |}
+	\hline 
+	\textbf{State}						& \textbf{Description} \\ \hline
+	Initialize							& The task starting up\\ \hline
+	Using external						& The navigation task apply the external navigation source in the state message\\ \hline
+	RTK ready							& The \gls{rtk-gps} is ready for use, however the external navigation source is still used\\ \hline
+	Using RTK							& The navigation task apply the \gls{rtk-gps} in the state message\\ \hline
+	Using short RTK loss compensator	& The navigation task apply the external navigation source with a compensation term to reduce the effect of \gls{rtk-gps} loss. \\ \hline
+\end{tabular}
+\end{table}
 \subsubsection{Short loss of RTKGPS}\label{ss:ShortLoss}
 In the event of \gls{rtk-gps} drop out a offset can be added to the position solution in order to prevent a sudden change in position. The offset is defined as the average difference between the $N$ latest position solution from the \gls{rtk-gps} and the external navigation system:
 \begin{equation}

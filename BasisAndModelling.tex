@@ -10,7 +10,7 @@ A \gls{uav} model can be described in different coordinate frames depending on w
 \dot{z}
 \end{bmatrix}
 =
- R(\Theta)_{Body}^{NED}\begin{bmatrix}
+ \mathbf{R}(\mathbf{\Theta})_{Body}^{NED}\begin{bmatrix}
  u \\
  v \\
  w
@@ -21,18 +21,18 @@ A \gls{uav} model can be described in different coordinate frames depending on w
 \dot{\psi}
 \end{bmatrix}
 = 
-T(\Theta_{nb})\begin{bmatrix}
+\mathbf{T}(\mathbf{\Theta}_{nb})\begin{bmatrix}
 p \\
 q \\
 r
 \end{bmatrix}\label{eq:kinematicsAttitude}
 \end{align}
 \end{subequations}
-where $R(\Theta)_{Body}^{NED}$ is the rotation matrix from the body frame to the NED frame, with $\Theta = \begin{bmatrix}
+where $\mathbf{R}(\mathbf{\Theta})_{Body}^{NED}$ is the rotation matrix from the body frame to the NED frame, with $\mathbf{\Theta} = \begin{bmatrix}
 \phi & \theta & \psi
-\end{bmatrix}^T.$ The transformation matrix $T(\Theta_{nb})$ is given in \citep{fossen2011handbook} as:
+\end{bmatrix}^T.$ The transformation matrix $\mathbf{T}(\mathbf{\Theta}_{nb})$ is given in \citep{fossen2011handbook} as:
 \begin{equation}
-T(\Theta_{nb}) = \begin{bmatrix}
+\mathbf{T}(\mathbf{\Theta}_{nb}) = \begin{bmatrix}
 1 & \sin(\phi)\tan(\theta) & \cos(\phi)\tan(\theta) \\
 0 & \cos(\phi) & -\sin(\phi) \\
 0 & \frac{\sin(\phi)}{\cos(\theta)} & \frac{\cos(\phi)}{\cos(\theta)}
@@ -47,11 +47,11 @@ F_x \\
 F_y \\
 F_z
 \end{bmatrix}
-&= R(\Theta)^{Body}_{NED}\begin{bmatrix}
+&= \mathbf{R}(\mathbf{\Theta})^{Body}_{NED}\begin{bmatrix}
 0 \\
 0 \\
 mg
-\end{bmatrix} - \frac{1}{2} \rho V_a^2 S R(\alpha)_{Stability}^{Body}\begin{bmatrix}
+\end{bmatrix} - \frac{1}{2} \rho V_a^2 S \mathbf{R}(\alpha)_{Stability}^{Body}\begin{bmatrix}
 F_{Drag} \\
 0 \\
 F_{Lift}
@@ -79,9 +79,9 @@ C_y(\beta,p,r,\delta_a,\delta_r) \notag\\
  \end{bmatrix}
 \end{align}
 \end{subequations}
-where $\rho$ is the air density in $kg/m^3$, $S$ is the platform area of the MAV wing, $C_i$ is nondimensional aerodynamic coefficients and $V_a$ is the speed of the MAV through the surrounding air. $\alpha$ and $\beta$ is the attack and side slip angle respectfully. $F_{Drag}$ is the drag force acting on the fuselage, and $F_{Lift}$ is the lift force. $R(\alpha)_{Stability}^{Body}$ is the rotation matrix from the stability frame to the body frame. The stability frame is rotated around the y-axis to the body frame, and is used to express the drag and lift forces. $S_{Prop}$ is the area swept out by the propeller, and $K_{Motor}$,$K_{T_p}$ and $K_\Omega$ is propeller specific constants. The control surface on the MAV is defined into two groups; the wings and the rudder. On the rudder $\delta_e$ controls the elevator deflection and $\delta_r$ the rudder deflection. For the wings $\delta_a$ is the control input from the aileron deflection. The control input for the control input is $\delta_t$.
+where $\rho$ is the air density in $kg/m^3$, $S$ is the platform area of the MAV wing, $C_i$ is nondimensional aerodynamic coefficients and $V_a$ is the speed of the MAV through the surrounding air. $\alpha$ and $\beta$ is the attack and side slip angle respectfully. $F_{Drag}$ is the drag force acting on the fuselage, and $F_{Lift}$ is the lift force. $\mathbf{R}(\alpha)_{Stability}^{Body}$ is the rotation matrix from the stability frame to the body frame. The stability frame is orientated with respect to the MAV movement through the surrounding air, which is defined as a standard rotation around the y-axis. $S_{Prop}$ is the area swept out by the propeller, and $K_{Motor}$,$K_{T_p}$ and $K_\Omega$ is propeller specific constants. The control surface on the MAV is defined into two groups; the wings and the rudder. On the rudder $\delta_e$ controls the elevator deflection and $\delta_r$ the rudder deflection. For the wings $\delta_a$ is the control input from the aileron deflection. The control input for the control input is $\delta_t$.
 \section{Landing path modelling}
-An autonomous system must be able to create a plan on how the system should move around in the surrounding environment in a feasible way. A minimum requirement for a path is that it is connected. The connection level can be described by the paths smoothness. Parametric continuity is denoted $C^n$ were n is the degree of smoothness. The order of n implies that the n first parametric derivatives match at a common point for two subsequent paths \citep{barsky1989geometric}. Geometric continuity is a relaxed from of parametric continuity in witch discontinuousness in speed is allowed. A table \ref{TB:SmoothnessDescriptions} of geometric and parametric continuity lists the requirement for each smoothness level, which is based definitions presented in \citep{barsky1989geometric}.
+A landing path is a path following problem where the minimum requirement is that the path is connected, and is flyable. The connection level can be described by the paths smoothness. Parametric continuity is denoted $C^n$ were n is the degree of smoothness. The order of n implies that the n first parametric derivatives match at a common point for two subsequent paths \citep{barsky1989geometric}. Geometric continuity is a relaxed from of parametric continuity in witch discontinuousness in speed is allowed. A table \ref{TB:SmoothnessDescriptions} of geometric and parametric continuity lists the requirement for each smoothness level, which is based definitions presented in \citep{barsky1989geometric}.
 Geometric continuity is sufficient for a path following system, which is the main focus of this thesis. Geometric continuity is denoted as $G^n$ were n is the order of continuity.
 
 \begin{table}[H]
@@ -104,19 +104,19 @@ $C^2$ & The acceleration is continuous \\ \hline
 
 The definition used for path in this thesis is equation 1.2 in \citep{tsourdos2010cooperative} which state:
 \begin{equation}
-P_s(x_s,y_s,z_s,\theta_s,\psi_s) \xrightarrow{r(q)} P_f(x_f,y_f,z_f,\theta_f,\psi_f)
+P_s(x_s,y_s,z_s,\theta_s,\psi_s) \xrightarrow{r(\varpi)} P_f(x_f,y_f,z_f,\theta_f,\psi_f)
 \end{equation}
-where the subscripts $s$ and $f$ denotes the start pose and finish pose respectfully with $r(q)$ as the path.
+where the subscripts $s$ and $f$ denotes the start pose and finish pose respectfully with $r(\varpi)$ as the path.
 
 \subsection{Straight lines}
-The simplest form on path is a straight line between $P_s$ and $P_f$. The straight line is given as 
+The simplest form on path is a straight line between $P_s$ and $P_f$. For simplicity the path is reduced to a 2 dimensional case, where the straight line is given as 
 \begin{subequations}
 \begin{align}
-& x(s) = a_xs + b_x \\
-& y(s) = a_ys + b_y 
+& x(\varpi) = a_x\varpi + b_x \\
+& y(\varpi) = a_y\varpi + b_y 
 \end{align}
 \end{subequations}
-with $ s \in [0,1] $, where $s$ has not necessary a physical meaning. Then the parametrisation of the straight line is:
+with $ \varpi \in [0,1] $, where $\varpi$ has not necessary a physical meaning. Then the parametrisation of the straight line is:
 \begin{subequations}
 \begin{align}
 P(0) &= \begin{bmatrix}
@@ -149,16 +149,19 @@ y_f - b_y
 \end{subequations}
 The tangential vector for a straight line is given as:
 \begin{equation}
-\psi (s) = \atan2(a_x,a_y)
+\psi(\varpi) = \atan2(a_x,a_y)
 \end{equation}
-A path constructed by straight lines is $G^0$, however since the tangential vector is discontinuous between two line segments with different heading it's not $G^1$[TODO: LEGG INN FIGUR SOM VISER DISKONINUITETEN]. The disadvantage with a path which is $G^0$ is that large discontinuity between two tangential vectors will cause problem for a control system. 
+with it's derivative:
+\begin{equation}
+\dot{\psi}(\varpi) = 0
+\end{equation}
+A path constructed by straight lines is $G^0$, however since the tangential vectors derivative is zeros, it is discontinuous between two line segments with different heading and therefore not $G^1$[TODO: LEGG INN FIGUR SOM VISER DISKONINUITETEN]. The disadvantage with a path which is $G^0$ is that large discontinuity between two tangential vectors will cause problem for a control system. 
 \begin{figure}[H]
 \includegraphics[width=0.7\textwidth]{figs/TheoryPlot/StraightLine.eps}
 \caption{Straight line path}
 \end{figure}
-The simplest form of creating a path is a straight line between two way-points. The advantage with a straight line is that it's easy for a guidance system to follow the line, however it will experience a jump in reference when transitioning to another straight line due to discontinuous tangential vector.
 \subsection{Dubins path}\label{S:DubinsPath}
-An alternative to a straight line path is a path constructed by straight lines and circle. Such a path is Dubins path\citep{dubins1957curves}, which showed that the shortest possible path for a particle that moved with unit speed with maximum curvature would consist of two circles and a straight line. The path consist of two arcs and a straight line. The straight line is tangential to both arcs. A disadvantage with Dubins path is that the curvature is discontinues, which gives a path from $P_s$ to $P_f$ with smoothness level of $G^1$.
+An alternative to a straight line path is a path constructed by straight lines and circle. Such a path is Dubins path\citep{dubins1957curves}, which showed that the shortest possible path for a particle that moved with unit speed with maximum curvature would consist of two circles and a straight line which is tangential to both circles. A disadvantage with Dubins path is that the curvature is discontinues, which gives a path from $P_s$ to $P_f$ with smoothness level of $G^1$.
 
 A Dubins path that is constructed where the final orientation is fixed has four different ways to be constructed, which is determined by the rotation directions. The four types of Dubins path that is used in this thesis is given in table \ref{Tb:DubinsTurningDirection}.
 \begin{table}[H]
@@ -185,21 +188,21 @@ The equations that is used to construct the path is found in \citep{tsourdos2010
 The first step if to determine the start and final turning circle center. The center is found with the equations:
 \begin{subequations}
 \begin{align}
-& X_{cs} = X_s - R_s\cos(\psi_s \pm \frac{\pi}{2}) \\
-& Y_{cs} = Y_s - R_s\sin(\psi_s \pm \frac{\pi}{2}) \\
-& X_{cf} = X_f - R_f\cos(\psi_f \pm \frac{\pi}{2}) \\
-& Y_{cf} = Y_f - R_f\sin(\psi_f \pm \frac{\pi}{2})
+X_{cs} &= X_s - R_s\cos(\psi_s \pm \frac{\pi}{2}) \\
+Y_{cs} &= Y_s - R_s\sin(\psi_s \pm \frac{\pi}{2}) \\
+X_{cf} &= X_f - R_f\cos(\psi_f \pm \frac{\pi}{2}) \\
+Y_{cf} &= Y_f - R_f\sin(\psi_f \pm \frac{\pi}{2})
 \end{align}
 \end{subequations}
 where $R_s$ and $R_f$ is the radius of the start and final turning circle respectfully, with $\psi_s$ and $\psi_f$ the start and final heading. The centres for the start and final turning circle is defined as:
 
 \begin{align}
-& O_{cs} =
+& \mathbf{O}_{cs} =
 \begin{bmatrix}
 X_{cs} \\
 Y_{cs}
 \end{bmatrix} \\
-& O_{cf} =
+& \mathbf{O}_{cf} =
 \begin{bmatrix}
 X_{cf} \\
 Y_{cf}
@@ -207,9 +210,9 @@ Y_{cf}
 \end{align}
 Continuing the centres $O_{cs}$ and $O_{cf}$ is connected with a centreline $c$, where the length is given as:
 \begin{equation}
-|c| = \sqrt{(X_{cs}-X_{cf})^2+(Y_{cs}-Y_{cf})^2}
+|c| = ||\mathbf{O}_{cs} - \mathbf{O}_{cf}||_2
 \end{equation}
-The arc exit and entry point for the start and final circle is calculated by first applying the equations:
+where $||\cdot||_2$ is the second norm. Continuing the arc exit and entry point for the start and final circle is calculated by first applying the equations:
 \begin{subequations}
 \begin{align}
 & \alpha = \arcsin\left(\frac{R_f-R_s}{|c|}\right) \\
@@ -237,11 +240,24 @@ With the angle of the exit and entry tangent point the point is given as:
 & y_{P_N} = x_{cf} + R_f\sin(\phi)
 \end{align}
 \end{subequations}
+which is used to define the exit and entry points as:
+\begin{subequations}
+\begin{align}
+\mathbf{P}_{\chi} &= \begin{bmatrix}
+x_{P_\chi} \\
+y_{P_\chi}
+\end{bmatrix} \\
+\mathbf{P}_N &= \begin{bmatrix}
+x_{P_N} \\
+y_{P_N}
+\end{bmatrix}
+\end{align}
+\end{subequations}
 The length of the path is calculated in three parts. The first the is the arc length from the start pose to the exit tangent point, then the length of the straight line before the arc length from the entry point to the final pose. The length of the path is given as: 
 \begin{equation}
 d = R_s\phi_s + d_t + R_f\phi_f
 \end{equation}
-where $d_t = ||P_N-P_{\chi}||_2$, $\phi_s$ and $\phi_f$ is the arc angle for the start and final circle respectfully.
+where $d_t = ||\mathbf{P}_N-\mathbf{P}_{\chi}||_2$, $\phi_s$ and $\phi_f$ is the arc angle for the start and final circle respectfully.
 
 \section{Position estimation RTK-GPS}\label{ss:rtk-gps}
 In \citep{misra2011global} section 7.2.2 \acrfull{rtk-gps} is defined as a rover that receive raw measurements from a reference receiver which is transmitted over a radio link, with a key feature that the rover is able to estimate the integer ambiguities while moving. The reference receiver is usually defined as a base station, and the integer ambiguity is the uncertainty of the number of whole phase cycles between the receiver and a satellite. With the measurements from the base station the rover is able to calculated the distance between itself and the base station, where the distance is referred to as a baseline. The length of the baseline affect the accuracy of the \gls{rtk-gps} solution, due to increased effect of atmospheric disturbance, which is further explain in \ref{Ss:Atmosphere}. However with a short baseline, e.g. $1-2 km$, the atmospheric condition can be considered equal for the base station and the rover, which keeps the solution  at centimetre level accuracy. The concept of \gls{rtk-gps} is depicted in figure \ref{figure:RTK}.

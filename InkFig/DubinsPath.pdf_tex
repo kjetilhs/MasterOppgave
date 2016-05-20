@@ -51,14 +51,19 @@
   \begin{picture}(1,0.59211336)%
     \put(0,0){\includegraphics[width=\unitlength,page=1]{InkFig/DubinsPath.pdf}}%
     \put(0.35155601,0.25125601){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.05148735\unitlength}\raggedright \end{minipage}}}%
-    \put(0.355568,0.24323204){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{c}}}%
-    \put(0.04998734,0.10548667){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$p_s$}}}%
-    \put(0.08609534,0.20846136){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$P_{\chi}$}}}%
-    \put(0.53744532,0.44918135){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$P_{N}$}}}%
-    \put(0.66382335,0.41106736){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$p_f$}}}%
-    \put(0.578234,0.37362201){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$O_f$}}}%
+    \put(0.78685802,0.47927134){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$p_f$}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=2]{InkFig/DubinsPath.pdf}}%
-    \put(0.26936848,0.1644803){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\beta$}}}%
-    \put(0.46416979,0.3337494){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\alpha$}}}%
+    \put(0.47860266,0.31143605){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{c}}}%
+    \put(0.173022,0.17369068){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$p_s$}}}%
+    \put(0.20913,0.27666537){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$P_{\chi}$}}}%
+    \put(0.66047998,0.51738536){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$P_{N}$}}}%
+    \put(0.70126867,0.44182602){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$O_f$}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{InkFig/DubinsPath.pdf}}%
+    \put(0.39240315,0.23268431){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\beta$}}}%
+    \put(0.58720446,0.40195341){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\alpha$}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{InkFig/DubinsPath.pdf}}%
+    \put(0.22019533,0.07275344){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.02647785\unitlength}\raggedright \end{minipage}}}%
+    \put(0.22397787,0.05667759){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\vv{x}$}}}%
+    \put(0.06227388,0.25715277){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\vv{y}$}}}%
   \end{picture}%
 \endgroup%
