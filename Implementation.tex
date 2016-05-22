@@ -1,15 +1,15 @@
 \chapter{Implementation}
-This chapter contain the technical specification of the navigation system and landing path system, in addition to the payload installed in the X8 and both nests.
+This chapter contain the technical specification of the navigation system and landing path system, in addition to the payload installed in the X8 and both nests. The main focus of this thesis is the implementation of the landing path system and the navigation system, including user interface for both system in Neptus. A simplified model of the DUNE system is shown in figure \ref{fig:DuneSystem}, where the task LandingPlan creates the landing path, RTKGPS dispatch the \gls{rtk-gps} solution, Navigation decide the navigation source, Path Control creates desired control input to the low level controllers and Ardupilot which communicates with the Pixhawk.
 \begin{figure}[H]
 	\centering
 		\includegraphics[width=1\textwidth]{figs/DUNESystem.png}
 		\caption{A simplified figure of the Dune auto land system}
-		\label{figure:RTKLIB_STRUCTURE}
+		\label{fig:DuneSystem}
 \end{figure}
 \section{Landing path}
-The landing path is specified through the Neptus plug-in LandmapLayer, which allow for real time setting of the parameters used to create the landing path. In addition the plug-in display the position of the net in the graphical map interface which is a part of Neptus. The plug-in dispatch the \gls{imc} message, LandingPlanGeneration, which has been created specifically for landing path purpose.
+The landing path system is design to start generation of a landing path when the \gls{imc} message LandingPlanGeneration message is dispatched in the DUNE system. The \gls{imc} message was created to ease the configuration of the landing path, and includes option on how the path should be created. Among the parametrisation options there is the possibility to manually decide the rotation direction of both the start and finish circle in the approach path. This option allow the user to create a desired path, which not necessary is the shortest path. The behaviour parameters in the LandingPlanGeneration message is given in table \ref{Tb:DubinConfig}. In addition the user can specify that the \gls{uav} should wait in a loiter manoeuvre at the end of the approach path before continuing towards the landing path. This is useful when performing dynamical landing where the position of the landing point is not fixed. In the case of performing a dynamic landing the land path system will only create the approach path, and not the landing path. This was found out to be a preferable solution since a dynamical landing require a feedback loop to correct the desired path, which is currently not included in the landing path system. A solution for performing a dynamical landing is currently research by fellow Master students where the multi-copters is used to catch the \gls{uav}, where this landing system is used to create a approach path to ready the \gls{uav} for a dynamic landing.
 
-The \gls{imc} LandingPlanGeneration message is dispatch to the Dune system, where it's picked up by the Dune task LandingPlan. This trigger the generation of the landing path, and depending on the configuration of the Dune task and desired setting in the LandingPlanGeneration message different landing path is generated. The different variants is categorised into two groups; configuration of the Dubins path, and configuration of the virtual runway. The configuration option that result in different variants of the landing path is given in table \ref{Tb:DubinConfig}. In addition the Dune task can be configured for a dynamical landing. When configured as dynamical it's assumed that an other task is responsible for the final landing part. Therefore the vertical runway is not part of the plan, however the first part of the path is still included.
+From Neptus the plug-in LandmapLayer, which is an altered version of Neptus plug-in developed in thesis \citep{Froelich}. Alteration in the plug-in include new parameters, the inclusion of the \gls{imc} message LandingPlangeneration and the abillity to manually write the global position coordinates of the net.
 \begin{table}
 \centering
 \begin{tabular}{| p{2.7cm} | | p{6cm} |}
@@ -21,15 +21,9 @@ Finish circle turning counter clockwise (boolean)	& If true the finish arc is cr
 Wait at loiter (boolean)							& If true a unlimited loiter is included in the path before the path continue with the path along the virtual runway. \\ \hline
 
 \end{tabular}
+\caption{Landing path behaviour setting in LandingPlanGeneration}
 \label{Tb:DubinConfig}
 \end{table}
-
-A design choice allows for user determined rotation direction. By setting the "automatic" flag to false in the \gls{imc} message LandingPlanGeneration the rotation direction is determined by the flags "startCounterClockwise" and "finishCounterClockwise".
-
-
-When generated the plan must be started from Neptus, where the desired control configuration is added to the path.
-
-A loiter manoeuvre can be included in the landing plan before the start of the path along the virtual runway. The loiter manoeuvre can be used to control when the \gls{uav} should start it's final approach, which is practical when performing a dynamical landing.
 \section{Navigation system}
 The navigation system is control by a state machine \ref{S:NavState}, which is used to control the content of the output \gls{imc} messages EstimatedState and NavSources. Depending on which state the navigation system is in the \gls{imc} EstimatedState message will either have position solution form the \gls{rtk-gps} system or the external navigation system. During a short loss of the RTK the external navigation position is compensated with the average difference between the RTK solution and the external navigation solution.
 \subsection{RTK-GPS system}

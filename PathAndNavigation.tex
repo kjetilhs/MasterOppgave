@@ -74,6 +74,7 @@ The lateral path is constructed following the equations in section \ref{S:Dubins
 		\label{Fig:LateralPath}
 \end{figure}
 
+The construction of the lateral path consists of two arc with a straight line between the arcs. The arcs are constructed by first finding the start and finish heading defined as $\psi_0$ and $\psi_1$ respectfully:
 \begin{subequations}
 \begin{align}
 \psi_0 &= \begin{cases}
@@ -86,7 +87,7 @@ The lateral path is constructed following the equations in section \ref{S:Dubins
 \end{cases}
 \end{align}
 \end{subequations}
-
+Continuing the turn angle must be defined, which is the difference between $\psi_1$ and $\psi_0$. However the periodic behaviour of the unit circle must respected, including the rotation direction. The maximum turning angle becomes:
 \begin{equation}
 \psi_{max} = \begin{cases}
 -|\psi_1 - \psi_0| & \text{if counter clockwise rotation and } \psi_1 - \psi_0 \leq 0 \\
@@ -95,7 +96,7 @@ The lateral path is constructed following the equations in section \ref{S:Dubins
 (2\pi - |\psi_1-\psi_0|) & \text{ if clockwise rotation and } \psi_1 - \psi_0 < 0
 \end{cases}
 \end{equation}
-where $psi_1-\psi_0 \in(-\pi,\pi]$.
+where $psi_1-\psi_0 \in(-\pi,\pi]$. From the maximum turning angle the angle step and number of angle segments in the arc can be determined:
 \begin{subequations}
 \begin{align}
 h &= \frac{d_{arc}}{R} \\
@@ -103,14 +104,14 @@ N &= \ceil[\Bigg]{\frac{\text{sign}(\psi_{max})\psi_{max}}{h}} + 1 \\
 h &= \text{sign}(\psi_{max})h
 \end{align}
 \end{subequations}
-where $h$ is arc angle step and $N$ the total number of steps in the arc.
+where $h$ is arc angle step and $N$ the total number of steps in the arc. The step angle must have the same size as $\psi_{max}$ to ensure the correct rotation direction. Continuing the heading function $\psi(\varpi)$ can be defined as:
 \begin{equation}
 \psi(\varpi) = \begin{cases}
 \psi_{max} & \varpi = N-1 \\
 \varpi h & \text{otherwise}
 \end{cases}
 \end{equation}
-where $\varpi = 1,...,N-1$.
+where $\varpi = 1,...,N-1$. Finally the arc path can be defined as:
 \begin{equation}
 \mathbf{r}(\varpi) = \begin{bmatrix}
 \mathbf{O}_c \\
@@ -121,7 +122,32 @@ where $\varpi = 1,...,N-1$.
 0
 \end{bmatrix}
 \end{equation}
-
+A summary of the lateral path is:
+\begin{equation}
+r(i) = \begin{cases}
+\begin{bmatrix}
+\mathbf{O}_{cs} \\
+0
+\end{bmatrix} + R_s\begin{bmatrix}
+\cos(\psi_{0} + \psi(\varpi)) \\
+\sin(\psi_{0} + \psi(\varpi)) \\
+0
+\end{bmatrix} & \text{Start circle} \\
+\begin{bmatrix}
+P_N - P_\chi \\
+0
+\end{bmatrix} & \text{Straight line between circles} \\
+\begin{bmatrix}
+\mathbf{O}_{cf} \\
+0
+\end{bmatrix} + R_f\begin{bmatrix}
+\cos(\psi_{0} + \psi(\varpi)) \\
+\sin(\psi_{0} + \psi(\varpi)) \\
+0
+\end{bmatrix} & \text{Finish circle}
+\end{cases}
+\end{equation}
+where $i = \varpi_s + \varpi_f$ with $\varpi_s$ and $\varpi_f$ as the number of segments in the start and finish circle respectfully.  
 \subsubsection{Longitudinal path}
 The longitudinal path is designed as a straight line along the lateral path, which results in a spiral path in the arcs created by the lateral path. The path hold a constant decent angle until the correct height is reached, which is defined as the start height for the virtual runway. The resulting height profile of the approach path becomes a straight line path shown in figure \ref{Fig:HeightProfile}. The longitudinal path is given as:
 \begin{equation}
@@ -158,15 +184,31 @@ The navigation system apply \gls{rtk-gps} for position and velocity measurement,
 \subsection{Navigation state}\label{S:NavState}
 The navigation system consists of five states, which is controlled by a state machine. The state transitions are determined by what's available and what the operator has specified should be used. The output from the state machine is the IMC message EstimatedState, which is the only state source used in the Dune system. The state machine also dispatch a IMC message that informs which the source used in the navigation system, and which sources is available. Currently only the \gls{rtk-gps} system is considered as a internal system, however this can be expanded to include other sensors used in the Dune system.
 
+\begin{table}[H]
+\begin{tabular}{ | p{3cm} | p{8cm} |}
+	\hline 
+	\textbf{State}						& \textbf{Description} \\ \hline
+	Initialize							& The task starting up\\ \hline
+	Using external						& The navigation task apply the external navigation source in the state message\\ \hline
+	RTK ready							& The \gls{rtk-gps} is ready for use, however the external navigation source is still used\\ \hline
+	Using RTK							& The navigation task apply the \gls{rtk-gps} in the state message\\ \hline
+	Using short RTK loss compensator	& The navigation task apply the external navigation source with a compensation term to reduce the effect of \gls{rtk-gps} loss. \\ \hline
+\end{tabular}
+\caption{States in the navigation system with description}
+\label{Tb:StateDescription}
+\end{table}
+
 The input to the navigation system is IMC message ExternalNav and GpsRtkFix. The ExternalNav message is the primary state source when the \gls{rtk-gps} is not in use, and it's receive the state information from the Pixhawk mounted in the X8.
 
 During a short loss of the \gls{rtk-gps} the position solution in the ExternalNav message is compensated to avoid sudden change in position. The short loss compensator is explain further in \ref{ss:ShortLoss}. The short loss system is implemented to avoid drop out of the \gls{rtk-gps} when a message is delayed, or its struggling due to the dynamic behaviour of the \gls{uav}.
 
 The state machine is depicted in figure \ref{Fig:NavState}, with the edge description given in table \ref{Tb:Nav state edge}.
-
-\begin{figure}\label{Fig:NavState}
+\newpage
+\begin{figure}[H]
 \def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
 \input{InkFig/StateMachine.pdf_tex}
+\caption{State machine in the DUNE Navigation task}
+\label{Fig:NavState}
 \end{figure}
 \begin{table}[H]
 
@@ -186,24 +228,12 @@ The state machine is depicted in figure \ref{Fig:NavState}, with the edge descri
     I 				& Time out: $x$ seconds since last valid GpsFixRtk 		& None \\ \hline
     \end{tabular}
 
-\caption{Net approach parameters }
+\caption{Description of the edges used in the state machine}
 \label{Tb:Nav state edge}
-\end{table}
-
-\begin{table}
-\begin{tabular}{ | p{3cm} | p{8cm} |}
-	\hline 
-	\textbf{State}						& \textbf{Description} \\ \hline
-	Initialize							& The task starting up\\ \hline
-	Using external						& The navigation task apply the external navigation source in the state message\\ \hline
-	RTK ready							& The \gls{rtk-gps} is ready for use, however the external navigation source is still used\\ \hline
-	Using RTK							& The navigation task apply the \gls{rtk-gps} in the state message\\ \hline
-	Using short RTK loss compensator	& The navigation task apply the external navigation source with a compensation term to reduce the effect of \gls{rtk-gps} loss. \\ \hline
-\end{tabular}
 \end{table}
 \subsubsection{Short loss of RTKGPS}\label{ss:ShortLoss}
 In the event of \gls{rtk-gps} drop out a offset can be added to the position solution in order to prevent a sudden change in position. The offset is defined as the average difference between the $N$ latest position solution from the \gls{rtk-gps} and the external navigation system:
 \begin{equation}
-offset = \frac{1}{N}\sum_{n=0}^N(RTKGPS(n)-External(n))
+\text{offset} = \frac{1}{N}\sum_{n=0}^N(\text{RTKGPS}(n)-\text{External}(n))
 \end{equation}
-where the \gls{rtk-gps} solution is displaced into the External nav system. However during the implantation it was discovered that the standard displace function in the DUNE literary was inaccurate in correctly calculating the hight of a offset point. The problem was that the geodetic latitude calculation was calculate assuming that the Earth has a spheric shape. This was solved by creating a new displace function where the geodetic latitude is calculated in according to
+where $n \in [0,N-1]$ and the \gls{rtk-gps} solution is displaced into the External nav system. However during the implantation it was discovered that the standard displace function in the DUNE literary was inaccurate in correctly calculating the hight of a offset point. The problem was that the geodetic latitude calculation was calculate assuming that the Earth has a spheric shape. This was solved by creating a new displace function where the geodetic latitude is calculated in according to
