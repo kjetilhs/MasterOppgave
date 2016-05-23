@@ -1,6 +1,6 @@
 \chapter{Path and Navigation}
 \section{Path system}\label{Ch:LandingPath}
-The path system is designed to enable \gls{uav} landing in both a stationary and a moving net. The path is created in two main stages. The first is the creation of the landing path, which is defined as a straight line along the heading of the net, as shown in figure \ref{Fig:LandingPhase}. The second stage is the approach path, which apply a lateral Dubins path and longitudinal straight line path to create a path that ensures that the \gls{uav} is able to enter the landing path at the correct height and attitude.
+The path system consist of two main parts, which the landing path and the approach path. The landing path is a straight line path orientated with respect to a reference net position. The approach path is design separately as a lateral Dubins path and a longitudinal straight line path. The approach path is designed to ensure that the \gls{uav} is able to enter the landing path at the correct height with the correct attitude.
 \subsection{Landing Path}\label{SS:netApproach}
 The landing path is inspired by the work done in \citep{Skulstad&Syversen} where waypoint was used to create a straight line path towards the net. This method proved successful, and since the \gls{uav} descent towards the net should be as controlled as possible only small angles is used when transitioning between way-points. The straight line path is constructed relative to the net as shown in figure \ref{Fig:LandingPhase}, with way-points given as:
 \begin{subequations}
@@ -96,7 +96,7 @@ Continuing the turn angle must be defined, which is the difference between $\psi
 (2\pi - |\psi_1-\psi_0|) & \text{ if clockwise rotation and } \psi_1 - \psi_0 < 0
 \end{cases}
 \end{equation}
-where $psi_1-\psi_0 \in(-\pi,\pi]$. From the maximum turning angle the angle step and number of angle segments in the arc can be determined:
+where $\psi_1-\psi_0 \in(-\pi,\pi]$. From the maximum turning angle the angle step and number of angle segments in the arc can be determined:
 \begin{subequations}
 \begin{align}
 h &= \frac{d_{arc}}{R} \\
@@ -104,7 +104,7 @@ N &= \ceil[\Bigg]{\frac{\text{sign}(\psi_{max})\psi_{max}}{h}} + 1 \\
 h &= \text{sign}(\psi_{max})h
 \end{align}
 \end{subequations}
-where $h$ is arc angle step and $N$ the total number of steps in the arc. The step angle must have the same size as $\psi_{max}$ to ensure the correct rotation direction. Continuing the heading function $\psi(\varpi)$ can be defined as:
+where $h$ is arc angle step and $N$ the total number of steps in the arc. The step angle must have the same sign as $\psi_{max}$ to ensure the correct rotation direction. Continuing the heading function $\psi(\varpi)$ can be defined as:
 \begin{equation}
 \psi(\varpi) = \begin{cases}
 \psi_{max} & \varpi = N-1 \\
