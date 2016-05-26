@@ -2,7 +2,7 @@
 \section{Path system}\label{Ch:LandingPath}
 The path system consist of two main parts, which the landing path and the approach path. The landing path is a straight line path orientated with respect to a reference net position. The approach path is design separately as a lateral Dubins path and a longitudinal straight line path. The approach path is designed to ensure that the \gls{uav} is able to enter the landing path at the correct height with the correct attitude.
 \subsection{Landing Path}\label{SS:netApproach}
-The landing path is inspired by the work done in \citep{Skulstad&Syversen} where waypoint was used to create a straight line path towards the net. This method proved successful, and since the \gls{uav} descent towards the net should be as controlled as possible only small angles is used when transitioning between way-points. The straight line path is constructed relative to the net as shown in figure \ref{Fig:LandingPhase}, with way-points given as:
+The landing path is inspired by the work done in \citep{Skulstad&Syversen} where waypoint was used to create a straight line path towards the net. This method proved successful, and thus this landing system continues on the work. The angles in the straight line path must be kept small to avoid large transition behaviour from switching way-point, however the trade off is that the start high in of the landing path must be above any obstacles that is around the landing area. At sea this could be other ships or platforms, and on land it could be threes or hills. The straight line path is constructed relative to the net as shown in figure \ref{Fig:LandingPhase}, with way-points given as:
 \begin{subequations}
 \begin{align}
 &\mathbf{WP4} = 
@@ -31,7 +31,7 @@ a3 \\
 \end{bmatrix}
 \end{align}
 \end{subequations}
-were the description of the parameters used is given in table \ref{Tb:Approach Parameters}. The net is placed between the fourth and third way points such that transitional behaviour do not occur during the finale stage of the net landing. In addition the path has been made with the assumption that the $\gamma_a$ and $\gamma_d$ is considered small. This assumption is made to ease the demand of the controllers used in the landing system.
+where the description of the parameters used is given in table \ref{Tb:Approach Parameters}. The net is placed between the fourth and third way points such that transitional behaviour do not occur during the finale stage of the net landing.
 \begin{table}[H]
 \begin{center}
     \begin{tabular}{ | l | l |}
@@ -53,20 +53,20 @@ The way point vectors are rotated into the NED frame by a rotation around the z-
 \begin{equation}
 \mathbf{WP}^n = \mathbf{R}(\psi_{net})\mathbf{WP}^b
 \end{equation}
-were $\psi_{net}$ is the heading of the net, and $\mathbf{R}(\psi_{net})$ is the rotation matrix around the z-axis.
+were $\psi_{net}$ is the heading of the net, and $\mathbf{R}(\psi_{net})$ is the standard rotation matrix around the z-axis.
 \begin{figure}
 \def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
 \input{InkFig/LandingPhase.pdf_tex}
-\caption{The virtual runway}
+\caption{The landing path}
 \label{Fig:LandingPhase}
 \end{figure}
 
 \subsection{Approach path}\label{SS:LandingApproach}
-The landing path is separated into two parts, which is a lateral and longitudinal path. The path is designed to ensure that the \gls{uav} follows the path along the virtual runway it must be at the correct height with the correct attitude from any initial position. In addition it's desirable that the decent angle is kept small to ease the strain on the control system, and reduce chance of overshoot of way-points.
+The landing path is separated into two parts, which is a lateral and longitudinal path. The purpose of the path is to ensure that the \gls{uav} can enter the landing path at the correct height with the correct attitude from any initial position. The lateral and longitudinal path are created separately 
 \subsubsection{Lateral path}
-The lateral path is designed as a Dubins path, where the initial position is the start pose, $P_s$, and the final pose $P_f$ is the start of the landing path. Dubins path was chosen due to it's simplicity in description and it fulfils the requirement that it's smooth enough for path following.
+The lateral path is designed as a Dubins path, with start pose, $P_s$, at the point where the landing plan generation request was made, and final pose, $P_f$, at the start of the landing path. Dubins path was chosen since it can be followed by a \gls{uav}, and meet the requirement that the \gls{uav} enters the landing path with the correct heading.
 
-The lateral path is constructed following the equations in section \ref{S:DubinsPath}, however the rotation direction in each circle must first be determined. The desired behaviour is to find the shortest path of the four different variants given in table \ref{Tb:DubinsTurningDirection}. The shortest path is determined by calculating the length of each variants, where the shortest is chosen. The resulting the path is shown in figure \ref{Fig:LateralPath}.
+The lateral path is constructed following the equations in section \ref{S:DubinsPath}, however the rotation direction in each circle must first be determined. The desired behaviour is to find the shortest path of the four different rotation pairs given in table \ref{Tb:DubinsTurningDirection}. The shortest path is determined by calculating the length of each variants, where the shortest is chosen. The resulting the path is shown in figure \ref{Fig:LateralPath}.
 \begin{figure}[H]
 	\centering
 		\includegraphics[width=1\textwidth]{figs/SysPlot/DubinsPath.eps}
@@ -113,49 +113,38 @@ where $h$ is arc angle step and $N$ the total number of steps in the arc. The st
 \end{equation}
 where $\varpi = 1,...,N-1$. Finally the arc path can be defined as:
 \begin{equation}
-\mathbf{r}(\varpi) = \begin{bmatrix}
+\mathbf{p}(\varpi) = \begin{bmatrix}
 \mathbf{O}_c \\
-0
 \end{bmatrix} + R\begin{bmatrix}
 \cos(\psi_0 + \psi(\varpi)) \\
 \sin(\psi_0 + \psi(\varpi)) \\
-0
 \end{bmatrix}
 \end{equation}
 A summary of the lateral path is:
 \begin{equation}
-r(i) = \begin{cases}
+p(i) = \begin{cases}
 \begin{bmatrix}
 \mathbf{O}_{cs} \\
-0
 \end{bmatrix} + R_s\begin{bmatrix}
 \cos(\psi_{0} + \psi(\varpi)) \\
 \sin(\psi_{0} + \psi(\varpi)) \\
-0
 \end{bmatrix} & \text{Start circle} \\
 \begin{bmatrix}
-P_N - P_\chi \\
-0
-\end{bmatrix} & \text{Straight line between circles} \\
-\begin{bmatrix}
 \mathbf{O}_{cf} \\
-0
 \end{bmatrix} + R_f\begin{bmatrix}
 \cos(\psi_{0} + \psi(\varpi)) \\
 \sin(\psi_{0} + \psi(\varpi)) \\
-0
 \end{bmatrix} & \text{Finish circle}
 \end{cases}
 \end{equation}
-where $i = \varpi_s + \varpi_f$ with $\varpi_s$ and $\varpi_f$ as the number of segments in the start and finish circle respectfully.  
+where $i = \varpi_s + \varpi_f$ with $\varpi_s$ and $\varpi_f$ as the number of segments in the start and finish circle respectfully.
 \subsubsection{Longitudinal path}
 The longitudinal path is designed as a straight line along the lateral path, which results in a spiral path in the arcs created by the lateral path. The path hold a constant decent angle until the correct height is reached, which is defined as the start height for the virtual runway. The resulting height profile of the approach path becomes a straight line path shown in figure \ref{Fig:HeightProfile}. The longitudinal path is given as:
 \begin{equation}
-r(i+1) = r(i) +
-\begin{bmatrix}
-0\\
-0\\
+r(i+1) = \begin{bmatrix}
+p(i) \\
 ||p(i)||_2\tan(\gamma_d)
+\end{bmatrix}
 \end{bmatrix}
 \end{equation}
 where $r(i)$ is the landing path and 
