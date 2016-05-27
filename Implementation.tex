@@ -1,5 +1,6 @@
 \chapter{Implementation}
 This chapter contain the technical specification of the navigation system and landing path system, in addition to the payload installed in the X8 and both nests. The main focus of this thesis is the implementation of the landing path system and the navigation system, including user interface for both system in Neptus. A simplified model of the DUNE system is shown in figure \ref{fig:DuneSystem}, where the task LandingPlan creates the landing path, RTKGPS dispatch the \gls{rtk-gps} solution, Navigation decide the navigation source, Path Control creates desired control input to the low level controllers and Ardupilot which communicates with the Pixhawk.
+\newpage
 \begin{figure}[H]
 	\centering
 		\includegraphics[width=1\textwidth]{figs/DUNESystem.png}
