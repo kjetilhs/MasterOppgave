@@ -111,6 +111,7 @@
 \RequirePackage{needspace}
 \RequirePackage{esvect}
 \DeclareMathOperator{\atan}{atan}
+\DeclareMathOperator{\atan2}{atan2}
 \DeclarePairedDelimiter\ceil{\lceil}{\rceil}
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 

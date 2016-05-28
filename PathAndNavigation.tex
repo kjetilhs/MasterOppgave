@@ -9,19 +9,19 @@ The landing path is inspired by the work done in \citep{Skulstad&Syversen} where
 \begin{bmatrix}
 -a0 \\
 0 \\
-h_{nc} + a1\tan(\gamma_a) 
+h_{nc} + a1\tan(\gamma_n) 
 \end{bmatrix}\\
 &\mathbf{WP3} = 
 \begin{bmatrix}
 a1 \\
 0 \\
-h_{nc} - a1\tan(\gamma_a)
+h_{nc} - a1\tan(\gamma_n)
 \end{bmatrix}\\
 &\mathbf{WP2} = \mathbf{WP3} + 
 \begin{bmatrix}
 a2 \\
 0 \\
-a2\tan(\gamma_d)
+-a2\tan(\gamma_l)
 \end{bmatrix}\\
 &\mathbf{WP1} = \mathbf{WP2} + 
 \begin{bmatrix}
@@ -42,8 +42,8 @@ where the description of the parameters used is given in table \ref{Tb:Approach 
     $a1$ & The distance in front of the net \\ \hline
     $a2$ & The length of the glide slope \\ \hline
     $a3$ & The length of the approach towards the glide slope \\ \hline
-    $\gamma_a$ & The net attack angle \\ \hline
-    $\gamma_d$ & The glide slope angle \\ \hline
+    $\gamma_n$ & The net attack angle \\ \hline
+    $\gamma_l$ & The landing glide slope angle \\ \hline
     \end{tabular}
 \end{center}
 \caption{Net approach parameters }
@@ -122,7 +122,7 @@ where $\varpi = 1,...,N-1$. Finally the arc path can be defined as:
 \end{equation}
 A summary of the lateral path is:
 \begin{equation}
-p(i) = \begin{cases}
+\mathbf{p}(i) = \begin{cases}
 \begin{bmatrix}
 \mathbf{O}_{cs} \\
 \end{bmatrix} + R_s\begin{bmatrix}
@@ -139,34 +139,42 @@ p(i) = \begin{cases}
 \end{equation}
 where $i = \varpi_s + \varpi_f$ with $\varpi_s$ and $\varpi_f$ as the number of segments in the start and finish circle respectfully.
 \subsubsection{Longitudinal path}
-The longitudinal path is designed as a straight line along the lateral path, which results in a spiral path in the arcs created by the lateral path. The path hold a constant decent angle until the correct height is reached, which is defined as the start height for the virtual runway. The resulting height profile of the approach path becomes a straight line path shown in figure \ref{Fig:HeightProfile}. The longitudinal path is given as:
+The longitudinal path is designed as a straight line along the lateral path, which results in a spiral path in the arcs created by the lateral path. The approach path hold a constant decent angle until the correct height is reached, which is defined as the start height for the landing path. The approach decent angle is then accused such that the correct height is reach. The approach decent angle is defined as:
 \begin{equation}
-r(i+1) = \begin{bmatrix}
-p(i) \\
-||p(i)||_2\tan(\gamma_d)
+\gamma_d = \begin{cases}
+\atan2(\Delta z,||\mathbf{p}(i+1)-\mathbf{p}(i)||_2) & \text{if } \atan2(\Delta z,||\mathbf{p}(i+1)-\mathbf{p}(i)||_2)\leq \gamma_{d_{Max}} \\
+\gamma_{d_{Max}}										& \text{otherwise}
+\end{cases}
+\end{equation}
+where $\gamma_{d_{Max}}$ is the maximum decent angle for the approach path, and $\Delta z$ is defined as:
+\begin{equation}
+\Delta z = z_{\mathbf{WP1}}-z(i)
+\end{equation}
+where $Z_{\mathbf{WP1}}$ is the $z$ component in $WP1$. Continuing the longitudinal path is given as:
+\begin{equation}
+\mathbf{r}(i+1) = \begin{bmatrix}
+\mathbf{p}(i) \\
+||\mathbf{p}(i+1)-\mathbf{p}(i)||_2\tan(\gamma_d)
 \end{bmatrix}
 \end{equation}
-where $r(i)$ is the landing path and 
+where $\mathbf{r}(i)$ is the landing path and 
 $p = \begin{bmatrix}
 x(i) & y(i)
-\end{bmatrix}^T$ is the lateral path. During each iteration the algorithm checks if the next step can reach the correct height with a decent angel greater or equal to the maximum decent angel $\gamma_d$. In the case where the the height at the end of the lateral path is not the same height as the start height for the virtual runway, the landing path will enter a spiral which decent towards the correct height. The spiral is centred in the same circle that is used to create the arc for the final turn in the lateral path. The spiral is exited when the correct height is reached, and a arc is created from the spiral exit point towards the lateral path final point.
-
-The height profile of the landing path is shown in figure \ref{Fig:HeightProfile},with the resulting path connected to the virtual runway shown in figure \ref{Ch:LandingPath}.
-
+\end{bmatrix}^T$ is the lateral path. The resulting height profile of the approach path is shown in figure \ref{Fig:HeightProfile}.
 \begin{figure}[H]
 	\centering
 		\includegraphics[width=1\textwidth]{figs/SysPlot/heightProfile.eps}
 		\caption{Height profile of the landing path}
 		\label{Fig:HeightProfile}
 \end{figure}
-
+\paragraph{Spiral path}
+The longitudinal path will in the case where the correct height is not reach enter a spiral such that the correct height is reached. The spiral keeps the same turn radius as the finish circle in the lateral path. The longitudinal path continues along the spiral until the correct height can be reached with and decent angle equal or less then $\gamma_{d_{Max}}$. Continuing an arc is created such that the path ends with the correct heading. The arc has the same rotation direction as the lateral path, with start point where the correct height was reached and end point of the start of the landing path. The complete approach path combined with the landing path is shown in figure \ref{Fig:LateralPath}.
 \begin{figure}[H]
 	\centering
 		\includegraphics[width=1\textwidth]{figs/SysPlot/LandingPath.eps}
-		\caption{Landing path connected to the virtual runway}
+		\caption{Approach path connected to the landing path}
 		\label{Fig:LandingPath}
 \end{figure}
-
 \section{Navigation system}
 The navigation system apply \gls{rtk-gps} for position and velocity measurement, which provide higher position accuracy then a standalone \gls{gps}. However the \gls{rtk-gps} is subject to drop out, which create a situation where the navigation system should switch to standalone \gls{gps} or wait for the \gls{rtk-gps} to return. A state machine has been created to handle the state switching between \gls{rtk-gps} and the external navigation data, which is navigation data from the Pixhawk. This is handled in two steps. The first is a short loss compensator stage, where the backup standalone \gls{gps} is compensated to get a position solution closer to the \gls{rtk-gps} solution. The second stage fully disconnect the \gls{rtk-gps}.
 
