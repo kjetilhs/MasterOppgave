@@ -148,9 +148,9 @@ The longitudinal path is designed as a straight line along the lateral path, whi
 \end{equation}
 where $\gamma_{d_{Max}}$ is the maximum decent angle for the approach path, and $\Delta z$ is defined as:
 \begin{equation}
-\Delta z = z_{\mathbf{WP1}}-z(i)
+\Delta z = z_d-z(i)
 \end{equation}
-where $Z_{\mathbf{WP1}}$ is the $z$ component in $WP1$. Continuing the longitudinal path is given as:
+where $z_d$ is the $z$ component in $WP1$. Continuing the longitudinal path is given as:
 \begin{equation}
 \mathbf{r}(i+1) = \begin{bmatrix}
 \mathbf{p}(i) \\
@@ -176,8 +176,7 @@ The longitudinal path will in the case where the correct height is not reach ent
 		\label{Fig:LandingPath}
 \end{figure}
 \section{Navigation system}
-The navigation system apply \gls{rtk-gps} for position and velocity measurement, which provide higher position accuracy then a standalone \gls{gps}. However the \gls{rtk-gps} is subject to drop out, which create a situation where the navigation system should switch to standalone \gls{gps} or wait for the \gls{rtk-gps} to return. A state machine has been created to handle the state switching between \gls{rtk-gps} and the external navigation data, which is navigation data from the Pixhawk. This is handled in two steps. The first is a short loss compensator stage, where the backup standalone \gls{gps} is compensated to get a position solution closer to the \gls{rtk-gps} solution. The second stage fully disconnect the \gls{rtk-gps}.
-
+The navigation system consist of two position and velocity measurement system, where one is a high accurate positioning system and the other a reliable backup system. The high accurate positioning system apply \gls{rtk-gps}, which is able to provide high accurate position solution. The backup positioning system consist of a standard package of standalone \gls{gps} and Inertial Measurement Unit (IMU) together with a Kalman filter, which is a proven reliable system in Ardupilot together with a Pixhawk. Ardupilot and Pixhawk are explained further in section \ref{ss:ardupilot} and section \ref{ss:Pixhawk}. However the \gls{rtk-gps} is subject to drop out, which create a situation where the navigation system should switch to standalone \gls{gps} or wait for the \gls{rtk-gps} to return. A state machine has been created to handle the state switching between \gls{rtk-gps} and the external navigation data, which is navigation data from the Pixhawk. This is handled in two steps. The first is a short loss compensator stage, where the backup standalone \gls{gps} is compensated to get a position solution closer to the \gls{rtk-gps} solution. The second stage fully disconnect the \gls{rtk-gps}. First the term \gls{rtk-gps} will be further explained, together with typical error sources that affect a \gls{gnss} positioning system.
 \subsection{Position estimation RTK-GPS}\label{ss:rtk-gps}
 \acrfull{rtk-gps} is in \citep{misra2011global} section 7.2.2 defined as a rover that receive raw \gls{gnss} measurements from a reference receiver which is transmitted over a radio link. A key feature with \gls{rtk-gps} is that the rover is able to estimate the integer ambiguities while moving. The reference receiver is usually defined as a base station, and the integer ambiguity is the uncertainty of the number of whole phase cycles between the receiver and a satellite. With the measurements from the base station the rover is able to calculated the distance between itself and the base station, where the distance is referred to as a baseline. The length of the baseline affect the accuracy of the \gls{rtk-gps} solution, due to increased effect of atmospheric disturbance, which is further explain in \ref{Ss:Atmosphere}. However with a short baseline, e.g. $1-2 km$, the atmospheric condition can be considered equal for the base station and the rover, which keeps the solution  at centimetre level accuracy. The concept of \gls{rtk-gps} is depicted in figure \ref{figure:RTK}.
 \begin{figure}[H]
@@ -207,8 +206,17 @@ One of the primary source of error in in a \gls{gnss} receiver is multipath. Mul
 
 Multipath error uncorrelated between receivers, thus the local receiver must be able to correct for multipath error locally.
 
-\subsection{Navigation state}\label{S:NavState}
-When applying \gls{rtk-gps} the navigation system must have a backup positioning system in the case of \gls{rtk-gps} drop out. The backup consist of the positioning solution from the pixhawk, which is proven reliable. The switching between the two system is managed by a state machine in the navigation system, where using the pixhawk and \gls{rtk-gps} is two separately states. The state machine consists of five states, which is given in table \ref{Tb:StateDescription}. The state machine is design such that the user can chose if the system should apply the \gls{rtk-gps} system, or continue using the pixhawk, which is the standard positioning system. The state machine can enter a state during loss of \gls{rtk-gps}, where the position solution from the pixhawk is compensated with the average difference between the \gls{rtk-gps} position solution and the pixhawk solution. This state will be further explained in section \ref{ss:ShortLoss}.
+\subsection{Navigation state control system}\label{S:NavState}
+The navigation state control system manage the current state of the navigation system, which controls if the \gls{rtk-gps} usage and responsible of dispatching the current state of the \gls{uav} to the rest of the DUNE system. The structure of the navigation state control system is shown in figure \ref{Fig:NavState}, with edge description given in table \ref{Tb:Nav state edge}. The basic state of the navigation system function as if the \gls{rtk-gps} system is not available, which makes the navigation system independent from the \gls{rtk-gps} system. This is a requirement for the navigation system since it should function in a \gls{uav} where \gls{rtk-gps} is not present.
+
+In order for the navigation system to switch state into "Rtk ready" the \gls{rtk-gps} message must contain a valid base position, which must be set by the user. The setting of the base station is specified further in section \ref{ss:RTK-GPS system}. In addition the \gls{rtk-gps} solution type must be valid for $x$ seconds such that a stable desired solution type is available.
+
+The navigation state control system will only use the \gls{rtk-gps} system if the user has configured the navigation system to apply \gls{rtk-gps} and if it's available. 
+
+The state machine can enter a state during loss of \gls{rtk-gps}, where the position solution from the Pixhawk is compensated with the average difference between the \gls{rtk-gps} position solution and the Pixhawk solution. This state will be further explained in section \ref{ss:ShortLoss}.
+
+A summary of the states in the navigation state control system is given in table \ref{Tb:StateDescription}.
+
 \begin{table}[H]
 \begin{tabular}{ | p{3cm} | p{8cm} |}
 	\hline 
@@ -234,26 +242,31 @@ The state machine is shown in figure \ref{Fig:NavState}, with edge description g
 
     \begin{tabular}{ | p{1cm} | p{8cm} | | p{4cm} |}
     \hline
-    \textbf{Edge} 	& \textbf{Event} 										& \textbf{Guard} \\ \hline
-    A 				& Event: Received External Nav message 					& None \\ \hline
-    B 				& Time out: Fix \gls{rtk-gps} solution for $x$ seconds 	& None \\ \hline
-    C 				& Time out: $x$ seconds since last valid GpsFixRtk 		& None \\ \hline
-    D 				& Flag: Using Rtk is set true& None \\ \hline
-    E 				& Flag: Using Rtk is set false& None \\ \hline
-    F 				& Time out: $x$ seconds since last valid GpsFixRtk 		& Short loss compensator:\\ 
-      				& Event: Received GpsRtkFix with $type==None$ 			& Enabled\\ \hline
-    G 				& Event: Received valid GpsFixRtk message				& None \\ \hline
-    H 				& Time out: $x$ seconds since last valid GpsFixRtk 		& Short loss compensator:\\
-    				& Event: Received GpsRtkFix with $type==None$			& Disabled \\ \hline
-    I 				& Time out: $x$ seconds since last valid GpsFixRtk 		& None \\ \hline
+    \textbf{Edge} 	& \textbf{Event} 																	& \textbf{Guard} \\ \hline
+    A 				& Event: Received External Nav message 												& None \\ \hline
+    B 				& Time out: Fix \gls{rtk-gps} solution for $x$ seconds with valid base position 	& None \\ \hline
+    C 				& Time out: $x$ seconds since last valid GpsFixRtk 									& None \\ \hline
+    D 				& Flag: Using Rtk is set true														& None \\ \hline
+    E 				& Flag: Using Rtk is set false														& None \\ \hline
+    F 				& Time out: $x$ seconds since last valid GpsFixRtk 									& Short loss compensator:\\ 
+      				& Event: Received GpsRtkFix with $\text{type}==\text{None}$ 						& Enabled\\ \hline
+    G 				& Event: Received valid GpsFixRtk message											& None \\ \hline
+    H 				& Time out: $x$ seconds since last valid GpsFixRtk 									& Short loss compensator:\\
+    				& Event: Received GpsRtkFix with $\text{type}==\text{None}$							& Disabled \\ \hline
+    I 				& Time out: $x$ seconds since last valid GpsFixRtk 									& None \\ \hline
     \end{tabular}
 
 \caption{Description of the edges used in the state machine}
 \label{Tb:Nav state edge}
 \end{table}
 \subsubsection{Short loss of RTKGPS}\label{ss:ShortLoss}
-The navigation  system must be able to continuing supplying high accurate position solution even thought the \gls{rtk-gps} position is momentarily unavailable. This is to prevent large discontinuity in the position estimate, which will happen when the navigation system changes from \gls{rtk-gps} to the external navigation system. However it has been observed that the difference between the \gls{rtk-gps} and the external navigation system is almost constant. Therefore a solution to handle short loss of \gls{rtk-gps} is present where the average difference of the $N$ latest position solution from the \gls{rtk-gps} and the external navigation system as:
+In order for the navigation system to handle short loss of \gls{rtk-gps} a short loss \gls{rtk-gps} system is presented. The compensator is based on that the position solution from the external navigation system is almost constant with respect to the \gls{rtk-gps} solution. Therefore the average difference between the \gls{rtk-gps} position solution and the external navigation system should be able to move the external navigation position solution closer to the \gls{rtk-gps} position solution. The short loss compensator is given as:
+\begin{align}
+\mathbf{e}(n) &= \mathbf{p}_1(n) - \mathbf{p}_2(n)\\
+\mathbf{\delta} &= \frac{1}{N}\sum_{n=0}^N(\mathbf{e}(n))
+\end{align}
+where $\mathbf{p}_1(n)$ and $\mathbf{p}_2(n)$ is the position solution sample for the \gls{rtk-gps} system and the external navigation system respectfully. $N$ is the total number of samples with $n\in [0,N-1]$ as the counting variable. Adding $\mathbf{\delta}$ to the external navigation position with the assumption of slow varying bias between the two position solution gives:
 \begin{equation}
-\text{offset} = \frac{1}{N}\sum_{n=0}^N(\text{RTKGPS}(n)-\text{External}(n))
+\mathbf{p}_2(t) + \mathbf{\delta} \rightarrow \mathbf{p}_1(t)
 \end{equation}
-where $n \in [0,N-1]$ and the \gls{rtk-gps} solution is displaced into the External nav system. The short loss compensator prolong the time where the \gls{rtk-gps} is available for the navigation system, and will ensure that the navigation system outputs at a stable frequency. The goal with the compensator is to prevent mission abortion, and make the \gls{rtk-gps} system more robust.
+where $\mathbf{p}_1(n)$ and $\mathbf{p}_2(n)$ is the current position solution for the \gls{rtk-gps} system and the external navigation system respectfully. The short loss \gls{rtk-gps} compensator will trigger if there is a delay in the \gls{rtk-gps} system, or a temporary drop out occur. The output frequency of the short loss compensator is set to be the same as the \gls{rtk-gps} system, which is estimate by comparing the time each \gls{rtk-gps} message is dispatched. This results in prolonging the time where the \gls{rtk-gps} is available for the navigation system, and will ensure that the navigation system outputs at a stable frequency. The goal with the compensator is to prevent mission abortion, and make the \gls{rtk-gps} system more robust.

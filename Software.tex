@@ -25,9 +25,9 @@ Rtklib is configured as a moving baseline, where the baseline between the base s
 \end{figure}
 \newpage
 
-\section{Pixhawk}
+\section{Pixhawk}\label{ss:Pixhawk}
 3DR Pixhawk is a high-performance autopilot suitable for fixed wing multi rotors, helicopter and other robotic platform that can move. The Pixhawk system comes complete with \gls{gps}, imu, airspeed sensor and magnetometer.
-\section{Ardupilot}
+\section{Ardupilot}\label{ss:ardupilot}
 Ardupilot is an open-source unmanned aerial vehicle platform, able to control fixed wing \gls{uav} and multicopters. Ardupilot is used for low level control of the \gls{uav}, and is the software that runs on the Pixhawk. Ardupilot is able to communicate to third party software e.g Dune. Ardupilot uses the sensors in the Pixhawk to calculate the position, velocity and attitude of the \gls{uav}, which is sent to DUNE.
 \section{JSBsim}
 JSBSim \citep{berndt2004jsbsim} is an open-source flight dynamic model that is able to simulate a physical model of an arbitrary aircraft without the need of specific compiled and linked program code. The simulator is design such that a third party software e.g. Ardupilot can expose the model to external forces and moments. This enable \gls{sil} testing of system that is able to run in a hardware configuration with only minor configuration alteration.
