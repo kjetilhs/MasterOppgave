@@ -214,23 +214,6 @@ In order for the navigation system to switch state into "Rtk ready" the \gls{rtk
 The navigation state control system will only use the \gls{rtk-gps} system if the user has configured the navigation system to apply \gls{rtk-gps} and if it's available. 
 
 The state machine can enter a state during loss of \gls{rtk-gps}, where the position solution from the Pixhawk is compensated with the average difference between the \gls{rtk-gps} position solution and the Pixhawk solution. This state will be further explained in section \ref{ss:ShortLoss}.
-
-A summary of the states in the navigation state control system is given in table \ref{Tb:StateDescription}.
-
-\begin{table}[H]
-\begin{tabular}{ | p{3cm} | p{8cm} |}
-	\hline 
-	\textbf{State}						& \textbf{Description} \\ \hline
-	Initialize							& The task starting up\\ \hline
-	Using external						& The navigation task apply the external navigation source in the state message\\ \hline
-	RTK ready							& The \gls{rtk-gps} is ready for use, however the external navigation source is still used\\ \hline
-	Using RTK							& The navigation task apply the \gls{rtk-gps} in the state message\\ \hline
-	Using short RTK loss compensator	& The navigation task apply the external navigation source with a compensation term to reduce the effect of \gls{rtk-gps} loss. \\ \hline
-\end{tabular}
-\caption{States in the navigation system with description}
-\label{Tb:StateDescription}
-\end{table}
-The state machine is shown in figure \ref{Fig:NavState}, with edge description given in table \ref{Tb:Nav state edge}. The state transition is triggered on time-out and configuration alteration events. The \gls{rtk-gps} solution type must by a stable Fix before the navigation system change state into the "Rtk ready" state. This is to prevent the \gls{rtk-gps} to imminently be available again after a drop out, which during a critical operation has caused a abort.
 \newpage
 \begin{figure}[H]
 \def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
@@ -258,6 +241,43 @@ The state machine is shown in figure \ref{Fig:NavState}, with edge description g
 
 \caption{Description of the edges used in the state machine}
 \label{Tb:Nav state edge}
+\end{table}
+The state machine is designed to alter behaviour when the state machine enters a new state, with the entries action listed in table \ref{Tb:EntryAction}. A summary of the states in the navigation state control system is given in table \ref{Tb:StateDescription}.
+\begin{table}[H]
+\begin{tabular}{ | p{3cm} | p{8cm} |}
+	\hline 
+	\textbf{State}						& \textbf{Description} \\ \hline
+	Initialize							& The task starting up\\ \hline
+	Using external						& The navigation task apply the external navigation source in the state message\\ \hline
+	RTK ready							& The \gls{rtk-gps} is ready for use, however the external navigation source is still used\\ \hline
+	Using RTK							& The navigation task apply the \gls{rtk-gps} in the state message\\ \hline
+	Using short RTK loss compensator	& The navigation task apply the external navigation source with a compensation term to reduce the effect of \gls{rtk-gps} loss. \\ \hline
+\end{tabular}
+\caption{States in the navigation system with description}
+\label{Tb:StateDescription}
+\end{table}
+
+\begin{table}[H]
+\begin{tabular}{ | p{3cm} | p{8cm} |}
+	\hline 
+	\textbf{State}						& \textbf{Entry action} 										\\ \hline
+	Initialize							& Start up for the navigation state control system				\\ \hline
+	Using external						& \gls{rtk-gps} is disabled										\\
+										& Availability activation timer for \gls{rtk-gps} is started 	\\
+										& State of navigation system is updated							\\ \hline
+	RTK ready							& \gls{rtk-gps} is disabled										\\
+										& Availability deactivation timer for \gls{rtk-gps} is started	\\
+										& State of navigation system is updated							\\ \hline
+	Using RTK							& \gls{rtk-gps} is enabled										\\
+										& State of navigation system is updated							\\
+										& If short RTK loss compensator is activated:					\\
+										&	- Short RTK loss compensator activation timer is started		\\
+										& If short RTK loss compensator is deactivated:					\\
+										& 	- \gls{rtk-gps} time out timer is started						\\ \hline
+	Using short RTK loss compensator	& Short RTK loss compensator deactivation timer is started		\\ \hline
+\end{tabular}
+\caption{Entry action for each state}
+\label{Tb:EntryAction}
 \end{table}
 \subsubsection{Short loss of RTKGPS}\label{ss:ShortLoss}
 In order for the navigation system to handle short loss of \gls{rtk-gps} a short loss \gls{rtk-gps} system is presented. The compensator is based on that the position solution from the external navigation system is almost constant with respect to the \gls{rtk-gps} solution. Therefore the average difference between the \gls{rtk-gps} position solution and the external navigation system should be able to move the external navigation position solution closer to the \gls{rtk-gps} position solution. The short loss compensator is given as:
