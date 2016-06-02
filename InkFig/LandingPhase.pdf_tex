@@ -50,16 +50,16 @@
   \makeatother%
   \begin{picture}(1,0.41402334)%
     \put(0,0){\includegraphics[width=\unitlength,page=1]{InkFig/LandingPhase.pdf}}%
-    \put(0.26247589,0.14576283){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\gamma_a$}}}%
+    \put(0.26247589,0.14576283){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\gamma_n$}}}%
     \put(0.16288194,0.1852891){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Net}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=2]{InkFig/LandingPhase.pdf}}%
-    \put(0.37975389,0.19989247){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\gamma_d$}}}%
+    \put(0.37975389,0.19989247){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\gamma_l$}}}%
     \put(0.14377453,0.08110866){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$a0$}}}%
     \put(0.23154887,0.08110917){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$a1$}}}%
     \put(0.44180246,0.08110917){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$a2$}}}%
     \put(0.69127624,0.08110917){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$a3$}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=3]{InkFig/LandingPhase.pdf}}%
-    \put(0.16342875,0.14405819){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\gamma_a$}}}%
+    \put(0.16342875,0.14405819){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\gamma_l$}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=4]{InkFig/LandingPhase.pdf}}%
     \put(0.07202612,0.12484322){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\mathbf{WP4}$}}}%
     \put(0.23242169,0.20424985){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{$\mathbf{WP3}$}}}%

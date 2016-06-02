@@ -14,15 +14,20 @@ A net recovery system for \gls{uav} with single-frequency \gls{rtk-gps} was desc
 The autonomous landing system must first prove that it can successfully perform a landing on land before it can be tested at sea. The advantage with tests on land is that the net can be assumed stationary, however there are more environmental obstacles that might hinder the \gls{uav}.
 
 This thesis focus on the navigation system and generation of landing path in the autonomous landing system. The navigation system apply \gls{rtk-gps} to provide high accuracy position estimation, which is needed to perform a autonomous landing. The landing path provide a flyable path from any initial position, where the length and direction of the virtual runway is determined by the operator. Through this work, the following contributions has been made:
-\begin{itemize}
-\item A landing path generator has been created, which guaranty a flyable path with controlled decent from any initial position \ref{Ch:LandingPath}.
-\item The landing path has been implemented in the DUNE runtime environment, which is capable to be used in both a stationary and moving net landing.
-\item A new \gls{imc} message has been created to contain the landing path specifications.
-\item A net nest has been constructed to provide the GPS coordinates for the stationary net.
-\item A navigation state machine, which is used to control which position solution source should be used in the payload computer. The state machine will try to keep the \gls{rtk-gps} available as long as possible by adding the average difference to the position solution from the Pixhawk for a short duration of time until a new viable \gls{rtk-gps} message is received.
-\item  A navigation source interface has been created to provide a visual indicator of which navigation system that is used in the DUNE environment.
-\item Physical experiments of the navigation system and landing path generator.
+\begin{enumerate}
+\item \textbf{A landing path generator} has been created, which guaranty a flyable path with controlled decent from any initial position. The landing path has been implemented in the DUNE runtime environment, which is capable to be used in both a stationary and moving net landing. In addition to the implementation of the landing path a \textbf{API} has been created to generate a landing path.
+\item \textbf{A navigation state control system} has been created to manage which positioning system should be used in the DUNE environment.
+\item \textbf{Increased the robustness of the \gls{rtk-gps}} by creating a bias estimator, which estimate the bias between \gls{rtk-gps} and a standalone \gls{gps}.
+\item \textbf{A navigation state monitor interface} has been created to provide a visual indicator of which navigation system that is used in the DUNE environment.
+\item \textbf{A mobile sensor with \gls{rtk-gps}} has been created to be a reference position for a stationary net.
+\item \textbf{Physical experiments} of the navigation system and landing path generator. The experimental testing includes performance of a DUNE guidance system
 %\item Finally statistical data on the performance of the X8 during landing during landing has been gather to be used in further work in further developing the landing system.
-\end{itemize}
+\end{enumerate}
 \section{Outline}
+Chapter 2 outlines two path planing strategies which is used in the development of the landing path system. The chapter also contains a model of a \gls{mav}.
+Chapter 3 proposes a path and navigation system for a autonomous landing system. The landing path system is separated into two planes, which is the lateral and longitudinal plane. The lateral path is created as a Dubins path, and the longitudinal path is created as a straight line path. The navigation system is controlled by a state machine which manage the 
+Chapter 4 explain the software used to create and test the autonomous landing system.
+Chapter 5 explain the implementation of the path and navigation system.
+Chapter 6 
+Chapter 7
 \cleardoublepage
