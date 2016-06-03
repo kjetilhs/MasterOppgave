@@ -19,7 +19,7 @@ The wind condition for the first day was $8-9 m/s$ from west, which is parallel 
 
 The behaviour of the lateral path shown in figure \ref{Fig:NorthEast31mai103029} indicates that the lateral guidance system is struggling to hold the line when flying in the crosswind. When exiting the overshoot may cause the \gls{uav} to leave the line of sight of the pilot, in which case the only method of monitoring the \gls{uav} is over a radio link which can experience drop out. The behaviour of the \gls{uav} when flying keeps ocislating around the straight line path, which is undesired during the finale stage of the landing plan. This behaviour can be reduced by lowering the lookahead distance in the lateral guidance system, which increased the performance during the final stage as shown in figure \ref{Fig:NorthEast31mai105034}.  
 
-The longitudinal guidance system used outputs a desired heigh which lags behind the desired path due to a smoothing filter which is used to remove the discontinue between two line segments. The filter currently used will only converge to a constant height value, such that the net impact angle has to zero in order for the longitudinal guidance system to converge to the desired path height. A new landing plan was generated with the net impact angle $\gamma_n = 0$ which gave a better performance from the height guidance system. However this results in that the glide slope is the only part of the landing path where the height can be reduced, which will cause a problem when attempting to land in a real net. This is due to the length restriction of both the airfield and the operational area where the \gls{uav} is visible for the pilot. With the current landing plan and a landing direction from east the minimum height at which the \gls{uav} can starts its landing path is set to $56 m$ above ground. 
+The longitudinal guidance system used outputs a desired heigh which lags behind the desired path due to a smoothing filter which is used to remove the discontinue between two line segments. The filter currently used will only converge to a constant height value, such that the net impact angle has to zero in order for the longitudinal guidance system to converge to the desired path height. A new landing plan, shown in figure \ref{Fig:Height31mai31mai105034} and \ref{Fig:NorthEast31mai105034}, was generated with the net impact angle $\gamma_n = 0$ which gave a better performance from the height guidance system. However this results in that the glide slope is the only part of the landing path where the height can be reduced, which will cause a problem when attempting to land in a real net. This is due to the length restriction of both the airfield and the operational area where the \gls{uav} is visible for the pilot. With the current landing plan and a landing direction from east the minimum height at which the \gls{uav} can starts its landing path is set to $56 m$ above ground. 
 \newpage
 \begin{figure}[H]
 \begin{subfigure}[H]{1\textwidth}
@@ -34,7 +34,7 @@ The longitudinal guidance system used outputs a desired heigh which lags behind 
 		\label{Fig:Height31mai103029}
 \end{subfigure}
 \end{figure}
-
+The performance form the lateral controller was increased by lowering the lookahead distance parameter. However the \gls{uav} still have ocilatoric behaviour along the straight line parts, with a large overshoot in the final turn.
 
 
 \newpage
@@ -51,7 +51,8 @@ The longitudinal guidance system used outputs a desired heigh which lags behind 
 		\label{Fig:Height31mai31mai105034}
 \end{subfigure}
 \end{figure}
-
+\subsubsection{Summary of day 1}
+The result from the first day was affected with strong wind condition, in which the \gls{uav} struggeled to stay on the path. The mean height and cross track error is listed in table \ref{tb:Day1HeightCrossTrack}, where the first column indicate the number of the landing attempt.
 \begin{table}[H]
 \centering
 \begin{tabular}{| l | l | l |}
@@ -70,6 +71,25 @@ $10$			& $1.5$							& $4.4$								\\ \hline
 $11$			& $1.5$							& $1.4$								\\ \hline
 \end{tabular}
 \caption{Mean height and cross track error from day 1}
+\label{tb:Day1HeightCrossTrack}
+\end{table}
+\begin{table}
+\centering
+\begin{tabular}{| p{0.5cm} | p{1cm} | p{1cm} | p{3.5cm} | p{3cm} | p{1cm} |}
+\hline
+\textbf{Nr.}	& \textbf{Height error}	& \textbf{Cross track error}& \textbf{Height acceptance}& \textbf{Cross track error acceptance}	& \textbf{Net hit}\\ \hline
+$1$				& $2.8 m $	& $2.1 m$	& X								& OK									& X	\\ \hline
+$2$				& $2.7 m$	& $-4.5$	&X								& X										& X					\\ \hline
+$3$				& $0.9 m$	& $-1.6 m$	&OK							& OK									& OK				\\ \hline
+$4$				& $0 m$		& $5.4 m$	&OK							& X										& X					\\ \hline
+$5$				& $0.8 m$	& $5.3 m$	&OK							& X										& X					\\ \hline
+$6$				& $2.1 m$	& $-1.6 m $	&X								& OK									& X					\\ \hline
+$7$				& $0.7 m$	& $2.3 m $	&OK							& OK									& OK				\\ \hline
+$8$				& $-1.5 m $ & $-5.4 m $	&X								& X										& X					\\ \hline
+$9$				& $1.9 m$	& $0.8 m $	&X								& OK									& X					\\ \hline
+$10$			& $0.3 m$	& $1.1 m $	&OK							& OK									& OK				\\ \hline
+$11$			& $-1.3 m$	& $0.15 m $	&OK							& OK									& OK				\\ \hline
+\end{tabular}
 \end{table}
 \subsection{Day 2}
 The wind condition on the second day was calm, which allowed for testing the performance of the landing system under ideal conditions.

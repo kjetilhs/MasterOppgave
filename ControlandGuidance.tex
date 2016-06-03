@@ -1,0 +1,19 @@
+\chapter{Guidance and control system}
+The autonomous landing system is design to be independent from any types of guidance and control system. However this hold only true when the guidance and control system is implemented in the DUNE environment due to the requirement of an accurate navigation system. The control system is separated into two groups, high level and low level control. The low level control is the control loops for the actuators, which are only controlled by ardupilot. The high level controllers depend on the the configuration of Ardupilot, which is listed in table \ref{tb:ArduPilotMode}.
+\begin{table}
+\centering
+\begin{tabular}{| p{3cm} | p{5cm}|}
+\hline
+\textbf{Mode}	&	\textbf{Description} \\ \hline
+Guide			& Ardupilot set-point guidance and control system 												\\ \hline
+FBWB			& DUNE lateral controller with desired height controlled in a set-point controller in Ardupilot \\ \hline
+FBWA			& DUNE lateral and longitudianl controller, where control input is sent directly to the low level controllers in Ardupilot 																						\\ \hline
+\end{tabular}
+\caption{Guidance and control modes in autopilot viable for the landing system}
+\label{tb:ArduPilotMode}
+\end{table}
+
+\section{Lateral controller}
+The lateral controller used in the autonomous landing system is based on the paper \citep{fortuna2015cascaded}, which is a s
+\section{Longitudinal controller}
+The longitudinal controller is based on the paper \citep{you2012guidance}
