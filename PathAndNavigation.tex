@@ -290,3 +290,5 @@ where $\mathbf{p}_1(n)$ and $\mathbf{p}_2(n)$ is the position solution sample fo
 \mathbf{p}_2(t) + \mathbf{\delta} \rightarrow \mathbf{p}_1(t)
 \end{equation}
 where $\mathbf{p}_1(n)$ and $\mathbf{p}_2(n)$ is the current position solution for the \gls{rtk-gps} system and the external navigation system respectfully. The short loss \gls{rtk-gps} compensator will trigger if there is a delay in the \gls{rtk-gps} system, or a temporary drop out occur. The output frequency of the short loss compensator is set to be the same as the \gls{rtk-gps} system, which is estimate by comparing the time each \gls{rtk-gps} message is dispatched. This results in prolonging the time where the \gls{rtk-gps} is available for the navigation system, and will ensure that the navigation system outputs at a stable frequency. The goal with the compensator is to prevent mission abortion, and make the \gls{rtk-gps} system more robust.
+
+\section{Summary}
