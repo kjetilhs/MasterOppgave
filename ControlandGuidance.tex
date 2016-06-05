@@ -15,5 +15,58 @@ FBWA			& DUNE lateral and longitudianl controller, where control input is sent d
 
 \section{Lateral controller}
 The lateral controller used in the autonomous landing system is based on the paper \citep{fortuna2015cascaded}, which is a s
+
+\begin{table}
+\centering
+\begin{tabular}{| l | l |}
+\hline
+\textbf{Parameter}	&	\textbf{Value} \\ \hline
+Lookahead           &                    $50.0$ \\ \hline
+Rho                 &                    $1.0$ \\ \hline
+Lambda				&                    $0.35$ \\ \hline
+Kd					&                    $1.5$ \\ \hline
+Bandwidth			&                    $3.0$ \\ \hline
+Roll Time Const		&                    $0.5$ \\ \hline
+Maximum Bank		&                    $40.0$ \\ \hline
+
+\end{tabular}
+\end{table}
 \section{Longitudinal controller}
 The longitudinal controller is based on the paper \citep{you2012guidance}
+
+Need to refer to the height smoothing filter with advantage and disadvantage.
+
+\begin{table}
+\centering
+\begin{tabular}{| l | l |}
+\hline
+\textbf{Parameter}	&	\textbf{Value} \\ \hline
+Throttle Proportional gain          &    $0.3$ \\ \hline
+Throttle Integrator gain            &    $0.1$ \\ \hline
+Throttle Proportional height gain   &    $0.3$ \\ \hline
+Gamma Proportional gain             &    $1.0$ \\ \hline
+Trim throttle                       &    $44.0$ \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{| l | l |}
+\hline
+\textbf{Parameter}	&	\textbf{Value} \\ \hline
+LOS Proportional gain up        &        $0.9$ \\ \hline
+LOS Integral gain up            &        $0.1$ \\ \hline
+LOS Radius up                   &        $14$ \\ \hline
+LOS Proportional gain down       &       $0.9$ \\ \hline
+LOS Integral gain down          &        $0.1$ \\ \hline
+LOS Radius down                  &       $14$ \\ \hline
+LOS Proportional gain line      &        $1.0$ \\ \hline
+LOS Integral gain line          &        $0.02$ \\ \hline
+LOS Radius line                &         $25$ \\ \hline
+Time constant refmodelZ         &        $1.0$ \\ \hline
+Time constant refmodelGamma     &        $1.0$ \\ \hline
+Use reference model             &        True \\ \hline
+Height bandwidth               &        $10$ \\ \hline
+Vertical Rate maximum gain      &        $0.3$ \\ \hline
+\end{tabular}
+\end{table}

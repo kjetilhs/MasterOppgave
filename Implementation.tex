@@ -54,4 +54,16 @@ The state of the navigation system is monitored though a interface in Neptus. Th
 \label{Tb:Color Code}
 \end{table}
 
+
+\section{Software in the loop simulation}
+The system was tested through a Software In the Loop (SIL) simulation. In a SIL simulation the same code that runs in the hardware is tested against a simulator which behave similarly to the real system.
+\subsection{Setup}
+When performing a SIL test the Dune system is locally connected to ardupilot, which is communicating with JSBsim instead of the real \gls{uav}. The simulation is performed with a mathematical model of the X8 developed in the Master thesis [ref master thesis]. The purpose with the SIL test is to test the same software which will run in the X8 during a experimental test, and is used to verified that the system works. However since it's a simulated environment the results can only be considered as ideal results.
+\subsection{Path planing SIL}
+The landing path is tested in both guided and FBWA. 
+\subsection{Navigation SIL}
+The navigation system was tested by creating a \gls{rtk-gps} simulator. This allowed for testing of the navigation interface, including the fixing of the base station position.
+
+\subsubsection{Short rtk loss compensator}
+The short rtk loss compensator was tested by adding a bias in the position solution from the simulated GpsFixRtk message. 
 \section{Summary}
