@@ -1,0 +1,33 @@
+\chapter{Landing plan generation API}
+The landing plan generation \gls{api} consist of the \gls{imc} LandingPlanGeneration, where the field with description is given in table 
+\begin{table}
+\centering
+\begin{tabular}{| p{4cm} | p{2cm} | p{6cm} |}
+\hline
+\textbf{Field name}	& \textbf{Type}	& \textbf{Description} \\ \hline
+Command								& Enumerated	& Command the plan database to generate the plan, with the option of executing the plan after generation. \\ \hline
+Operation							& Enumerated	& Type of operation started.	\\ \hline
+Plan identifier						& Plain text	& Plan identifier.	\\ \hline
+Reference latitude					& rad			& Reference latitude for the landing path.	\\ \hline
+Reference longitude					& rad			& Reference longitude for the landing path.	\\ \hline
+Reference height					& m				& Reference height for the landing path.	\\ \hline
+Height over ground					& m				& Offset from the reference height to placement.	\\ \hline
+Reference point heading				& rad			& Heading of the reference point in NED frame.	\\ \hline
+Distance behind						& m				& Aiming point behind the reference point.	\\ \hline
+Final approach length				& m				& The length of the final approach towards the reference point.	\\ \hline
+Final approach angle				& rad			& The decent angle of the final approach vector. 	\\ \hline
+Glide slope length					& m				& The length of the glide slope in the landing path.	\\ \hline
+Glide slope angel					& rad			& The decent angle of the glide slope.	\\ \hline
+Approach decent angle				& rad			& The decent angle of the approach path.	\\ \hline
+Approach length						& $m$			& The length of the vector from the end of the approach path to the glide slope.	\\ \hline
+Landing speed						& $m/s$			& The landing speed.	\\ \hline
+Approach speed						& $m/s$			& The approach speed.	\\ \hline
+Start turning circle radius			& m				& The radius of the first turning circle.	\\ \hline
+Finish turning circle radius		& m				& The radius of the second turning circle.	\\ \hline
+Automatic generate landing plan		& Flag			& The approach path will calculate the shortest path form the initial position towards the start of the landing path.	\\ \hline
+Start circle turning direction		& Flag			& Manually setting the rotation direction of the first circle.	\\ \hline
+Finish circle turning direction		& Flag			& Manually setting the rotation direction of the finish circle.	\\ \hline
+Wait at loiter						& Flag			& Setting if after the approach path the \gls{uav} should enter a loiter manoeuvre.	\\ \hline
+\end{tabular}
+\caption{Table containing the landing plan generation \gls{api}}
+\end{table}
