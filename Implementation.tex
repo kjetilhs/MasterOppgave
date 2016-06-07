@@ -1,20 +1,16 @@
 \chapter{Implementation}
-The landing path generator and the navigation state control system is implememented in the DUNE environment, while controlled and monitored through Neptus. A simplified structure of the autonomous landing system is shown in figure \ref{fig:DuneSystem}. The DUNE task Ardupilot is used as the interface for the Ardupilot in the Pixhawk.
+The landing path generator and the navigation state control system is implememented in the DUNE environment, while controlled and monitored through Neptus. The autonomous landing system for stationary net landing consist mainly of three modules, which is the Navigation, LandingPlan, and Path Controller tasks. A simplified figure of the system flow in the autonomous landing system in DUNE is showed in figure \ref{fig:DuneSystem}. The path controllers used in the autonomous landing system is not a focus area in this theses, however a description of the controllers used is given in appendix \ref{AP:ControlGuidanceSystem}. The Ardupilot DUNE task in the DUNE system is used as interface towards the Ardupilot software that either runs as in a simulation mode or on a Pixhawk.
+
 \begin{figure}[H]
 	\centering
 		\includegraphics[scale=0.8]{figs/DUNESystem.png}
-		\caption{A simplified figure of the Dune auto land system}
+		\caption{A simplified depiction of the interaction between the major components in the autonomous landing system during stationary net landing}
 		\label{fig:DuneSystem}
 \end{figure}
 \section{Landing plan generator}
-The landing plan generator is implemented to be triggered on the consumption of a LandingPlanGeneration \gls{imc} message, which act as the \gls{api} for the task.
-
-The landing path system is implemented in the DUNE task LandingPlan, which is design to start generation of a approach and landing path when receiving the \gls{imc} message LandingPlanGeneration.  The \gls{imc} message was created to structure the parameter needed to construct a flyable approach and landing path. As part of the \gls{imc} message is the ability to specify the rotation direction of the start and finish circle, as well as if there should be a loiter point in the end of the approach path. The ability to specify the rotation direction of the start and final turning circles ensures that the path can be created to take into account environmental obstacles or wind directions. However if all four variants of the approach path is valid, then the shortest path can be chosen by setting the "Automatic" parameter in the LandingPlanGeneration message true. 
-
-The ability to have a loiter manoeuvre at the end of the approach path gives flexibillity when performing a net landing. It allows for final checks of the net condition, or can be used in a dynamic landing operation where the net not stationary e.q. placed on a ship or carried by multi-copters. When configuration the LandingPlan task to perform a dynamical landing only the approach path is created. This was found out to be a preferable solution since a dynamical landing require a feedback loop to correct the desired path, which is currently not included in the landing path system. A solution for performing a dynamical landing is currently research by fellow Master students where the multi-copters is used to catch the \gls{uav}, where this landing system is used to create a approach path to ready the \gls{uav} for a dynamic landing.
-
-The approach path is created as a FollowPath manoeuvre, which is a manoeuvre with a reference position and offset points that displaced relative to the reference position. The distance between each offset point in each arc is given as a task configuration parameter named "Distance Between Arc Segments"
+The landing plan generator is the DUNE implementation of the landing plan generation system described in section \ref{Ch:LandingPlan}. The DUNE task is designed with a \gls{api} designed as the \gls{imc} message LandingPlanGeneration, which is used to specify the path parameters. The task is triggered when a LandingPlanGenertion message is consumed. This result in the generation of the approach and landing path, which together forms the landing plan. The \gls{api} can be accessed from Neptus through the plug-in LandMayLayer, such that a graphical interface can be used for net placement. 
 \subsection{Landing plan generation API}
+The landing plan generation \gls{api} is a \gls{imc} message used to structure the input parameter used to create the landing plan. With the \gls{api} the desired path parameter can be set, in addition to behaviour setting used to create a specific landing plan. The \gls{api} can be used to set the rotation direction of the start and finish turning circle, by setting the "Automatic" flag to false. In addition is the option to add a loiter manoeuvre to the landing path, which act as a waiting manoeuvre. The behaviour setting in the \gls{api} is listed in table \ref{Tb:DubinConfig}, with the entire \gls{api} listed in appendix \ref{AP:APIIMC}.
 \begin{table}[H]
 \centering
 \begin{tabular}{| p{2.7cm} | | p{6cm} |}
@@ -29,34 +25,38 @@ Wait at loiter (boolean)							& If true a unlimited loiter is included in the p
 \caption{Landing path behaviour setting in LandingPlanGeneration}
 \label{Tb:DubinConfig}
 \end{table}
-\subsubsection{Neptus plug-in}
-From Neptus the plug-in LandmapLayer, which is an altered version of Neptus plug-in developed in thesis \citep{Froelich}. Alteration in the plug-in include new parameters, the inclusion of the \gls{imc} message LandingPlangeneration and the ability to manually write the global position coordinates of the net.
-\begin{figure}
+\subsubsection{Neptus API graphical interface}
+In Neptus the plug-in LandmapLayer, which is an altered version of Neptus plug-in developed in theses \citep{Froelich}, is used to configure the landing plan generation \gls{api}. The alteration in the plug-in include new parameters, the inclusion of the \gls{imc} message LandingPlangeneration and the ability to manually write the global position coordinates of the net. The \gls{api} graphical interface is shown in figure \ref{Fig:LandMapLayer}. The LandmapLayer function by first placing the net in Neptus, continued by setting the desired parameter of the landing plan in the graphical interface for the landing plan generator \gls{api}.
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.6]{figs/LandMapLayer.png}
-\caption{Interaction with the landing plan \gls{api} through Neptus}
+\caption{Graphical interface for the landing plan  generator \gls{api} in Neptus}
 \label{Fig:LandMapLayer}
 \end{figure}
 \subsection{Approach path}
-The approach is implemented as a Dubins path from the initial position of the fixed wing \gls{uav} to $\textbf{WP1}$. The approach path creation is started when the landing plan generator receive a LandingPlanGeneration message, which trigger the content extraction of the message. The option for the user to specify the rotation direction of the approach path dictates the system flow 
+The approach path given described in section \ref{SS:LandingApproach} is implemented in the DUNE task LandingPlan, where the start position of the approach path is the initial position of the fixed wing \gls{uav} at the time the LandingPlanGeneration message is sent. The final position of the approach path is the first $\textbf{WP}$ in the landing path. Figure \ref{Fig:FlowChartApproach} shows the structure of the creation of the approach path in the landing plan. The creation is trigger by the consumption of a LandingPlanGeneration message, which is extracted in order gain access to the landing plan parameters. 
+
+The creation of the approach path is designed to enable the user to specify the rotation direction of the start and finish turning circles. This design choice was made such that the user has a guaranty of the turning direction in both circles, which is not given when calculating the shortest Dubins path. Thus the two mode have different guaranties, such that the landing plan generator becomes more flexible. 
+
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.8]{figs/ApproachPath.png}
 \caption{Flow chart of approach path creation}
 \label{Fig:FlowChartApproach}
 \end{figure}
+The approach path is created as a FollowPath manoeuvre, which is a manoeuvre where the path is offset point from a given reference position. This manoeuvre is suited for more complex manoeuvres, which is the reason it's used in the approach path. The task configuration parameter "Distance Between Arc Segments" is used to spesify the distance between each point both the turning circles, thus given the total number of segments in the circles. The parameter can be used to increase the performance of the lateral control system, continues switching point to keep the bank angle in order to better stay on the circle.
 \subsection{Landing path}
-The landing path consist of goto manoeuvres, where the position of the goto manoeuvre is given by the way-points $\textbf{WP4-2}$ defined in \ref{SS:netApproach} relative to the position of the net. Figure \ref{Fig:FlowChartLanding} shown the system flow when a landing path is created in the landing plan generator. A option for the landing path is that it includes a loiter manoeuvre at the beginning, which is defined as a circular manoeuvre around a fixed position with a constant radius. The loiter manoeuvre increase the flexibility of the autonomous landing system, by introducing a manoeuvre that in which the \gls{uav} can wait for the landing zone to be prepared. In the case of a dynamic net landing the loiter manoeuvre can be used as a waiting manoeuvre as a final check before the \gls{uav} starts to track the position of the net. An other possible application is to apply the loiter manoeuvre in a net landing where the net is carried by multi-copter \glspl{uav}, where the copters can wait on the ground until the fixed wing \gls{uav} enters the loiter manoeuvre.
-\begin{figure}
+The landing path described in section \ref{SS:netApproach} is implemented in the DUNE task LandingPlan, where the path is created relative to the position and heading of the net retrieved from the LandingPlanGeneration message. Figure \ref{Fig:FlowChartLanding} shows the structure of the creation of the landing path. The creation is trigger when the approach path has successfully been created. A option for the landing path is that it includes a loiter manoeuvre at the beginning, which is defined as a circular manoeuvre around a fixed position with a constant radius. The loiter manoeuvre increase the flexibility of the autonomous landing system, by introducing a manoeuvre that in which the \gls{uav} can wait for the landing zone to be prepared. In the case of a dynamic net landing the loiter manoeuvre can be used as a waiting manoeuvre as a final check before the \gls{uav} starts to track the position of the net. An other possible application is to apply the loiter manoeuvre in a net landing where the net is carried by multi-copter \glspl{uav}, where the copters can wait on the ground until the fixed wing \gls{uav} enters the loiter manoeuvre.
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.8]{figs/LandingPath.png}
 \caption{Flow chart of the landing plan generation}
 \label{Fig:FlowChartLanding}
 \end{figure}
 \subsection{Software in the loop simulation}
-The landing plan was tested in a Software In the Loop (SIL) simulation, where the landing plan generation code runs as if it's connected to the actual hardware. The SIL simulation is used to verify that the code function as it's design to do. During a SIL simulation Ardupilot enters a simulation mode, where the JSBSim simulation is used as replacement of the actual X8 fixed wing \gls{uav}. The result obtain from the simulation can be used as a ideal test can of which the performance during a real flight can be compeered against. However the current model of X8 used in the simulation has not been completely verified, such that model error is expected.
+The landing plan was verified and test through the use of a Software In the Loop (SIL) simulation, where the landing plan generation code runs as if it's connected to the actual hardware. The SIL simulation is used to verify that the code function as it's design to do. During a SIL simulation Ardupilot enters a simulation mode, where the JSBSim simulation is used as replacement of the actual X8 fixed wing \gls{uav}. The result obtain from a simulation is used as a ideal test case, from which the performance of a flight test can be compeered against. However the current model of X8 used in the simulation has not been completely verified, such that deviation in results and behaviour is expected.
 
-A landing path was created to simulate a real landing, where the lateral path is shown in figure \ref{Fig:SILNorthEast090145} and the height versus the desired height is shown in figure \ref{Fig:SILHeight6juni090145}. The plan is designed to fit a operational area where the \gls{uav} will be within the line of sight of the pilot at any time during execution of the landing plan.
+A landing path was created to simulate a real landing, with the lateral path is shown in figure \ref{Fig:SILNorthEast090145} and the height versus the desired height  shown in figure \ref{Fig:SILHeight6juni090145}. The plan is designed to fit a operational area where the \gls{uav} will be within the line of sight of the pilot at any time during execution of the landing plan.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{figs/SysPlot/SILNorthEast6juni090145.eps}
@@ -69,9 +69,7 @@ A landing path was created to simulate a real landing, where the lateral path is
 \caption{The desired height and \gls{uav} height when executing the landing plan.}
 \label{Fig:SILHeight6juni090145}
 \end{figure}
-In the case where at the end of the approach path the height does not match the start height of the landing path a downwards spiral is created in order to reach the correct height.
-
-In figure \ref{Fig:SILNorthEastSpiral092307} the spiral function of the lateral path was tested, with the resulting height profile in figure \ref{Fig:SILHeightSpiral092307}. The simulation was performed with a wind disturbance of $9 m/s$ from west, in order to observe how the \gls{uav} would behave during a simulated landing plan with wind disturbance. The lateral guidance system struggles when flying with the wind, however when flying against the wind it's able to stay on the straight line between the way-points. During the turn in the spiral the lateral guidance system is unable to stay on the circle, thus overshooting the desired path. The longitudinal guidance and control system behave similar to the simulation without wind. This indicate that during a actual flight the wind will affect the error in the longitudinal guidance and control system less then the lateral control and guidance system. 
+During a landing plan the height in the end of the approach path may not match the start height of the landing path. In those cases the spiral path described in section \ref{pp:SpiralPath} is created in order for the approach path to reach the correct height. In figure \ref{Fig:SILNorthEastSpiral092307} the spiral function of the lateral path was tested, with the resulting height profile in figure \ref{Fig:SILHeightSpiral092307}. The simulation was performed with a wind disturbance of $9 m/s$ from west, to simulate how the \gls{uav} would perform during the landing plan with wind disturbance The direction of the wind is set such the landing path is directed against the wind, which the optimal direction to land in order to reduce the ground speed of the \gls{uav}. The lateral control system struggles when flying with the wind, however when flying against the wind it's able to stay on the straight line between the way-points. During the turn in the spiral the lateral control system is unable to stay on the circle, thus overshooting the desired path. The longitudinal control system behave similar to the simulation without wind. This indicate that during a actual flight the wind will affect the error in the longitudinal control system less then the lateral control system. 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{figs/SysPlot/SILNorthEast6juni092307.eps}
@@ -85,10 +83,23 @@ In figure \ref{Fig:SILNorthEastSpiral092307} the spiral function of the lateral 
 \label{Fig:SILHeightSpiral092307}
 \end{figure}
 \subsubsection{Result of simulations}
+The system performance in a simulation environment is presented, where the criteria is where the \gls{uav} was during the time when it passed the net position. The criteria used to indicate if the X8 would have hit the net is given in table \ref{tb:NetCriteria}, which is related to a net with the dimensions 3 meter height and 5 meter width.
+\begin{table}[H]
+\centering
+\begin{tabular}{| l | l |}
+\hline
+\textbf{Height acceptance}	& \textbf{Cross track error acceptance}	\\ \hline
+$\pm1.5$					& $\pm2.5$								\\ \hline
+\end{tabular}
+\caption{Net hit acceptance criteria}
+\label{tb:NetCriteria}
+\end{table}
+The result from six simulations is given in figure \ref{Fig:SILNetPasing}, with the overall performance of the path following capability of the control system given in table \ref{Tb:SILAverageCrossHeight}. The autonomous landing system is able to pass the net with a accuracy that is within the acceptance criteria, indicating that the system is able to perform autonomous landing. The height difference between the net placement and the start of the landing path was $31.5 m$, where the glide slope angle was set to $6\deg$. A higher glide slope angle would result in the \gls{uav} to build up speed, thus with the current longitudinal controller the angle of the glide slope should not exceed $8\deg$.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{figs/SysPlot/SILNetPasing.eps}
 \caption{\gls{uav} position at time of net passing during SIL simulation.}
+\label{Fig:SILNetPasing}
 \end{figure}
 \begin{table}[H]
 \centering
@@ -102,19 +113,44 @@ $4$				& $0.5$							& $-1.2$								\\ \hline
 $5$				& $0.4$							& $-2.5$								\\ \hline
 $6$				& $0.2$							& $0.3$								\\ \hline
 \end{tabular}
+\caption{Average cross track error and height error relative to the path.}
+\label{Tb:SILAverageCrossHeight}
 \end{table}
-
 \section{Navigation system}
-The navigation system is control by a state machine \ref{S:NavState}, which is used to control the content of the output \gls{imc} messages EstimatedState and NavSources. Depending on which state the navigation system is in the \gls{imc} EstimatedState message will either have position solution form the \gls{rtk-gps} system or the external navigation system. During a short loss of the RTK the external navigation position is compensated with the average difference between the RTK solution and the external navigation solution.
+The navigation state control system described in section \ref{S:NavState} is implemented in the DUNE task Navigation, which is used to control the content of the output \gls{imc} messages EstimatedState and NavSources. Depending on the current state of the navigation system the \gls{imc} EstimatedState message will either have position solution form the \gls{rtk-gps} system or the external navigation system. During a short loss of the RTK the external navigation position is compensated with the average difference between the RTK solution and the external navigation solution.
 \subsection{RTK-GPS system}\label{ss:RTK-GPS system}
-The \gls{rtk-gps} solution is dispatched from the DUNE task RTKGPS, however before the message is accepted by the Navigation task the message must include a valid base station position. The base station position is not included in the output message from RTKlib, which demand the base station position to be calculated locally at the base station as a standalone \gls{gnss} receiver. For this purpose the DUNE task BasestationFix is used to lock the current position of the base station, which result in the base station position being transmitted to the RTKGPS task.
-The navigation system require to now the reference position of the base station in order to use the \gls{rtk-gps} solution. However the base station position is currently not part of the output message from rtkrcv. This is resolved by allowing the base station to calculate it's own position as a standalone \gls{gps}. The \gls{gps} position is transmitted to a local Dune task on the base station, where the operator can decide when the base station can be considered as fixed. When the base station is considered fixed the position is sent to the X8, where it's included in the \gls{rtk-gps} solution message.
-\subsection{State machine}
-\subsubsection{Nest system}
-A nest system is a stationary unit with the sole purpose of providing it's position to the rest of the Dune System. As part of the navigation system the base station is defined as a nest, where the \gls{gps} position is sent to the \gls{rtk-gps} system when fixed.
-An other nest has been created to obtain the \gls{gps} position of the stationary net. The net nest is configured as a rover in \gls{rtk-gps} configuration, such that the position relative to the base station is in the same frame as the X8.
-\subsection{Operator interface}
-The state of the navigation system is monitored though a interface in Neptus. The interface indicate which source the Dune system is using for state information. The interfaced apply a color code to indicate which source is currently in use in addition to all sensor system that are available, as seen in table \ref{Tb:Color Code}.
+The \gls{rtk-gnss} solution is made available to the DUNE system through the DUNE task RTKGPS, which is an altered version of the system developed in the theses \citep{Spockeli}. The \gls{rtk-gnss} solution is included in the \gls{imc} GpsFixRtk message, however in order for the message to be valid the following flags must be set true:
+\begin{table}
+\begin{itemize}[noitemsep]
+\item Valid velocity
+\item Valid position
+\item Valid time
+\item Valid base
+\end{itemize}
+\end{table}
+The three fist flags are set automatically when receiving a output solution from RTKLib, however the since the base station position is not included in the RTKLib output this flag will not be set. In order for the GpsFixRtk message in the \gls{uav} to get a valid base station position, the base station must calculate it's own position and send it to the \gls{uav}. Figure \ref{Fig:ValidationGpsFixRtk} shows the message flow which is needed in order for the GpsFixRtk message in the \gls{uav} to be considered valid by the \gls{uav} navigation system. The DUNE task basestationFix must be configured from Neptus that the base station position is fixed in order for the base station to start transmitting its own position to the \gls{uav}. The advantage fixing the base station position is that all vehicle that uses \gls{rtk-gnss} will be in the same reference frame, which enable high accurate vehicle coordination.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{figs/ValidationGpsFixRtk.png}
+\caption{Message flow for validation of GpsFixRtk}
+\label{Fig:ValidationGpsFixRtk}
+\end{figure}
+\subsection{Navigation state control system}
+The navigation state control system described in section \citep{S:NavState} is implemented in the DUNE task Navigation. Figure \ref{Fig:NavStateControlFlow} shows the system flow in the navigation state control system, which is trigger by either receiving a ExternalNavData or GpsFixRtk \gls{imc} message. Both types of messages is stored internally in the DUNE task, however the GpsFixRtk is used to trigger update of the short rtk loss compensator.
+
+The state machine performs its state transition action while entering the new state. The state change will then trigger an alteration in the content of the EstimatedState \gls{imc} message whether the position and velocity information should be from \gls{rtk-gnss} or from the external navigation system.
+
+In the case where \gls{rtk-gnss} is lost the short \gls{rtk-gnss} loss compensator described in section \ref{ss:ShortLoss} is implemented in the Navigation task. The compensator is used to prolong the availability of the \gls{rtk-gnss}, however if the Navigation task does not receive a valid GpsFixRtk before the deactivation timer triggers the navigation state control system will change state to only relay on the external navigation system.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.17]{figs/NavStateControl.png}
+\caption{Flow chart of the navigation state control system}
+\label{Fig:NavStateControlFlow}
+\end{figure}
+\subsection{Mobile sensor unit}
+The mobile sensor unit is a stationary unit with the sole purpose of providing it's position to the rest of the Dune System to be used as a reference position for net placement in Neptus. The mobile sensor unit apply \gls{rtk-gnss} in the same manor as a \gls{uav}, however the navigation system does not include a external navigation system. Thus a simplified version of the Navigation task has been created for the mobile sensor unit, which is the DUNE task RtkNavigation. The DUNE task RtkNavigation handle the GpsRtkFix message similar to the Navigation task, however due to not having a external navigation system only the GpsFixRtk position solution is used in the EstimatedState message.
+\subsection{Navigation source monitor}
+The navigation source monitor is a plug-in in Neptus used to monitor which navigation source a vehicle is using. The monitor consume the NavSources \gls{imc} message, which contain the navigation sources that are currently in use and which are available. The monitor apply color code to indicate which source is currently in use in addition to all sensor system that are available, as seen in figure \ref{Fig:NavsourceInterface}, with color description given in table \ref{Tb:Color Code}.
 \begin{table}[H]
 \begin{center}
     \begin{tabular}{ | l | l |}
@@ -128,7 +164,7 @@ The state of the navigation system is monitored though a interface in Neptus. Th
 \caption{Net approach parameters }
 \label{Tb:Color Code}
 \end{table}
-\begin{figure}
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.6]{figs/NavSourceInterface.png}
 \caption{Navigation source interface}

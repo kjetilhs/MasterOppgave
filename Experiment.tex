@@ -1,18 +1,7 @@
 \chapter{Experimental field tests}
 The autonomous landing system has successfully been tested in the field, where the result from two subsequent days is presented. The landing plan that was test was only with a virtual net that was placed $26$ meters above the ground, using guidance and high level control systems in DUNE. The navigation system used \gls{rtk-gps} with the compensator system enabled, which ensures that the positioning of the \gls{uav} can be assumed highly accurate. The result of the navigation system is presented in section \ref{ss:EXNavigation}.
 \section{Landing system}
-The wind condition the first day had an windspeed at $8-9 m/s$ from west, and the second day was calm wind conditions at $1 m/s$ from west. Hence the performance of system was tested with two different wind condition, where one strained the performance of the system while the other could be considered as ideal conditions. The criteria used to indicate if the X8 would have hit the net is given in table \ref{tb:NetCriteria}, which is related to a net with the dimensions 3 meter height and 5 meter width. The virtual net was placed above a runway at Agdenes, such that the landing path is similar to a landing path where a physical net is used. All landing plan was generated when the \gls{uav} was in a loiter manoeuvre, such that the plan could be reviewed and the correct controllers assigned to the plan.
-\begin{table}[H]
-\centering
-\begin{tabular}{| l | l |}
-\hline
-\textbf{Height acceptance}	& \textbf{Cross track error acceptance}	\\ \hline
-$\pm1.5$					& $\pm2.5$								\\ \hline
-\end{tabular}
-\caption{Net hit acceptance criteria}
-\label{tb:NetCriteria}
-\end{table} 
-\newpage
+The wind condition the first day had an windspeed at $8-9 m/s$ from west, and the second day was calm wind conditions at $1 m/s$ from west. Hence the performance of system was tested with two different wind condition, where one strained the performance of the system while the other could be considered as ideal conditions. The virtual net was placed above a runway at Agdenes, such that the landing path is similar to a landing path where a physical net is used. All landing plan was generated when the \gls{uav} was in a loiter manoeuvre, such that the plan could be reviewed and the correct controllers assigned to the plan.
 \subsection{Day 1}
 The first plan created had the approach path cross the landing path, which lead the \gls{uav} into the crosswind on the straight line between the circles. This strained the lateral controller introduces oscillatory motion in the \gls{uav}. Figure \ref{Fig:NorthEast31mai103029} shows the lateral landing plan, including the flight path of the \gls{uav} and the position of the virtual net. Figure \ref{Fig:Height31mai103029} shows the desired height and the \gls{uav} height during the landing plan.
 

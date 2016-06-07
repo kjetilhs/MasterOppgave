@@ -1,5 +1,5 @@
-\chapter{Path and Navigation}
-\section{Path system}\label{Ch:LandingPath}
+\chapter{Path and navigation}
+\section{Landing plan generation system}\label{Ch:LandingPlan}
 The path system consist of two main parts, which the landing path and the approach path. The landing path is a straight line path orientated with respect to a reference net position. The approach path is design separately as a lateral Dubins path and a longitudinal straight line path. The approach path is designed to ensure that the \gls{uav} is able to enter the landing path at the correct height with the correct attitude.
 \subsection{Landing Path}\label{SS:netApproach}
 The landing path is inspired by the work done in \citep{Skulstad&Syversen} where waypoint was used to create a straight line path towards the net. This method proved successful, and thus this landing system continues on the work. The angles in the straight line path must be kept small to avoid large transition behaviour from switching way-point, however the trade off is that the start high in of the landing path must be above any obstacles that is around the landing area. At sea this could be other ships or platforms, and on land it could be threes or hills. The straight line path is constructed relative to the net as shown in figure \ref{Fig:LandingPhase}, with way-points given as:
@@ -167,7 +167,7 @@ x(i) & y(i)
 		\caption{Height profile of the landing path}
 		\label{Fig:HeightProfile}
 \end{figure}
-\paragraph{Spiral path}
+\paragraph{Spiral path}\label{pp:SpiralPath}
 The longitudinal path will in the case where the correct height is not reach enter a spiral such that the correct height is reached. The spiral keeps the same turn radius as the finish circle in the lateral path. The longitudinal path continues along the spiral until the correct height can be reached with and decent angle equal or less then $\gamma_{d_{Max}}$. Continuing an arc is created such that the path ends with the correct heading. The arc has the same rotation direction as the lateral path, with start point where the correct height was reached and end point of the start of the landing path. The complete approach path combined with the landing path is shown in figure \ref{Fig:LateralPath}.
 \begin{figure}[H]
 	\centering
