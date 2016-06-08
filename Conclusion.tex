@@ -1,5 +1,26 @@
 \chapter{Conclusion and recommendation for further work}
 This chapter presents the main findings and conclusions from the thesis, as well as several topics for further work
 \section{Conclusion}
-The development of a autonomous landing system for fixed wing \gls{uav}
+The development of a autonomous landing system for fixed wing \gls{uav} has resulted in a system capable to perform a successful autonomous landing. The system has successfully been implemented and tested in the field, from which valuable insight operation information has been gathered. The main finding from the operational study has been that a autonomous landing from the East would require the use of the entire airfield at Agdenes, thought would still push the limitation of the operational area in which the \gls{uav} can fly. Further testing of the autonomous landing system is needed in order to create operational specification for autonomous landing in both direction on Agdenes airfield. 
+
+The landing path generator includes the versatility needed for a autonomous landing operation. The path can be customized to for-fill the need of the user, which was proven when it was used in a concept study of a  fixed wing \gls{uav} landing system where the net was suspended between multirotor \glspl{uav}.
+
+The testing of the lateral control system provided satisfying results during calm wind conditions, however this was not the case when flying in windy weather condition. Tuning of the lookahead distance to the lateral control system increased the performance when flying against the wind, however it decreased the performance when flying with the wind. The lateral control system caused the \gls{uav} to overshot in the turning circles along the approach path, which is due to the control system used was design for straight line path following. The control system must be improved in order to prevent overshot when following the turning circles, which is necessary in a autonomous landing attempt from the East at Agdenes with a stationary net.
+
+The testing of the longitudinal control system proved that the current glide slope angle of the longitudinal control system is $6 \deg$, however better tuning of the low level pitch controller could increase this limitation. The performance of the longitudinal control system stayed consistent both the field test days.
+
+The navigation system has successfully been integrate with \gls{rtk-gnss}, which works with satisfying performance. The navigation system now has the accuracy need in order to perform a autonomous landing. The robustness of the \gls{rtk-gnss} has been increased by the introduction of the short \gls{rtk-gnss} compensator, all though further study is needed to determine the time limitation of the compensator.
+
+The mobile sensor unit has successfully been created an tested in the field where it was used as a reference position in Neptus. The full potential of the mobile sensor unit has not been reach, since the only interaction with the unit is through view the position in Neptus.
 \section{Recommendation for further work}
+This master thesis has presented a autonomous landing system, with the main focus on the path and navigation system.
+
+Further increase the robustness of the navigation system capable to keep the \gls{rtk-gnss} position accuracy for a prolonged duration then current system
+
+A lateral control system capable with high performance in both turning manoeuvres and straight line path following in the present of wind disturbance. The current lateral control system can be improved by letting the lookahead distance parameter becoming a variable dependent on the ground speed with respect to the desired airspeed.
+
+A longitudinal control system capable of quickly decent over a short distance in a controlled manor, which uses the high dynamic capability in the fixed wing \gls{uav}.
+
+Expand the functionality of the mobile sensor unit to enable the fixed wing \gls{uav} to apply target tracking of the position of the sensor unit. This could be used in a autonomous net landing system where the position of the net is dynamic, without the use of multirotor \glspl{uav}. This can be used in a autonomous landing system where the net is placed on a ship, of which the DUNE system has not the option to control.
+
+The autonomous landing system in a stationary net require a monitor to follow the fixed wing \gls{uav} along the landing path and detect when the \gls{uav} hit the net, or be used to trigger an abortion. In the case of abortion the autonomous landing system must include a evasive manoeuvre, however further testing of the current landing system is required to find the boundaries of when an abortion should be triggered.

@@ -1,13 +1,12 @@
 \chapter{Experimental field tests}
-The autonomous landing system has successfully been tested in the field, where the result from two subsequent days is presented. The landing plan that was test was only with a virtual net that was placed $26$ meters above the ground, using guidance and high level control systems in DUNE. The navigation system used \gls{rtk-gps} with the compensator system enabled, which ensures that the positioning of the \gls{uav} can be assumed highly accurate. The result of the navigation system is presented in section \ref{ss:EXNavigation}.
-\section{Landing system}
-The wind condition the first day had an windspeed at $8-9 m/s$ from west, and the second day was calm wind conditions at $1 m/s$ from west. Hence the performance of system was tested with two different wind condition, where one strained the performance of the system while the other could be considered as ideal conditions. The virtual net was placed above a runway at Agdenes, such that the landing path is similar to a landing path where a physical net is used. All landing plan was generated when the \gls{uav} was in a loiter manoeuvre, such that the plan could be reviewed and the correct controllers assigned to the plan.
+The autonomous landing system has successfully been tested in the field, where the result from two subsequent days is presented. The landing plan was tested and verified at Agdenes airfield with a virtual net placed $26 m$ above ground. The landing plan applied the control system given in appendix \citep{AP:ControlGuidanceSystem} in Fly By Wire A (FBWA) modus, with the navigation system which has been presented in this thesis. The result of the navigation system is presented in section \ref{ss:EXNavigation}.
+\section{Landing plan generation system}
+The landing plan generation system was test in the field at Agdenes airfield, where the results from two consecutive days are presented. The weather condition differed on those two day, where as the first had windspeeds between $8-9 m/s$ from West while the second day was considered calm. Hence the performance of the autonomous landing system was tested during two different wind condition, where one strained the performance of the system while the other could be considered as ideal conditions. The virtual net was placed above a runway at Agdenes, such that the landing path is similar to a landing path where a physical net is used. All landing plan was generated when the \gls{uav} was in a loiter manoeuvre, such that the plan could be reviewed and the correct controllers assigned to the plan.
 \subsection{Day 1}
-The first plan created had the approach path cross the landing path, which lead the \gls{uav} into the crosswind on the straight line between the circles. This strained the lateral controller introduces oscillatory motion in the \gls{uav}. Figure \ref{Fig:NorthEast31mai103029} shows the lateral landing plan, including the flight path of the \gls{uav} and the position of the virtual net. Figure \ref{Fig:Height31mai103029} shows the desired height and the \gls{uav} height during the landing plan.
+\subsubsection{First path}
+The first land plan created during the first day is shown in figure \ref{Fig:NorthEast31mai103029}, which shows the desired path, net position and the actual path of the \gls{uav}. The desired heigh as well as the actual height is shown in figure \ref{Fig:Height31mai103029}. The straight line in the approach path is here chosen to cross the landing path, which lead the \gls{uav} into the crosswind on the straight line between the circles. The effect of flying in the cross wind introduced oscillatory motion in the \gls{uav}, which the lateral control system was unable to remove. The oscillatory behaviour affect the path of the \gls{uav} when entering the final turning circle, where it overshoot the path. The overshot may cause the \gls{uav} to leave the line of sight of the pilot, which is a critical failure in a LOS flight operation. When entering the landing path the \gls{uav} continues to oscillate along the landing path, however the \gls{uav} was able at the time of net passing to have a cross track error within the acceptance criteria.
 
-The behaviour of the lateral path shown in figure \ref{Fig:NorthEast31mai103029} indicates that the lateral guidance system is struggling to stay on the straight lines in the plan when flying in the crosswind. The oscillatory behaviour affect the path of the \gls{uav} when entering the final turning circle, where it overshoot the path. The overshot may cause the \gls{uav} to leave the line of sight of the pilot, which is a critical failure in a LOS flight operation. When entering the landing path the \gls{uav} continues to oscillate along the final straight line path, all though the \gls{uav} was able to have a cross track error at the time of passing the virtual net lower then the cross track error acceptance. The behaviour of the lateral behaviour can be increased by changing the rotation direction of the first turning circle, such that the straight line path between the circle do not cross the landing path. This will also allow the \gls{uav} to enter the final  turning circle at a better angle. The lookahead distance of the lateral controller can be reduced such that it will react more aggressive when flying in the head wind.
-
-The longitudinal guidance system is able to follow it's reference, all though it is also struggling when attempting a glide slope decent in the head wind. However it  should be noted that the path shown in figure \ref{Fig:Height31mai103029} was constructed with a net impact angle of $\gamma_n = 3 \deg$, which resulted in the desired height failure to converge to the path due the smoothing filter introducing a constant bias from the desired path. In order for the desired height from the longitudinal guidance system to converge to the desired path the net impact angle $\gamma_n$ was set to zero. However this affect the total altitude descent along the landing path since now only the glide slope is used to reduce the altitude of the \gls{uav}. 
+The longitudinal control system is able to follow it's reference, however the \gls{uav} height starts to diverge from the desired height during the landing path. The divergence corresponds to the overshot in the lateral plan, which could be the reason for the divergence. However the desired height does not reach the height of the net due to a smoothing filer of the desired height in the longitudinal control system. This results in the desired height only to converge to the desired path if the path height remain constant, which is not the case with a net impact angle greater then zero. However with a net impact angle equal to zero, the glide slope will be the sole part of the landing path which is used to decrease the height of the \gls{uav}.
 \newpage
 \begin{figure}[H]
 	\centering
@@ -21,32 +20,31 @@ The longitudinal guidance system is able to follow it's reference, all though it
 		\caption{Height profile of landing plan with $3 \deg$ net impact angle}
 		\label{Fig:Height31mai103029}
 \end{figure}
-A new landing plan, where the desired height and \gls{uav} during the landing plan is shown in figure \ref{Fig:Height31mai31mai105034}, was generated with the net impact angle $\gamma_n = 0$. The effect of setting the net impact angle to zero gave a better performance from the height guidance system. At the time the \gls{uav} passed the virtual net the hight error with respect the height of the net center was within the height error acceptance.
-
-The minimum altitude that was used at the start of the landing path was set to $56 m$ above the runway. This is due to the length restriction of both the airfield and the operational area where the \gls{uav} is visible for the pilot. With the current landing plan and a landing direction from east the minimum height at which the \gls{uav} can starts its landing path is set to $56 m$ above ground. The effect of this requirement is discussed further in section \ref{sss:summaryDay1}.
-
-During the new path the \gls{uav} was able to stay on the straight line towards the net. However the \gls{uav} still have oscillatory behaviour along the straight line connecting the two circles, with a large overshoot in the final turn. A better path would be to avoid flying in the cross wind as much as possible, which would result in a smoother path between the circles. However this will not remove the overshot in the final turn, all thought it will be reduced since the \gls{uav} is not in a oscillatory motion when entering the final circle.
+\subsubsection{Path with $\gamma_n = 0$}
+A new landing plan, where the desired height and \gls{uav} during the landing plan is shown in figure \ref{Fig:Height31mai31mai105034}, was generated with the net impact angle $\gamma_n = 0$. The effect of setting the net impact angle to zero gave a better performance from the longitudinal control system, due to the desired height now converging to the net center height. At the time the \gls{uav} passed the virtual net the hight error with respect the height of the net center was within the height error acceptance.
 \begin{figure}[H]
 \centering
 		\includegraphics[scale=0.7]{figs/Experiment/Height31mai105034.eps}
 		\caption{Height profile of landing plan with $0 \deg$ net impact angle}
 		\label{Fig:Height31mai31mai105034}
 \end{figure}
-In order to reduce the oscillatory motion of the \gls{uav} a new path was constructed where the rotation direction of the first circle was changed to counter clockwise, as shown in figure \ref{Fig:NorthEast31mai125420}. The new path had its straight line path between the circles parallel to the wind direction, which resulted in less oscillatory motion and a smaller entry tangential angle into the final turning circle. However the overshoot in the final circle is still present, and is a result of the \gls{uav} attempting to turn up against the wind. The oscillatory motion was reduced by changing the rotation direction of the first turning circle, however the \gls{uav} is still not able to stay on the straight line paths in the landing plan. 
+\subsubsection{Path with inverted rotation direction in the first circle}
+An attempt to reduce the oscilatoric motion of the \gls{uav} during the straight line part of the approach path, a new path was created with inverted rotation direction in the first circle, as shown in figure \ref{Fig:NorthEast31mai125420}. The straight line part of the approach path moved the \gls{uav} to fly in the same direction as the wind, which resulted in less oscillatory motion. However the overshoot in the final circle is still present, which is due to a combination of the \gls{uav} turning up against the wind and the lateral controller not being design to follow a turning manoeuvre.
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.7]{figs/Experiment/NorthEast31mai125420.eps}
 	\caption{North-East plot where the straight line segment between the two circles give a path parallel to the wind}
 	\label{Fig:NorthEast31mai125420}
 \end{figure}
-In order to further reduce the oscillatory motion of the lateral controller the lookahead distance was reduced to make the controller more aggressive towards the wind. The effect of this change is shown in figure \ref{Fig:NorthEast31mai131844}, where the oscillatory motion is almost completely removed. However the overshot at end of the final circle indicates that the lateral controller is struggling to handle a turning circle. 
+\subsubsection{Path with reduced lookahead distance in lateral controller}
+In order to further reduce the oscillatory motion in the lateral plan the lookahead distance in the lateral control system was reduced to make the controller more aggressive towards the wind. The effect of this change is shown in figure \ref{Fig:NorthEast31mai131844}, where the oscillatory motion is almost completely removed. However the overshot at end of the final circle shows that the lateral controller is struggling to handle a turning circle. 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{figs/Experiment/NorthEast31mai131844.eps}
 \caption{North-East plot where the lookahead distance of the lateral controller was reduced to increase performance when flying against the wind}
 \label{Fig:NorthEast31mai131844}
 \end{figure}
-Looking at the desired roll ($\phi_d$ ) and the actual roll ($\phi$) of the \gls{uav} at the time of the final turn, shown in figure \ref{Fig:DesiredRoll131844}, it's observed that the controller does not try to keep a constant bank through the turn. Instead it lowering the roll angle, which in turn affect the performance of the \gls{uav} at the end of the turn. The performance might be reduced by reducing the distance between each arc segments in the turning circle, and experimenting with the radius of the turning circle. However this was not attempt during the first day, all thought attempts to reduce overshot by lowering the distance between each arc segments was performed the following day.
+By reviewing the desired roll ($\phi_d$ ) and the actual roll ($\phi$) of the \gls{uav} at the time of the final turn, shown in figure \ref{Fig:DesiredRoll131844}, it's observed that the lateral control system decrease the desired roll in the middle of the turn. This happens since the lateral control system only sees the next point on the circle, and not the circle as a whole.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{figs/Experiment/rollDesired131844.eps}
@@ -54,7 +52,7 @@ Looking at the desired roll ($\phi_d$ ) and the actual roll ($\phi$) of the \gls
 \label{Fig:DesiredRoll131844}
 \end{figure}
 \subsubsection{Summary of day 1}\label{sss:summaryDay1}
-The result from the first day was affected with strong wind condition, in which the \gls{uav} struggled to stay on the path. The mean height and cross track error is listed in table \ref{tb:Day1HeightCrossTrack}, where the first column indicate the number of the landing attempt. As seen in table \ref{tb:Day1HeightCrossTrack} the average cross track error equals to $5.4 m$
+The result from the first day was affected with strong wind condition, in which the \gls{uav} struggled to stay on the path and overshooting in the final turning circle. The average heigh and cross track error with respect to desired heigh and path respectfully for 11 landing plan performance, is given in table \ref{tb:Day1HeightCrossTrack}. The average height error vary less then the average cross track error, with a variance of $0.4 m$ against $6.2 m$. However the performance of the \gls{uav} in both height error and cross track error is worse then the results obtain during SIL simulation. This was expected, however the magnitude of the variance in the average cross track error shows that the performance of the lateral control system must increase in order for the autonomous landing system to be considered reliable. 
 \begin{table}[H]
 \centering
 \begin{tabular}{| l | l | l |}
@@ -71,12 +69,13 @@ $8$				& $1.2$							& $8.2$								\\ \hline
 $9$				& $1.9$							& $5.9$								\\ \hline
 $10$			& $1.5$							& $4.4$								\\ \hline
 $11$			& $1.5$							& $1.4$								\\ \hline
-Average				& $1.5$							& $5.4$								\\ \hline
+Average			& $1.5$							& $5.4$								\\ \hline
+Variance		& $0.4$							& $6.2$								\\ \hline
 \end{tabular}
 \caption{Mean height and cross track error from day 1}
 \label{tb:Day1HeightCrossTrack}
 \end{table}
-The longitudinal guidance system was able to keep a stable average height error during the landing plans. However the longitudinal control system must be further fine tuned in order to achieve the precision needed to perform a autonomous landing during windy conditions. A table containing if a landing plan would result in a net landing is presented in table \ref{tb:Day1LandingAttempt}. The success rate of the first day gives a $36.3  \% $ probability of successfully landing in the net, which indicate that alteration to the current landing system is needed in order to achieve better performance in strong wind conditions.
+The variance of the longitudinal control system shows that the control system is reliable in performance, however the average error must decrease to allow increased certainty that the \gls{uav} is able to hit the stationary net. In table \ref{tb:Day1LandingAttempt} the results of whether the \gls{uav} passed through the net or not, is present. Most of the alteration on the path and controllers was aimed towards the lateral control system, which is shown be be increased performance during the later attempts. In the comparison to the simulation results, where the average error was almost zero, the performance has clearly decreased. This behaviour was expected due the simulation model used in the simulation has not been verified. In addition the simulation results was obtain after the two experimental test day, where a different time constant was used in the smoothing filter in the longitudinal control system \citep{Sigurd}. It is expected that this alteration would have increased the behaviour of longitudinal control system, however this has not been verified due to limitation in flight days.
 \begin{table}[H]
 \centering
 \begin{tabular}{| p{0.5cm} | p{1cm} | p{1cm} | p{3.5cm} | p{3cm} | p{1cm} |}
@@ -97,29 +96,17 @@ $11$			& $-1.3$	& $0.2$		& OK							& OK									& OK				\\ \hline
 \caption{Table containing the result of each landing attempt}
 \label{tb:Day1LandingAttempt}
 \end{table}
-The content of table \ref{tb:Day1LandingAttempt} is shown in figure \ref{Fig:Day1NetPass}, where the net is marked as a whole line and all landing attempts are marked as crosses. The osilatory motion in the lateral plane by the \gls{uav} is reflected in the placement of the crosses. However the placement of the cross is evenly divided along the cross track error axis, which is not reflected in the placement along the height error axis. The placement along the height error axis indicates that the \gls{uav} 
+The content of table \ref{tb:Day1LandingAttempt} is shown in figure \ref{Fig:Day1NetPass}, where the net is marked as a whole line and all landing attempts are marked as crosses. The oscillatory motion in the lateral plane by the \gls{uav} is reflected in the placement of the crosses. However the placement of the cross shows the effect of a to high average height error by either passing over the net or in the upper part of the net.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{figs/Experiment/day1NetHit.eps}
 \caption{Position of UAV relative to the net center at the time of net passing}
 \label{Fig:Day1NetPass}
 \end{figure}
-The maximum length of the landing path with the radius of the final turning circle must be within the flight operation area. On Agdenes when attempting to land from the East the restriction is estimated to be $700 m$, with minimum altitude of $56 m$. 
-\begin{table}
-\centering
-\begin{tabular}{| p{2cm} | p{4cm} | p{2cm} | p{2cm} |}
-\hline
-\textbf{Net offset [m]}	& \textbf{Needed decent height [m]}& \textbf{Glide slope length [m]}& \textbf{Glide slope angle [$\deg$]}	\\ \hline
-$0$						& $56$													&$700$							& $4.6$			\\ \hline
-$3$						& $53$													&$700$							& $4.3$			\\ \hline
-$3$						& $53$													&$300$							& $9.5$			\\ \hline
-\end{tabular}
-\caption{Different decent heights and length of glide slope with responding glide slope angle}
-\label{Tb:GlideSlopeAngles}
-\end{table}
-The minimum altitude will vary if the \gls{uav} can start its landing path from the west, however this will only be the case during calm wind condition or a wind direction from the east. In addition increased glide slope angle will result in the \gls{uav} to build up speed, however decreasing the throttle in order to reduce lift might be a method used to quickly lose hight during the landing path.
+During the execution of the landing plan it was discovered that in order for the \gls{uav} to stay above the highest tree tops it had to start its decent from an height of $56 m$ above the airfield. Flying bellow this height would result in the pilot losing sight of the \gls{uav}, which is unacceptable in a LOS \gls{uav} operation. This didn't provide a problem during landing attempt with a virtual net which was placed $26 m$ above the airfield, however during a real stationary net landing it would push the limitation of the operation area in which the \gls{uav} can fly. The flight is a Line Of Sight operation, meaning that the pilot must have the \gls{uav} within sight during the entire flight. A $56 m $ decent with a glide slope angle of $6\deg$ would require a glide slope of $500 m$. An estimate of the the available length of which the \gls{uav} can use to perform a autonomous landing in a stationary net is estimated to be $700 m$. This would require the use of the entire runway at Agdenes. An alternative solution is to attempt to land with a greater glide slope angle, or simply start the landing path from West. Landing attempts from the west has yet to tried, the reason being limited time and that would mean that the \gls{uav} would land in the same direction the wind is typically blowing. This would increase the ground speed of the \gls{uav}, which is undesired. However in the case where the wind is calm enough to be considered negligible, a autonomous landing from west would be a valid option.
 \subsection{Day 2}
-The second day had calm wind condition, which is considered as ideal field test conditions for the autonomous landing system. For the new landing plan the virtual net was moved in order for the landing path to use more of the runway. In addition the heading of the net was changed such the landing path became parallel to the runway. The main goal with the flight today was to reduce to overshot in the final turn, and to investigate how to increase the performance of the height guidance system. To increase the height difference between the net center and the start of the landing path both the length of the glide slope and glide slope angle was increased.
+\subsubsection{First path}
+The second day had calm wind condition, which is considered as ideal field test conditions for the autonomous landing system. In an attempt to increase the height difference between the start height of the landing path and the net center, a longer glide slope was attempted. The virtual net was place further to the west along the runway, and the length and angle of the glide slope was increase to $280 m$ and $8 \deg$ respectfully. The full path specification for the first path is given in appendix \ref{AP:SpecDay2}.
 
 The path generated with the new parameters is shown in figure \ref{Fig:NorthEast1juni081328}. The lateral path overshoots in both the start and final turning circles. As seen in figure \ref{Fig:Roll1juni081328} the roll motion of the \gls{uav} does not follow the desired roll, which is due to the low level roll controller is tuned for manual flight where rapid changes in the actuators is undesired. In addition the control surface used to control the roll of the \gls{uav} is also used to control the pitch, which results in having to weight the performance in heading against the ability to follow a height reference.
 \begin{figure}[H]
@@ -154,6 +141,12 @@ In order to reduce the overshot in the final turning circle the distance between
 \caption{North-East plot where the distance between each arc segments has been reduced from $25 m$ to $10 m$}
 \label{Fig:NorthEast1juni083423}
 \end{figure}
+\begin{figure}
+\centering
+\includegraphics[scale=0.7]{figs/Experiment/Roll1juni083423.eps}
+\caption{Roll and desired roll in the final turning circle}
+\label{Fig:RollFinalTurning083423}
+\end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{figs/Experiment/CrossTrackError1juni083423.eps}
@@ -162,30 +155,6 @@ In order to reduce the overshot in the final turning circle the distance between
 \end{figure}
 \subsubsection{Summary day 2}
 The second day had more experimental testing then the first day, where the limits of the height profile and reducing the overshoot in the final turning circle was the main focus. The testing of limits for glide slope angle is reflected in table \ref{Tb:AverageCrossHeightDay2} where the net misses is due to height error. With the current system the limit was found to be $\gamma_l=6\deg$, however better tuning of low level pitch controller and reducing landing speed could increase the limitation on the glide slope angle. The short final approach length resulted in the \gls{uav} to have a short distance of which the net center height could be reached. A longer final approach would result in a higher success rate, however this would require either a longer landing path or shorter glide slope. The final approach could be increased to $120 m$ by moving the net further west over. The risk with a large final approach during a autonomous landing in a real net would be the prolonged time the \gls{uav} flies $3-4 m$ above ground. A loss of high accurate positioning system could then result in a crash.
-\begin{table}[H]
-\centering
-\begin{tabular}{| p{0.5cm} | p{1cm} | p{1cm} | p{3.5cm} | p{3cm} | p{1cm} |}
-\hline
-\textbf{Nr.}	& \textbf{Height error [m]}	& \textbf{Cross track error [m]}& \textbf{Height acceptance}& \textbf{Cross track error acceptance}	& \textbf{Net hit}\\ \hline
-$1$				& $14.4$		& $0.1$		& X								& OK									& X					\\ \hline
-$2$				& $1.3$		& $0.6$	& OK								& OK										& OK					\\ \hline
-$3$				& $1.1$		& $-0.2$	& OK							& OK									& OK				\\ \hline
-$4$				& $1.4$		& $0.1$		& OK							& OK										& OK					\\ \hline
-$5$				& $1.1$		& $0.1$		& OK							& OK										& OK					\\ \hline
-$6$				& $2.0$		& $-0.2$	& X								& OK									& X					\\ \hline
-$7$				& $2.3$		& $0.2$		& X							& OK									& X				\\ \hline
-$8$				& $7.0$	& $0.3$	& X								& OK										& X					\\ \hline
-\end{tabular}
-\caption{Table containing the result of each landing attempt}
-\label{tb:Day2LandingAttempt}
-\end{table}
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.7]{figs/Experiment/day2NetHit.eps}
-\caption{Position of the \gls{uav} relative to the net center at the time of net passing}
-\label{Fig:Day2NetPass}
-\end{figure}
-The performance of the lateral controller increase during calm wind condition, however the performance of the longitudinal controller is the same as during windy conditions. Table \ref{Tb:AverageCrossHeightDay2} list up the average height error and cross track error relative to the desired height and path. 
 \begin{table}[H]
 \centering
 \begin{tabular}{| l | l | l |}
@@ -199,10 +168,37 @@ $5$				& $3.0$							& $0.3$										\\ \hline
 $6$				& $1.6$							& $0.2$										\\ \hline
 $7$				& $1,9$							& $-2.3$									\\ \hline
 $8$				& $1.9$							& $-0.1$									\\ \hline
+Average			& $1.9$							& $0.5$										\\ \hline
+Variance		& $0.5$							& $4.7$										\\ \hline
 \end{tabular}
 \caption{Average height and cross track error from day 2}
 \label{Tb:AverageCrossHeightDay2}
 \end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{| p{0.5cm} | p{1cm} | p{1cm} | p{3.5cm} | p{3cm} | p{1cm} |}
+\hline
+\textbf{Nr.}	& \textbf{Height error [m]}	& \textbf{Cross track error [m]}& \textbf{Height acceptance}& \textbf{Cross track error acceptance}	& \textbf{Net hit}\\ \hline
+$1$				& $14.4$		& $0.1$		& X								& OK									& X					\\ \hline
+$2$				& $1.3$		& $0.6$	& OK								& OK										& OK					\\ \hline
+$3$				& $1.1$		& $-0.2$	& OK							& OK									& OK				\\ \hline
+$4$				& $1.4$		& $0.1$		& OK							& OK										& OK					\\ \hline
+$5$				& $1.1$		& $0.1$		& OK							& OK										& OK					\\ \hline
+$6$				& $2.0$		& $-0.2$	& X								& OK									& X					\\ \hline
+$7$				& $2.3$		& $0.2$		& X								& OK									& X				\\ \hline
+$8$				& $7.0$	& $0.3$	& X										& OK										& X					\\ \hline
+\end{tabular}
+\caption{Table containing the result of each landing attempt}
+\label{tb:Day2LandingAttempt}
+\end{table}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{figs/Experiment/day2NetHit.eps}
+\caption{Position of the \gls{uav} relative to the net center at the time of net passing}
+\label{Fig:Day2NetPass}
+\end{figure}
+The performance of the lateral controller increase during calm wind condition, however the performance of the longitudinal controller is the same as during windy conditions. Table \ref{Tb:AverageCrossHeightDay2} list up the average height error and cross track error relative to the desired height and path. 
 \section{Navigation}\label{ss:EXNavigation}
 The testing of the navigation system is restricted to the X8, however the same navigation system was used in a multicoper \gls{uav} both days.
 \subsection{RTK-GNSS performance}
@@ -241,5 +237,6 @@ The short loss compensator was designed to prolong the availability of the \gls{
 \caption{Loss of \gls{rtk-gps} triggers the short loss compensator such that the \gls{uav} keeps the \gls{rtk-gps} position solution longer}
 \label{Fig:ShortLoss}
 \end{figure}
+\subsection{Summary of navigation system performance}
 \section{Summary}
 This chapter showed the performance of a X8 fixed wing \gls{uav} performing a autonomous landing in a virtual net. The performance of the navigation system is acceptable for a autonomous system by supplying a stable highly accurate position solution, with redundancy for short \gls{rtk-gps} loss periods. The landing plan still require further testing to develop path parameters that  will result in a successful net landing. The path parameters are depending on the ability for the control system to follow the desired path, which might prove demanding in the longitudinal plane for large change in high over a short distance.
