@@ -106,9 +106,7 @@ The content of table \ref{tb:Day1LandingAttempt} is shown in figure \ref{Fig:Day
 During the execution of the landing plan it was discovered that in order for the \gls{uav} to stay above the highest tree tops it had to start its decent from an height of $56 m$ above the airfield. Flying bellow this height would result in the pilot losing sight of the \gls{uav}, which is unacceptable in a LOS \gls{uav} operation. This didn't provide a problem during landing attempt with a virtual net which was placed $26 m$ above the airfield, however during a real stationary net landing it would push the limitation of the operation area in which the \gls{uav} can fly. The flight is a Line Of Sight operation, meaning that the pilot must have the \gls{uav} within sight during the entire flight. A $56 m $ decent with a glide slope angle of $6\deg$ would require a glide slope of $500 m$. An estimate of the the available length of which the \gls{uav} can use to perform a autonomous landing in a stationary net is estimated to be $700 m$. This would require the use of the entire runway at Agdenes. An alternative solution is to attempt to land with a greater glide slope angle, or simply start the landing path from West. Landing attempts from the west has yet to tried, the reason being limited time and that would mean that the \gls{uav} would land in the same direction the wind is typically blowing. This would increase the ground speed of the \gls{uav}, which is undesired. However in the case where the wind is calm enough to be considered negligible, a autonomous landing from west would be a valid option.
 \subsection{Day 2}
 \subsubsection{First path}
-The second day had calm wind condition, which is considered as ideal field test conditions for the autonomous landing system. In an attempt to increase the height difference between the start height of the landing path and the net center, a longer glide slope was attempted. The virtual net was place further to the west along the runway, and the length and angle of the glide slope was increase to $280 m$ and $8 \deg$ respectfully. The full path specification for the first path is given in appendix \ref{AP:SpecDay2}.
-
-The path generated with the new parameters is shown in figure \ref{Fig:NorthEast1juni081328}. The lateral path overshoots in both the start and final turning circles. As seen in figure \ref{Fig:Roll1juni081328} the roll motion of the \gls{uav} does not follow the desired roll, which is due to the low level roll controller is tuned for manual flight where rapid changes in the actuators is undesired. In addition the control surface used to control the roll of the \gls{uav} is also used to control the pitch, which results in having to weight the performance in heading against the ability to follow a height reference.
+The second day had calm wind condition, which is considered as ideal field test conditions for the autonomous landing system. In an attempt to increase the height difference between the start height of the landing path and the net center, a longer glide slope was attempted. The virtual net was place further to the west along the runway, and the length and angle of the glide slope was increase to $280 m$ and $8 \deg$ respectfully. The full path specification for the first path is given in appendix \ref{AP:SpecDay2}. Figure \ref{Fig:NorthEast1juni081328} show a North-East plot of the path created with the new specification, which show that the lateral path overshoots in both the start and finish turning circle. The overshot in the start circle is a result of the roll angle is not able to follow the desired roll angle fast enough, which is due to the low level roll controller being poorly tuned for autonomous flights where high precision performance from the \gls{uav} is desired. In addition the control surface used to control the roll of the \gls{uav} is also used to control the pitch, which results in having to weight the performance in heading against the ability to follow a height reference.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{figs/Experiment/NorthEast1juni081328.eps}
@@ -121,7 +119,7 @@ The path generated with the new parameters is shown in figure \ref{Fig:NorthEast
 \caption{Roll}
 \label{Fig:Roll1juni081328}
 \end{figure}
-The resulting desired height and \gls{uav} height from the new path, shown in figure \ref{Fig:Height1juni081328}, shows that the \gls{uav} was unable to follow a glide slope with glide slope angle $\gamma_l = 8 \deg$. A major reason for this behaviour is due to the failure of the \gls{uav} pitch to follow the desired pitch, as shown in figure \ref{Fig:Pitch1juni081328}. The pitch appear to to saturated in the low level controller since it does not reach the desired pitch. Better tuning of the low level control system might reduce the bias and lag between actual and desired pitch value, however the reason for the saturation must be further investigated. A restriction in the desired pitch available for the control system, indicate that a new strategy is need in a autonomous landing system where speed assignment during the landing path must be investigated.
+The desired height and the actual heigh of the \gls{uav} is shown in figure \ref{Fig:Height1juni081328}, which shows that the \gls{uav} is unable to follow a glide slope with a slope angle of $\gamma_l = 8 \deg$. A major reason for this behaviour is due to the failure of the \gls{uav}s low level pitch controller to follow the desired pitch, as shown in figure \ref{Fig:Pitch1juni081328}. The pitch appear to be saturated in the low level controller since it does not attempt to reach the desired pitch. The low level pitch controller must be further fine tuned, and similar to the low level roll controller, has not been fine tuned for autonomous flights where high precision performance is desired.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{figs/Experiment/Height1juni081328.eps}
@@ -134,7 +132,8 @@ The resulting desired height and \gls{uav} height from the new path, shown in fi
 \caption{Pitch}
 \label{Fig:Pitch1juni081328}
 \end{figure}
-In order to reduce the overshot in the final turning circle the distance between each arc segments each turning circle was reduced. The goal for with this alteration was to get the lateral controller to keep the roll angle in order to increase the turning performance. Figure \ref{Fig:NorthEast1juni083423} shows the the resulting path when the arc segment distance is reduced. The overshot in the final turning circle is reduced, and the cross track error in the final turning circle is shown in figure \ref{Fig:CrossTrackError1juni083423} indicates that the performance of the \gls{uav} increase with short distance between arc segments. A long term solution for reducing overshot in a turning circle would be a dedicated controller for turning manoeuvre. If combined with the current lateral controller which is designed to stay on a straight line between way-point the result will be a controller that is well suited for performing a autonomous landing.
+\subsubsection{Reducing arc segments distance}
+In an attempt to further reduce the overshot in the finish turning circle the distance between each arc segments in the approach path circles was reduced from $25 m$ to $10 m$. The desired response with this alteration of the approach path was to ensure that the lateral control system keeps a high desired roll angle through the turning circle, thus reducing the overshot and increase the performance. A North-East plot of the resulting path is shown in figure \ref{Fig:NorthEast1juni083423}, which shows that the \gls{uav} has reduced its overshot in the final turning circle. The desired behaviour where the lateral control system keep a high desired roll angle through is achieved and shown in figure \ref{Fig:RollFinalTurning083423}. The confirmation that the \gls{uav} had a small overshot from the desired path is shown in the cross track error plot given in figure \ref{Fig:CrossTrackError1juni083423}.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{figs/Experiment/NorthEast1juni083423.eps}
@@ -154,7 +153,26 @@ In order to reduce the overshot in the final turning circle the distance between
 \label{Fig:CrossTrackError1juni083423}
 \end{figure}
 \subsubsection{Summary day 2}
-The second day had more experimental testing then the first day, where the limits of the height profile and reducing the overshoot in the final turning circle was the main focus. The testing of limits for glide slope angle is reflected in table \ref{Tb:AverageCrossHeightDay2} where the net misses is due to height error. With the current system the limit was found to be $\gamma_l=6\deg$, however better tuning of low level pitch controller and reducing landing speed could increase the limitation on the glide slope angle. The short final approach length resulted in the \gls{uav} to have a short distance of which the net center height could be reached. A longer final approach would result in a higher success rate, however this would require either a longer landing path or shorter glide slope. The final approach could be increased to $120 m$ by moving the net further west over. The risk with a large final approach during a autonomous landing in a real net would be the prolonged time the \gls{uav} flies $3-4 m$ above ground. A loss of high accurate positioning system could then result in a crash.
+The second day had ideal weather condition, which allowed for testing of the autonomous landing system in ideal condition. The goal with the second day was to increase the height from which the \gls{uav} would start its decent towards the net by increasing the glide slope angle, and to investigate path parameter that can be used to reduce the \gls{uav}s overshot during turning in the final turning circle. The attempts to increase glide slope angle during the flight test is reflected in table \ref{tb:Day2LandingAttempt}, which contain the results of whether the \gls{uav} passed through the net or not. Attempts with glide slope angle greater then $6 \deg$ resulted in the \gls{uav} to miss the net, however this performance could be increased with a better the use of the same time constant in the smoothing filter in the longitudinal control system and better tuning of the low level pitch controllers. With the current longitudinal control system the maximum glide slope angle that the \gls{uav} is able to follow during a flight is $6 \deg$. In addition increased performance from the longitudinal control system can be achieved by increasing the length of the final approach, in order for the \gls{uav} to have longer time to converge to the net center height. The final approach could be increased to $120 m$ by moving the net further west over. The risk with a large final approach during a autonomous landing in a real net would be the prolonged time the \gls{uav} flies $3-4 m$ above ground. A loss of high accurate positioning system could then result in a crash.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{| p{0.5cm} | p{1cm} | p{1cm} | p{3.5cm} | p{3cm} | p{1cm} |}
+\hline
+\textbf{Nr.}	& \textbf{Height error [m]}	& \textbf{Cross track error [m]}& \textbf{Height acceptance}& \textbf{Cross track error acceptance}	& \textbf{Net hit}\\ \hline
+$1$				& $14.4$		& $0.1$		& X								& OK									& X					\\ \hline
+$2$				& $1.3$		& $0.6$	& OK								& OK										& OK					\\ \hline
+$3$				& $1.1$		& $-0.2$	& OK							& OK									& OK				\\ \hline
+$4$				& $1.4$		& $0.1$		& OK							& OK										& OK					\\ \hline
+$5$				& $1.1$		& $0.1$		& OK							& OK										& OK					\\ \hline
+$6$				& $2.0$		& $-0.2$	& X								& OK									& X					\\ \hline
+$7$				& $2.3$		& $0.2$		& X								& OK									& X				\\ \hline
+$8$				& $7.0$	& $0.3$	& X										& OK										& X					\\ \hline
+\end{tabular}
+\caption{Table containing the result of each landing attempt}
+\label{tb:Day2LandingAttempt}
+\end{table}
+The lateral control system perform better compared to the first day during calm wind condition which is reflected in the table \ref{Tb:AverageCrossHeightDay2}, which contain the performance from 8 landing plan missions. In addition the performance from the longitudinal control system remain similar to the first day. This show that the longitudinal control system is less affected by the wind, however the the average height error of the longitudinal control system must be decreased in order for the autonomous landing to achieve a higher probability of successfully performing a successful net landing. The hight average height error is reflected in figure \ref{Fig:Day2NetPass}, where those crosses that are within the height acceptance criteria are in the upper part of the net.
 \begin{table}[H]
 \centering
 \begin{tabular}{| l | l | l |}
@@ -174,35 +192,15 @@ Variance		& $0.5$							& $4.7$										\\ \hline
 \caption{Average height and cross track error from day 2}
 \label{Tb:AverageCrossHeightDay2}
 \end{table}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{| p{0.5cm} | p{1cm} | p{1cm} | p{3.5cm} | p{3cm} | p{1cm} |}
-\hline
-\textbf{Nr.}	& \textbf{Height error [m]}	& \textbf{Cross track error [m]}& \textbf{Height acceptance}& \textbf{Cross track error acceptance}	& \textbf{Net hit}\\ \hline
-$1$				& $14.4$		& $0.1$		& X								& OK									& X					\\ \hline
-$2$				& $1.3$		& $0.6$	& OK								& OK										& OK					\\ \hline
-$3$				& $1.1$		& $-0.2$	& OK							& OK									& OK				\\ \hline
-$4$				& $1.4$		& $0.1$		& OK							& OK										& OK					\\ \hline
-$5$				& $1.1$		& $0.1$		& OK							& OK										& OK					\\ \hline
-$6$				& $2.0$		& $-0.2$	& X								& OK									& X					\\ \hline
-$7$				& $2.3$		& $0.2$		& X								& OK									& X				\\ \hline
-$8$				& $7.0$	& $0.3$	& X										& OK										& X					\\ \hline
-\end{tabular}
-\caption{Table containing the result of each landing attempt}
-\label{tb:Day2LandingAttempt}
-\end{table}
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{figs/Experiment/day2NetHit.eps}
 \caption{Position of the \gls{uav} relative to the net center at the time of net passing}
 \label{Fig:Day2NetPass}
 \end{figure}
-The performance of the lateral controller increase during calm wind condition, however the performance of the longitudinal controller is the same as during windy conditions. Table \ref{Tb:AverageCrossHeightDay2} list up the average height error and cross track error relative to the desired height and path. 
 \section{Navigation}\label{ss:EXNavigation}
-The testing of the navigation system is restricted to the X8, however the same navigation system was used in a multicoper \gls{uav} both days.
 \subsection{RTK-GNSS performance}
-The performance of the \gls{rtk-gnss} system during the first day of executing landing plans is summaries in table \ref{TB:RTKFirstDayRTK}, which shows that \gls{rtk-gnss} kept a stable FIX during the landing plan experiment. The same result was achieved during the second day during the execution of the landing plans, however the \gls{rtk-gps} experienced problem later the second day, due to lost contact with the base station. The expected reason is that pore satellite geometry made effective use of \gls{rtk-gps} difficult.
+The \gls{rtk-gnss} system was used during both the test days, however due to similar performance only the results from the first day is presented in this section, while the results from the second day is given in appendix \ref{AP:RTKPerformance}. The results from the \gls{rtk-gps} system during the landing plan flights is summarised in table \ref{TB:RTKFirstDayRTK}, where the result is presented as percentage of the total number of GpsFixRtk messages.
 \begin{table}[H]
 \centering
 \begin{tabular}{| l | l | l | l |}
@@ -224,7 +222,7 @@ $11$			& $100$		& $0.0$	& $0.0$									\\ \hline
 \label{TB:RTKFirstDayRTK}
 \end{table}
 \subsection{Short loss compensator}
-The short loss compensator was designed to prolong the availability of the \gls{rtk-gps}, such that a flight plan does not get interrupted due to a temporary problem with the \gls{rtk-gnss}. During a flight the second day the gls{rtk-gps} experienced a short drop out, as seen in figure \ref{Fig:NavSource}. Even though the \gls{rtk-gps} position solution is unavailable the navigation system is still able to supply high accurate position solution due to the short \gls{rtk-gnss} compensator as seen in figure \ref{Fig:ShortLoss}. The duration of the short \gls{rtk-gps} could be expanded, and currently the time limitation of the compensator where the position solution start to diverge is unknown.
+The short loss compensator was engaged during a flight where the \gls{rtk-gnss} started to experience problem. The flight plan was part of cooperative net recovery system presented in \citep{Sigurd} and \citep{Jostein}, which experience reduced \gls{rtk-gnss} performance due to decreased satellite geometry. During the flight the \gls{rtk-gnss} system experienced a drop out, as seen in figure \ref{Fig:NavSource}. The main reason for the drop out is shown in figure \ref{Fig:SatCount1juni114124}, where at the time of \gls{rtk-gnss} drop out the number of valid satellites starts to vary rapidly. Even though the \gls{rtk-gps} position solution is unavailable the navigation system is still able to supply high accurate position solution due to the short \gls{rtk-gnss} compensator as seen in figure \ref{Fig:ShortLoss}.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{figs/Experiment/navSource.eps}
@@ -237,6 +235,26 @@ The short loss compensator was designed to prolong the availability of the \gls{
 \caption{Loss of \gls{rtk-gps} triggers the short loss compensator such that the \gls{uav} keeps the \gls{rtk-gps} position solution longer}
 \label{Fig:ShortLoss}
 \end{figure}
+\begin{figure}
+\centering
+\includegraphics[scale=0.7]{figs/Experiment/ShortrtklossSatellites1juni114124.eps}
+\caption{Number of valid satellites during a flight mission}
+\label{Fig:SatCount1juni114124}
+\end{figure}
 \subsection{Summary of navigation system performance}
+The navigation system was able to provide high accuracy position solution to the \gls{uav} during the autonomous landing flight plan, however continues drop out of the \gls{rtk-gnss} system was experienced when the satellite geometry decreased, which make the positioning system more susceptible to atmospheric disturbance. The continues drop out could be reduced by increasing the elevation mask in RTKlib, however this would limit the valid satellites to a number where a FIX solution from the \gls{rtk-gnss} system is no longer available. In order for the system to be able to perform during a prolong duration of degraded satellite geometry a state estimator must be created which can give a accurate position estimate with minimum \gls{rtk-gnss} information available. This would be a more advance estimator then the short loss compensator presented in this thesis.
+
+The short loss compensator was able to compensate the solution from the external navigation system, such that a large jump in \gls{uav} position was avoided for a short time. However the limits of the short loss compensator has yet to determined, and should be further tested. The goal of the navigation system is be to be able to provide high accurate position solution to the \gls{uav}, even if the \gls{rtk-gnss} system experience a drop out.
 \section{Summary}
-This chapter showed the performance of a X8 fixed wing \gls{uav} performing a autonomous landing in a virtual net. The performance of the navigation system is acceptable for a autonomous system by supplying a stable highly accurate position solution, with redundancy for short \gls{rtk-gps} loss periods. The landing plan still require further testing to develop path parameters that  will result in a successful net landing. The path parameters are depending on the ability for the control system to follow the desired path, which might prove demanding in the longitudinal plane for large change in high over a short distance.
+This chapter has presented the results of a X8 fixed wing \gls{uav} performing autonomous landing in a virtual net, in addition to the performance of the navigation system. The two days where the autonomous landing system was tested had different weather condition, which allowed for identification of strength and weaknesses with the system. The longitudinal control system had a stable performing, however a large average error in the height with respect to the desired height shows a performance that is not acceptable for a autonomous landing system. Compeering to the results obtain in the SIL experiment \ref{SIL:Results} where the low level controllers are fined tuned, it's observed that the performance can increase with better tuning of the low level pitch controller. Better performance from the low level pitch controller can allow for increase in the glide slope angle, which would result in a shorter glide slope and increase operational control over the \gls{uav}. 
+The lateral control system function completely different depending on the wind condition. The lateral controller require different tuning parameter depending on the wind speed and in which direction is affecting the \gls{uav}. When flying against the wind a short lookahead distance is needed in order for the lateral control system is stay on the desired path, however when flying with the wind the lookahead distance should increase in order for the \gls{uav} to stay on the desired path. A possible solution to this problem would be to implement the the lookahead distance as a function of the cross track error, which in \citep{fossen2011handbook} section 10.3.2 is given as:
+\begin{equation}
+\Delta(t) = \sqrt{R^2 - e(t)^2}
+\end{equation}
+where $\Delta(t)$ is the lookahead distance, $R$ is the maximum lookahead distance and $e(t)$ is the cross track error. The lateral control system was unable to completely follow the path along the turning circles without overshooting. A solution which would solve this problem would be a lateral control system design for turning manoeuvres. The problem with this approach would be that a landing path would require two set of lateral control system, which would result in a over complicated system. The best approach would be to improve the current lateral control system to better perform turning manoeuvre, which together with the proposed solution for the lookahead distance would result in a robust lateral control system.
+
+The landing plan has proven that it's flexible when it comes to path alteration. The path can be constructed to suit the needs of the operator, and can be use to increase the performance from the control system. In order for the longitudinal control system to reach a desired height which corresponds to the net center height, the net impact angle must be set to zero. Unfortunately this means that the glide slope will be the only part of the landing path where the height is decreased, however from a control perspective this means that the \gls{uav} have longer time to converge to the correct height. In the turning circles the distance between each arc segment can be adjusted in order to achieve better performance from the lateral control system. However for this to have an affect the time of arrival factor must be kept between $1-2$ seconds, in order to prevent the path control system from switching point to early. A arc segment distance of $10 m$ was found to ensure that the lateral control system kept a high roll angle through the turning circle.
+
+The minimum height from which the autonomous landing system could start the landing path from was found to be $56 m$ above the runway at Agdenes airfield. This strain the operation boundaries in which the \gls{uav} operates, since a landing path could move the \gls{uav} out of the line of sight of the pilot. An autonomous landing from the east is possible with the current system, however further testing is needed in order to determine the operation weather limitations of the system. In addition a landing attempt from the west could be performed with a lower start height, which then would require less usage of the runway.
+
+The navigation system performed with satisfying results, and showed that it's able to provide a stable and reliable \gls{rtk-gnss} solution to the navigation system. However the \gls{rtk-gnss} is still prone to bad satellite geometry, which will result in the \gls{rtk-gnss} system to loose lock of the satellites. During these events the short \gls{rtk-gnss} loss compensator is able to compensate the external navigation system, such that the navigation position solution remain at the same accuracy level as with \gls{rtk-gnss}. The time limitation in which the compensator is able to operate without divergence from the \gls{rtk-gnss} accuracy level has yet to determined,  however an estimate would be that the current limitation could be doubled.
