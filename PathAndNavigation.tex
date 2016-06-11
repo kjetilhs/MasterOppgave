@@ -213,37 +213,14 @@ One of the primary source of error in in a \gls{gnss} receiver is multipath \cit
 Multipath error uncorrelated between receivers, thus the local receiver must be able to correct for multipath error locally.
 
 \subsection{Navigation state control system}\label{S:NavState}
-The navigation state control system manage the current state of the navigation system, which controls if the \gls{rtk-gnss} usage and responsible of dispatching the current state of the \gls{uav} to the rest of the DUNE system. The state chart of the navigation state control system is shown in figure \ref{Fig:NavState}, with edge description given in table \ref{Tb:Nav state edge}. The navigation state control system is designed to function without \gls{rtk-gnss} available, which makes the navigation system independent from the \gls{rtk-gnss} system. This is a requirement for the navigation system since it should function in a \gls{uav} where \gls{rtk-gnss} is not present.
+The navigation state control system manage the current state of the navigation system, which controls the \gls{rtk-gnss} usage and is responsible for dispatching the current state of the \gls{uav} to the rest of the DUNE system. A state diagram of the navigation state control system is shown in figure \ref{Fig:NavState}, which included trigger event on the edges and entry actions when entering a new state. The entry actions ensure that only functionality that is connected to the current state is active, and that monitors are updated with the state switch. The navigation state control system is designed to function without \gls{rtk-gnss} available, which makes the navigation system independent from the \gls{rtk-gnss} system. This is a requirement for the navigation system since it should function in a \gls{uav} where \gls{rtk-gnss} is not present.
 
-In order for the navigation system to switch state into "Rtk ready" the \gls{rtk-gps} message must be considered valid, which is defined in section \ref{ss:RTK-GPS system}. In addition the \gls{rtk-gps} solution type must be FIX for $x$ seconds such that the \gls{rtk-gnss} solution can be considered highly accurate. For the navigation state control system to switch to \gls{rtk-gnss}, the user has to enabled it from the command and control software used to monitor the \gls{uav}. In the case where a loss of \gls{rtk-gnss} is experienced the short \gls{rtk-gnss} compensator will be enable to prevent the loss of \gls{rtk-gnss} accuracy, thus prolonging the availability of the \gls{rtk-gnss}. This state will be further explained in section \ref{ss:ShortLoss}.
-\newpage
+In order for the navigation system to switch state into "Rtk ready" the \gls{rtk-gps} message must be considered valid, which is defined in section \ref{ss:RTK-GPS system}. In addition the \gls{rtk-gps} solution type must be FIX for $x$ seconds such that the \gls{rtk-gnss} solution can be considered highly accurate. For the navigation state control system to switch to \gls{rtk-gnss}, the user has to enabled it from the command and control software used to monitor the \gls{uav}. In the case where a loss of \gls{rtk-gnss} is experienced the short \gls{rtk-gnss} compensator will be enable to prevent the loss of \gls{rtk-gnss} accuracy, thus prolonging the availability of the \gls{rtk-gnss}. This state will be further explained in section \ref{ss:ShortLoss}. A summary of the states in the navigation state control system is given in table \ref{Tb:StateDescription}.
 \begin{figure}[H]
 \includegraphics[scale=0.18]{figs/NavigationStateControl.png}
 \caption{State machine in the DUNE Navigation task}
 \label{Fig:NavState}
 \end{figure}
-\begin{table}[H]
-
-    \begin{tabular}{ | p{1cm} | p{8cm} | | p{4cm} |}
-    \hline
-    \textbf{Edge} 	& \textbf{Event} 																	& \textbf{Guard} \\ \hline
-    A 				& Event: Received External Nav message 												& None \\ \hline
-    B 				& Time out: Fix \gls{rtk-gps} solution for $x$ seconds with valid base position 	& None \\ \hline
-    C 				& Time out: $x$ seconds since last valid GpsFixRtk 									& None \\ \hline
-    D 				& Flag: Using Rtk is set true														& None \\ \hline
-    E 				& Flag: Using Rtk is set false														& None \\ \hline
-    F 				& Time out: $x$ seconds since last valid GpsFixRtk 									& Short loss compensator:\\ 
-      				& Event: Received GpsRtkFix with $\text{type}==\text{None}$ 						& Enabled\\ \hline
-    G 				& Event: Received valid GpsFixRtk message											& None \\ \hline
-    H 				& Time out: $x$ seconds since last valid GpsFixRtk 									& Short loss compensator:\\
-    				& Event: Received GpsRtkFix with $\text{type}==\text{None}$							& Disabled \\ \hline
-    I 				& Time out: $x$ seconds since last valid GpsFixRtk 									& None \\ \hline
-    \end{tabular}
-
-\caption{Description of the edges used in the state machine}
-\label{Tb:Nav state edge}
-\end{table}
-The navigation state control system is design to execute state spesific action during entry into new state. The entry actions ensure that only functionality that is connected to the current state is active, and that monitors are updated with the state switch. Then entry actions are listen in the table \ref{Tb:EntryAction}, and a summary of the states in the navigation state control system is given in table \ref{Tb:StateDescription}.
 \begin{table}[H]
 \begin{tabular}{ | p{3cm} | p{8cm} |}
 	\hline 
@@ -256,29 +233,6 @@ The navigation state control system is design to execute state spesific action d
 \end{tabular}
 \caption{States in the navigation system with description}
 \label{Tb:StateDescription}
-\end{table}
-
-\begin{table}[H]
-\begin{tabular}{ | p{3cm} | p{8cm} |}
-	\hline 
-	\textbf{State}						& \textbf{Entry action} 										\\ \hline
-	Initialize							& Start up for the navigation state control system				\\ \hline
-	Using external						& \gls{rtk-gnss} is disabled										\\
-										& Availability activation timer for \gls{rtk-gnss} is started 	\\
-										& State of navigation system is updated							\\ \hline
-	\gls{rtk-gnss} ready							& \gls{rtk-gnss} is disabled										\\
-										& Availability deactivation timer for \gls{rtk-gnss} is started	\\
-										& State of navigation system is updated							\\ \hline
-	Using \gls{rtk-gnss}							& \gls{rtk-gnss} is enabled										\\
-										& State of navigation system is updated							\\
-										& If short \gls{rtk-gnss} loss compensator is activated:					\\
-										&	- Short \gls{rtk-gnss} loss compensator activation timer is started		\\
-										& If short \gls{rtk-gnss} loss compensator is deactivated:					\\
-										& 	- \gls{rtk-gnss} time out timer is started						\\ \hline
-	Using short \gls{rtk-gnss} loss compensator	& Short \gls{rtk-gnss} loss compensator deactivation timer is started		\\ \hline
-\end{tabular}
-\caption{Entry action for each state}
-\label{Tb:EntryAction}
 \end{table}
 \subsubsection{Short loss of \gls{rtk-gnss}}\label{ss:ShortLoss}
 In order for the navigation system to handle short loss of \gls{rtk-gps} a short loss \gls{rtk-gps} system is presented. The compensator is based on that the position solution from the external navigation system is almost constant with respect to the \gls{rtk-gps} solution. As seen in figure \ref{Fig:RTKExternal} the position of the \gls{rtk-gnss} and the external navigation system remain  close to each other, given that the \gls{rtk-gnss} has a FIX solution. 
@@ -306,6 +260,6 @@ where $\mathbf{p}_1(n)$ and $\mathbf{p}_2(n)$ is the position solution sample fo
 \end{equation}
 where $\mathbf{p}_1(t)$ and $\mathbf{p}_2(t)$ is the current position solution for the \gls{rtk-gnss} system and the external navigation system respectfully. The short loss \gls{rtk-gnss} compensator will trigger if there is a delay in the \gls{rtk-gnss} system, or a temporary drop out occur. The output frequency of the short loss compensator is set to be the same as the \gls{rtk-gnss} system, which is estimate by comparing the time each \gls{rtk-gnss} message is dispatched. This results in prolonging the time where the \gls{rtk-gnss} is available for the navigation system, and will ensure that the navigation system outputs at a stable frequency. The goal with the compensator is to prevent mission abortion, and make the \gls{rtk-gnss} system more robust.
 \section{Summary}
-This chapter has presented a system description of both a landing plan generator and a navigation system with robust \gls{rtk-gnss}. The landing plan presented is separated into two parts which is the landing path and the approach path. The landing path is a straight line path towards the net, whereas the approach path is the path that enable the \gls{uav} to enter the landing path at the correct height with the correct orientation from any initial position.
+This chapter has presented a system description of both a landing plan generator and a navigation system with robust \gls{rtk-gnss}. The landing plan presented is separated into two parts, which is the landing path and the approach path. The landing path is a straight line path towards the net, whereas the approach path is a combination of Dubins path in the lateral plane and straight line path in the longitudinal plane. The approach path is designed to guaranty that \gls{uav} has a flyable path which enable the \gls{uav} to enter the landing path at the correct height with the correct orientation from any initial position.
 
-The navigation system has been design with a navigation state control system, which is used to control the current state of the source of the navigation data. Currently the different navigation source available to the \gls{uav} is a external navigation system and a \gls{rtk-gnss} system. In order to prolong the availability of the \gls{rtk-gnss} during short drop outs a short \gls{rtk-gnss} loss compensator system is presented, which is used to compensate the external navigation system position solution in order for the \gls{uav} navigation system to keep the a \gls{rtk-gnss} accuracy level during a \gls{rtk-gnss} drop out.
+The \gls{uav} navigation system has been design with a navigation state control system, which is used to control the current state of the source of the navigation data. Currently the different navigation source available to the \gls{uav} is a external navigation system and a \gls{rtk-gnss} system. In order to prolong the availability of the \gls{rtk-gnss} during short drop outs a short \gls{rtk-gnss} loss compensator system is presented, which is used to compensate the external navigation system position solution in order for the \gls{uav} navigation system to keep the a \gls{rtk-gnss} accuracy level during a \gls{rtk-gnss} drop out.

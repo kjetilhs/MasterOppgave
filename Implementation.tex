@@ -1,4 +1,4 @@
-\chapter{Implementation}
+\chapter{Implementation}\label{Ch:Implementation}
 The autonomous landing system for stationary net landing consist mainly of three modules, which is the Navigation, LandingPlan, and Path Controller tasks. A simplified figure of the system flow in the autonomous landing system in DUNE is showed in figure \ref{fig:DuneSystem}. The implementation and system description of the path controllers used in the autonomous landing system is not a focus area in this thesis, however a short description is given in appendix \ref{AP:ControlGuidanceSystem} and a closer analyse of the path control system can be found in the master thesis \citep{Sigurd}. The DUNE task Ardupilot is used as interface towards the Ardupilot software which either runs as in a simulation mode or on a Pixhawk. The DUNE system is command  and controlled with Neptus, which has been modified to suit the needs of the autonomous landing system.
 \begin{figure}[H]
 	\centering
@@ -52,7 +52,7 @@ The landing path described in section \ref{SS:netApproach} is implemented in the
 \caption{Flow chart of the landing plan generation}
 \label{Fig:FlowChartLanding}
 \end{figure}
-\subsection{Software in the loop simulation}
+\subsection{Software in the loop simulation}\label{ss:SILLandingPlan}
 The landing plan was verified and test through the use of a Software In the Loop (SIL) simulation, where the landing plan generation code runs as if it's connected to the actual hardware. A SIL simulation is used to verify that the code function as it's design to do. During a SIL simulation Ardupilot enters a simulation mode, where the JSBSim simulator is used as replacement of the actual X8 fixed wing \gls{uav}. The result obtain from a simulation is used as a ideal test case, from which the performance of a flight test can be compeered against. However the current model of the X8 used in the simulation has not been completely verified, such that deviation in results and behaviour is expected. Figure \ref{Fig:LandingPathNeptus} shows a screenshot of a landing plan created in Neptus with the green triangle symbolizing the net placement. 
 \begin{figure}[H]
 \centering
@@ -151,7 +151,7 @@ In the case where \gls{rtk-gnss} is lost the short \gls{rtk-gnss} loss compensat
 \caption{Flow chart of the navigation state control system}
 \label{Fig:NavStateControlFlow}
 \end{figure}
-\subsection{Mobile sensor unit}
+\subsection{Mobile sensor unit}\label{ss:MobileSensor}
 The mobile sensor unit is a box that can moved around and act as a reference position for other vehicles in the DUNE systems, e.q net placement for the autonomous landing system. The mobile sensor unit apply \gls{rtk-gnss} in the same manor as a \gls{uav}, however the mobile sensor unit does not include a external navigation system. Thus a simplified version of the Navigation task has been created for the mobile sensor unit, which is the DUNE task RtkNavigation. The DUNE task RtkNavigation handle the GpsRtkFix message similar to the Navigation task, however due to not having a external navigation system only the GpsFixRtk position solution is used in the EstimatedState message. Figure \ref{Fig:MobileSensor} shows a picture of the mobile sensor unit.
 \begin{figure}[H]
 \centering
