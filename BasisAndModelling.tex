@@ -1,6 +1,6 @@
 \chapter{Basis and modelling}
 \section{UAV model}
-A \gls{uav} model is presented in \citep{beard2012small}, which present the kinetic equations of a general \gls{mav} in the. The kinetic equations is given in the body frame, which is fixed to the frame of the \gls{uav}. The kinematics equations is given as:
+A fixed wing \gls{uav} model is presented in \citep{beard2012small}, which contain the kinetic equations of a general \gls{mav}. The kinetic equations used to described a general \gls{mav} can represent a fixed wing \gls{uav} given that the size of the \gls{uav} is small enough, which is the case with the \gls{uav} used in this thesis. First the kinematic equations used to describe a \gls{mav} are given as:
 \begin{subequations}
 \label{eq:kinematics}
 \begin{align}\label{eq:kinematicsPosition}
@@ -38,7 +38,7 @@ where $\mathbf{R}(\mathbf{\Theta})_{Body}^{NED}$ is the rotation matrix from the
 0 & \frac{\sin(\phi)}{\cos(\theta)} & \frac{\cos(\phi)}{\cos(\theta)}
 \end{bmatrix}
 \end{equation}
-The kinetic equations is given as:
+The kinetic equations presented from \citep{beard2012small} is given in the body frame, which is a frame fixed to the body of the vehicle and rotated relative to an inertia frame, e.q the Earth center. The kinetic equations are given as:
 \begin{subequations}
 \label{eq:kinetics}
 \begin{align}
@@ -79,11 +79,9 @@ C_y(\beta,p,r,\delta_a,\delta_r) \notag\\
  \end{bmatrix}
 \end{align}
 \end{subequations}
-where $\rho$ is the air density in $kg/m^3$,$mg$ is the weight of the \gls{uav}, $S$ is the platform area of the \gls{mav} wing, $C_i$ is nondimensional aerodynamic coefficients and $V_a$ is the speed of the \gls{mav} through the surrounding air. $\alpha$ and $\beta$ is the attack and side slip angle respectfully. $F_{Drag}$ is the drag force acting on the fuselage, and $F_{Lift}$ is the lift force. $\mathbf{R}(\alpha)_{Stability}^{Body}$ is the rotation matrix from the stability frame to the body frame. The stability frame is orientated with respect to the \gls{mav} movement through the surrounding air, which is defined as a standard rotation around the y-axis of the body frame. $S_{Prop}$ is the area swept out by the propeller, and $K_{Motor}$,$K_{T_p}$ and $K_\Omega$ is propeller specific constants. The control surface on the \gls{mav} is defined into two groups; the wings and the rudder. On the rudder $\delta_e$ controls the elevator deflection and $\delta_r$ the rudder deflection. For the wings $\delta_a$ is the control input from the aileron deflection. The control input for the control input is $\delta_t$.
+where $\rho$ is the air density in $kg/m^3$,$mg$ is the weight of the \gls{mav}, $S$ is the platform area of the \gls{mav} wing, $C_i$ are nondimensional aerodynamic coefficients and $V_a$ is the speed of the \gls{mav} through the surrounding air. $\alpha$ and $\beta$ is the attack and side slip angle respectfully. $F_{Drag}$ is the drag force acting on the fuselage, and $F_{Lift}$ is the lift force. $\mathbf{R}(\alpha)_{Stability}^{Body}$ are the rotation matrix from the stability frame to the body frame. The stability frame is orientated with respect to the \gls{mav} movement through the surrounding air, which is defined as a standard rotation around the y-axis of the body frame. $S_{Prop}$ is the area swept out by the propeller, and $K_{Motor}$,$K_{T_p}$ and $K_\Omega$ are propeller specific constants. The control surface on the \gls{mav} is defined into two groups; the wings and the rudder. On the rudder $\delta_e$ controls the elevator deflection and $\delta_r$ the rudder deflection. For the wings $\delta_a$ is the control input from the aileron deflection. The control input for the control input is $\delta_t$.
 \section{Landing path modelling}
-A landing path is a path following problem where the minimum requirement is that the path is connected, and is flyable. The connection level can be described by the paths smoothness. Smoothness can be described with parametric continuity, which is denoted $C^n$ were n is the degree of smoothness. The order of n implies that the n first parametric derivatives match at a common point for two subsequent paths \citep{barsky1989geometric}. Geometric continuity is a relaxed from of parametric continuity in which discontinuousness in speed is allowed. A table \ref{TB:SmoothnessDescriptions} of geometric and parametric continuity lists the requirement for each smoothness level, which is based definitions presented in \citep{barsky1989geometric}.
-Geometric continuity is sufficient for a path following system, which is the main focus of this thesis. Geometric continuity is denoted as $G^n$ were n is the order of continuity.
-
+A landing path can be view as a path following problem, which is the \gls{uav} attempts to follow a desired path without a time demand. A minimum requirement for a path is that the path is connected, where the connection level can be described by the path smoothness. Smoothness can be described with parametric continuity, which is denoted $C^n$ were n is the degree of smoothness. The order of n implies that the n first parametric derivatives match at a common point for two subsequent paths \citep{barsky1989geometric}. Geometric continuity is a relaxed form of parametric continuity in which discontinuousness in speed is allowed. A table \ref{TB:SmoothnessDescriptions} of geometric and parametric continuity lists the requirement for each smoothness level, which is based definitions presented in \citep{barsky1989geometric}. Geometric continuity is sufficient for a path following system, which is the main focus of this thesis. Geometric continuity is denoted as $G^n$ were n is the order of continuity.
 \begin{table}[H]
 \begin{center}
 \begin{tabular}{| l | l |}
@@ -98,10 +96,9 @@ $C^1$ & The velocity is continuous \\ \hline
 $C^2$ & The acceleration is continuous \\ \hline
 \end{tabular}
 \end{center}
-\caption{Smoothness definitions}
+\caption{Smoothness definitions for both parametric and geometric}
 \label{TB:SmoothnessDescriptions}
 \end{table} 
-
 The definition used for path in this thesis is equation 1.2 in \citep{tsourdos2010cooperative} which state:
 \begin{equation}
 P_s(x_s,y_s,z_s,\theta_s,\psi_s) \xrightarrow{r(\varpi)} P_f(x_f,y_f,z_f,\theta_f,\psi_f)
@@ -109,14 +106,14 @@ P_s(x_s,y_s,z_s,\theta_s,\psi_s) \xrightarrow{r(\varpi)} P_f(x_f,y_f,z_f,\theta_
 where the subscripts $s$ and $f$ denotes the start pose and finish pose respectfully with $r(\varpi)$ as the path and $\varpi$ the path variable.
 
 \subsection{Straight lines}
-The simplest form on path is a straight line between $P_s$ and $P_f$. For simplicity the path is reduced to a 2 dimensional case, where the straight line is given as 
+The simplest path from $P_s$ and $P_f$ is a straight line path between the poses. A straight line path is given, where for for simplicity and without loss of generality the path is reduced to a 2 dimensional case: 
 \begin{subequations}
 \begin{align}
 & x(\varpi) = a_x\varpi + b_x \\
 & y(\varpi) = a_y\varpi + b_y 
 \end{align}
 \end{subequations}
-with $ \varpi \in [0,1] $, where $\varpi$ has not necessary a physical meaning. Then the parametrisation of the straight line is:
+with $ \varpi \in [0,1] $, where $\varpi$ has not necessary a physical meaning. Then the parametrisation of the straight line becomes:
 \begin{subequations}
 \begin{align}
 P(0) &= \begin{bmatrix}
@@ -147,23 +144,29 @@ y_f - b_y
 \end{bmatrix}
 \end{align}
 \end{subequations}
-The tangential vector for a straight line is given as:
+Further the path tangential for a straight line path is given as:
 \begin{equation}
 \psi(\varpi) = \atan2(a_y,a_x)
 \end{equation}
-with it's derivative:
-\begin{equation}
-\dot{\psi}(\varpi) = 0
-\end{equation}
-A path constructed by straight lines is $G^0$, however since the tangential vectors derivative is zeros, it is discontinuous between two line segments with different heading and therefore not $G^1$[TODO: LEGG INN FIGUR SOM VISER DISKONINUITETEN]. The disadvantage with a path which is $G^0$ is that large discontinuity between two tangential vectors will cause problem for a control system. 
+which shows that the path-tangential for a straight line path is discontinues, as seen in figure \ref{Fig:Path-tangential}. That define a straight line path with the smoothness of $G^0$, which allows the path to be used in a path following system, however with discontinuity in the path-tangential. A straight line path is shown in  figure \ref{Fig:StraightLinePath}.
 \begin{figure}[H]
-\includegraphics[width=0.7\textwidth]{figs/TheoryPlot/StraightLine.eps}
+\centering
+\includegraphics[scale=0.5]{figs/TheoryPlot/TangentialStraight.eps}
+\caption{Path-tangential to a straight line path}
+\label{Fig:Path-tangential}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[width=0.5\textwidth]{figs/TheoryPlot/StraightLine.eps}
 \caption{Straight line path}
+\label{Fig:StraightLinePath}
 \end{figure}
 \subsection{Dubins path}\label{S:DubinsPath}
-An alternative to a straight line path is a path constructed by straight lines and circle. Such a path is Dubins path\citep{dubins1957curves}, which showed that the shortest possible path for a particle that moved with unit speed with maximum curvature would consist of two circles and a straight line which is tangential to both circles. A disadvantage with Dubins path is that the curvature is discontinues, which gives a path from $P_s$ to $P_f$ with smoothness level of $G^1$.
+An alternative to a straight line path is a path constructed by straight lines and circle, like the Dubins path proposed in the paper \citep{dubins1957curves}, which showed that the shortest possible path for a particle that moved with unit speed with maximum curvature would consist of two circles and a straight line which is tangential to both circles.
 
-A Dubins path that is constructed where the final orientation is fixed has four different ways to be constructed, which is determined by the rotation directions. The four types of Dubins path that is used in this thesis is given in table \ref{Tb:DubinsTurningDirection}.
+
+ 
+
+A Dubins path which is constructed with the final orientation fixed has four ways to be constructed, which are determined by the rotation directions. The four rotation combination with fixed finish orientation are given in table \ref{Tb:DubinsTurningDirection}.
 \begin{table}[H]
 \centering
 \begin{adjustbox}{max width=\textwidth}
@@ -178,14 +181,14 @@ Left to left \\ \hline
 \caption{Turning direction for Dubins path with fixed final orientation}
 \label{Tb:DubinsTurningDirection}
 \end{table}
-The equations that is used to construct the path is found in \citep{tsourdos2010cooperative} section 2.2.1, with a constructed path shown in figure \ref{Fig:DubinsPath}. In figure \ref{Fig:DubinsPath} the whole line is the path, with the doted lines used to constructed the path.
+The equations used to construct a Dubins path are found in \citep{tsourdos2010cooperative} section 2.2.1, with a constructed path shown in figure \ref{Fig:DubinsPath}. In figure \ref{Fig:DubinsPath} the whole line is the path, with the doted lines used express the parameter used to construct the path.
 \begin{figure}[H]
 \def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
 \input{InkFig/DubinsPath.pdf_tex}
-\caption{Dubins path}
+\caption{The whole line is the Dubins path, while the doted lines are used to express the parameter used to construct the path}
 \label{Fig:DubinsPath}
 \end{figure}
-The first step if to determine the start and final turning circle center. The center is found with the equations:
+Dubins path is constructed by first determine the start and finish turning circle center. The centres are found with the equations:
 \begin{subequations}
 \begin{align}
 X_{cs} &= X_s - R_s\cos(\psi_s \pm \frac{\pi}{2}) \\
@@ -194,7 +197,7 @@ X_{cf} &= X_f - R_f\cos(\psi_f \pm \frac{\pi}{2}) \\
 Y_{cf} &= Y_f - R_f\sin(\psi_f \pm \frac{\pi}{2})
 \end{align}
 \end{subequations}
-where $R_s$ and $R_f$ is the radius of the start and final turning circle respectfully, with $\psi_s$ and $\psi_f$ the start and final heading. The centres for the start and final turning circle is defined as:
+where $R_s$ and $R_f$ is the radius of the start and final turning circle respectfully, with $\psi_s$ and $\psi_f$ the start and finish orientation. The centres for the start and finish turning circle are defined as:
 
 \begin{align}
 & \mathbf{O}_{cs} =
@@ -208,11 +211,11 @@ X_{cf} \\
 Y_{cf}
 \end{bmatrix}
 \end{align}
-Continuing the centres $O_{cs}$ and $O_{cf}$ is connected with a centreline $c$, where the length is given as:
+Continuing the centres $O_{cs}$ and $O_{cf}$ are connected with a centreline $c$, where the length is given as:
 \begin{equation}
 |c| = ||\mathbf{O}_{cs} - \mathbf{O}_{cf}||_2
 \end{equation}
-where $||\cdot||_2$ is the second norm. Continuing the arc exit and entry point for the start and final circle is calculated by first applying the equations:
+where $||\cdot||_2$ is the second norm. Continuing the arc exit and entry point for the start and finish circles are calculated by first applying the equations:
 \begin{subequations}
 \begin{align}
 & \alpha = \arcsin\left(\frac{R_f-R_s}{|c|}\right) \\
@@ -233,7 +236,7 @@ $\phi_{left}$ & $\beta - \alpha + \frac{3\pi}{2}$ \\ \hline
 \end{center}
 
 \end{table}
-With the angle of the exit and entry tangent point the point is given as:
+With the angle of the exit and entry tangent point the points are given as:
 \begin{subequations}
 \begin{align}
 & x_{P_\chi} = x_{cs} + R_s\cos(\phi) \\
@@ -255,9 +258,19 @@ y_{P_N}
 \end{bmatrix}
 \end{align}
 \end{subequations}
-The length of the path is calculated in three parts. The first the is the arc length from the start pose to the exit tangent point, then the length of the straight line before the arc length from the entry point to the final pose. The length of the path is given as: 
+The length of the Dubins path is calculated in three parts. The first the is the arc length from the start pose to the exit tangent point, then the length of the straight line before the arc length from the entry point to the finish pose. The length of the path is given as: 
 \begin{equation}
 d = R_s\phi_s + d_t + R_f\phi_f
 \end{equation}
-where $d_t = ||\mathbf{P}_N-\mathbf{P}_{\chi}||_2$, $\phi_s$ and $\phi_f$ is the arc angle for the start and final circle respectfully.
+where $d_t = ||\mathbf{P}_N-\mathbf{P}_{\chi}||_2$, $\phi_s$ and $\phi_f$ is the arc angle for the start and finish circle respectfully. The path-tangential of the Dubins path is given as:
+\begin{equation}
+\psi = \atan2(1,-tan(\phi))
+\end{equation}
+which determine that the path-tangential is continues, which makes Dubins path $G^1$. The path-tangential for Dubins path is shown in figure \ref{Fig:Path-tangentialDubin}.
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{figs/TheoryPlot/tangentialDubin.eps}
+\caption{Path-tangential for a Dubins path}
+\label{Fig:Path-tangentialDubin}
+\end{figure}
 \cleardoublepage
