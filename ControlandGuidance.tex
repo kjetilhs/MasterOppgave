@@ -1,22 +1,9 @@
 \chapter{Guidance and control system}\label{AP:ControlGuidanceSystem}
-The autonomous landing system is design to be independent from any types of guidance and control system. However this hold only true when the guidance and control system is implemented in the DUNE environment due to the requirement of an accurate navigation system. The control system is separated into two groups, high level and low level control. The low level control is the control loops for the actuators, which are only controlled by ardupilot. The high level controllers depend on the the configuration of Ardupilot, which is listed in table \ref{tb:ArduPilotMode}.
-\begin{table}
-\centering
-\begin{tabular}{| p{3cm} | p{5cm}|}
-\hline
-\textbf{Mode}	&	\textbf{Description} \\ \hline
-Guide			& Ardupilot set-point guidance and control system 												\\ \hline
-FBWB			& DUNE lateral controller with desired height controlled in a set-point controller in Ardupilot \\ \hline
-FBWA			& DUNE lateral and longitudianl controller, where control input is sent directly to the low level controllers in Ardupilot 																						\\ \hline
-\end{tabular}
-\caption{Guidance and control modes in autopilot viable for the landing system}
-\label{tb:ArduPilotMode}
-\end{table}
-
+The autonomous landing system is design to be independent from any types of guidance and control system. However this hold only true when the guidance and control system is implemented in the DUNE environment due to the requirement of an accurate navigation system. 
 \section{Lateral controller}
-The lateral controller used in the autonomous landing system is based on the paper \citep{fortuna2015cascaded}, which is a s
+The lateral controller used in the autonomous landing system is based on the paper \citep{fortuna2015cascaded}, which is a line of sight path following and sliding mode controller. The controller is designed to converge to the straight line between two waypoints, with the ability to compensate the wind disturbance in order to stay on the path. Depending on the line of sight of the controller, the controller either react aggressive towards wind disturbance or allow the wind to guide the \gls{uav}. The lookahead distance is a constant parameter, which can be configured from either the configuration file in DUNE or Neptus. The lateral controller is implemented in the DUNE task LOSnSMC, however a slightly altered version was used in the autonomous landing field experiment, which was the DUNE task LOSnSMCuser. The configuration parameter used in the autonomous landing field test are given in table \ref{AP:TB:LOSnSMCuser} 
 
-\begin{table}
+\begin{table}[H]
 \centering
 \begin{tabular}{| l | l |}
 \hline
@@ -28,15 +15,13 @@ Kd					&                    $1.5$ \\ \hline
 Bandwidth			&                    $3.0$ \\ \hline
 Roll Time Const		&                    $0.5$ \\ \hline
 Maximum Bank		&                    $40.0$ \\ \hline
-
 \end{tabular}
+\caption{LOSnSMCuser configuration parameters used in the hardware setup}
+\label{AP:TB:LOSnSMCuser}
 \end{table}
 \section{Longitudinal controller}
-The longitudinal controller is based on the paper \citep{you2012guidance}
-
-Need to refer to the height smoothing filter with advantage and disadvantage.
-
-\begin{table}
+The longitudinal control system used in the autonomous landing system is designed and implemented as part of the master thesis \citep{Sigurd}. The controller is design to create glide slopes between waypoint, where a 3rd low pass reference model is used make the glide slope between two way point smooth enough to become flyable. The reference model create outputs a desired hight which lay above the desired path due to lag introduced from the reference model. When the desired height glide slope will reach a constant height is dependent on the time constant used in the reference model, in addition to the time of arrival factor in DUNE. The longitudinal control system is implemented in the DUNE tasks Longitudinal and HeightGlideslope, with the configuration parameter given in table \ref{AP:TB:Longitudianl} and \ref{AP:TB:HeightGlideslope} for the Longitudinal and HeightGlideslope respectfully.
+\begin{table}[H]
 \centering
 \begin{tabular}{| l | l |}
 \hline
@@ -47,9 +32,11 @@ Throttle Proportional height gain   &    $0.3$ \\ \hline
 Gamma Proportional gain             &    $1.0$ \\ \hline
 Trim throttle                       &    $44.0$ \\ \hline
 \end{tabular}
+\caption{Longitudinal configuration parameters used in the hardware setup}
+\label{AP:TB:Longitudianl}
 \end{table}
 
-\begin{table}
+\begin{table}[H]
 \centering
 \begin{tabular}{| l | l |}
 \hline
@@ -69,4 +56,6 @@ Use reference model             &        True \\ \hline
 Height bandwidth               &        $10$ \\ \hline
 Vertical Rate maximum gain      &        $0.3$ \\ \hline
 \end{tabular}
+\caption{HeightGlideslope configuration parameters used in the hardware setup}
+\label{AP:TB:HeightGlideslope}
 \end{table}
