@@ -6,122 +6,6 @@ The autonomous landing system for stationary net landing consist mainly of three
 		\caption{A simplified depiction of the interaction between the major components in the autonomous landing system during stationary net landing}
 		\label{fig:DuneSystem}
 \end{figure}
-\section{Landing plan generator}
-The DUNE task LandingPlan is the implementation of the landing plan generation system described in section \ref{Ch:LandingPlan}. The DUNE task receive its plan parameter through a \gls{api}, which is a \gls{imc} message called LandingPlanGeneration. The task is triggered by the event a LandingPlanGeneration message is consumed, which results in the generation of the approach and landing path. Together the paths form the landing plan. The \gls{api} can be accessed from Neptus through the plug-in LandMayLayer, enabling a graphical interface to be used for net placement.
-\subsection{Landing plan generation API}
-The landing plan generation \gls{api} is a \gls{imc} message used to structure the input parameter used to create the landing plan. With the \gls{api} the desired path parameter can be set, in addition to behaviour setting used to create a specific landing plan. The \gls{api} can be used to set the rotation direction of the start and finish turning circle, by setting the "Automatic" flag to false. In addition a loiter manoeuvre can be added to the landing path, which act as a waiting manoeuvre. The behaviour settings in the \gls{api} are listed in table \ref{Tb:DubinConfig}, with the entire \gls{api} listed in appendix \ref{AP:APIIMC}.
-\begin{table}[H]
-\centering
-\begin{tabular}{| p{2.7cm} | p{6cm} |}
-\hline
-\textbf{Parameter name} 							& \textbf{Description} \\ \hline
- Automatic (boolean)								& If true a standard path where the shortest Dubins path is chosen as the approach path. Otherwise a user specific path is chosen \\ \hline
-Start circle turning counter clockwise (boolean)	& If true the start turning circle is created with a turning direction which is counter clockwise. Otherwise clockwise. Require Automatic==false \\ \hline
-Finish circle turning counter clockwise (boolean)	& If true the finish turning circle is created with a turning direction which is counter clockwise. Otherwise clockwise. Require Automatic==false \\ \hline
-Wait at loiter (boolean)							& If true a unlimited loiter is included into the landing plan. \\ \hline
-
-\end{tabular}
-\caption{Landing plan behaviour setting in Landing plan generation \gls{api}}
-\label{Tb:DubinConfig}
-\end{table}
-\subsubsection{Neptus API graphical interface}
-In Neptus the plug-in LandmapLayer, which is an altered version of the Neptus plug-in developed in the master thesis \citep{Froelich}, is used to configure the landing plan generation \gls{api}. The alteration in the plug-in includes new parameters, the inclusion of the \gls{imc} message LandingPlanGeneration and the ability to manually write the global position coordinates of the net. The \gls{api} graphical interface which is used in Neptus is shown in figure \ref{Fig:LandMapLayer}. The LandmapLayer plug-in works by first placing the net in Neptus, continued by setting the desired parameters of the landing plan in the graphical interface.
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.6]{figs/LandMapLayer.png}
-\caption{Graphical interface for the landing plan  generator \gls{api} in Neptus}
-\label{Fig:LandMapLayer}
-\end{figure}
-\subsection{Approach path}
-The approach path described in section \ref{SS:LandingApproach} is implemented in the DUNE task LandingPlan, where the start position of the approach path is the initial position of the fixed wing \gls{uav} at the time the LandingPlanGeneration message is sent. The final position of the approach path is the first $\textbf{WP}$ in the landing path. Figure \ref{Fig:FlowChartApproach} shows the structure of the creation of the approach path in the landing plan. The creation is trigger by the consumption of a LandingPlanGeneration message, which is extracted in order gain access to the landing plan parameters. 
-
-The creation of the approach path is designed to enable the user to specify the rotation direction of the start and finish turning circles. This design choice was made such that the user has a guaranty of the turning direction in both circles, which is not given when calculating the shortest Dubins path. Thus the two mode have different guaranties, such that the landing plan generator becomes more flexible. 
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.8]{figs/ApproachPath.png}
-\caption{Flow chart of approach path creation}
-\label{Fig:FlowChartApproach}
-\end{figure}
-The approach path is created as a FollowPath manoeuvre, which is a manoeuvre where each point in the manoeuvre is defined relative to a fixed reference position. This manoeuvre is suited for more complex manoeuvres, which is the reason it's used in the approach path. The task configuration parameter "Distance Between Arc Segments" is used to specify the distance between each point in both the turning circles, thus given the total number of segments in the circles. The parameter can be used to increase the performance of the lateral control system, by continues switching point to create a smoother circle.
-\subsection{Landing path}
-The landing path described in section \ref{SS:netApproach} is implemented in the DUNE task LandingPlan, where the path is created relative to the position and heading of the net retrieved from the LandingPlanGeneration message. Figure \ref{Fig:FlowChartLanding} shows the system flow for the creation of the landing path. The creation is trigger when the approach path has successfully been created. A option for the landing path is that it includes a loiter manoeuvre at the beginning, which is defined as a circular manoeuvre around a fixed position with a constant radius. The loiter manoeuvre increase the flexibility of the autonomous landing system, by introducing a manoeuvre in which the \gls{uav} can wait for the landing zone to be prepared. In the case of a dynamic net landing the loiter manoeuvre can be used as a waiting manoeuvre as a final check before the \gls{uav} starts to track the position of the net. An other possible application is to apply the loiter manoeuvre in a net landing where the net is carried by multi-copter \glspl{uav}, where the copters can wait on the ground until the fixed wing \gls{uav} enters the loiter manoeuvre.
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.8]{figs/LandingPath.png}
-\caption{Flow chart of the landing plan generation}
-\label{Fig:FlowChartLanding}
-\end{figure}
-\subsection{Software in the loop simulation}\label{ss:SILLandingPlan}
-The landing plan was verified and test through the use of a Software In the Loop (SIL) simulation, where the landing plan generation code runs as if it's connected to the actual hardware. A SIL simulation is used to verify that the code function as it's design to do. During a SIL simulation Ardupilot enters a simulation mode, where the JSBSim simulator is used as replacement of the actual X8 fixed wing \gls{uav}. The result obtain from a simulation is used as a ideal test case, from which the performance of a flight test can be compeered against. However the current model of the X8 used in the simulation has not been completely verified, such that deviation in results and behaviour is expected. Figure \ref{Fig:LandingPathNeptus} shows a screenshot of a landing plan created in Neptus with the green triangle symbolizing the net placement. 
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.25]{figs/LandingPathNeptus.png}
-\caption{Path generated from the landing plan generator, with the net placement as a green triangle}
-\label{Fig:LandingPathNeptus}
-\end{figure}
-\subsubsection{Landing plan generation}
-A landing path was created to simulate a real landing, with the lateral path is shown in figure \ref{Fig:SILNorthEast090145} and the height versus the desired height  shown in figure \ref{Fig:SILHeight6juni090145}. The landing plan is design to fit the operation area in which the fixed wing \gls{uav} can operate during LOS flight operation.
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.7]{figs/SysPlot/SILNorthEast6juni090145.eps}
-\caption{North-East plot of a SIL simulation of the autonomous landing system.}
-\label{Fig:SILNorthEast090145}
-\end{figure}
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.7]{figs/SysPlot/SILHeight6juni090145.eps}
-\caption{The desired height and \gls{uav} height when executing the landing plan.}
-\label{Fig:SILHeight6juni090145}
-\end{figure}
-\subsubsection{Spiral path creation}
-During a landing plan the height in the end of the approach path may not match the start height of the landing path. In those cases the spiral path described in section \ref{pp:SpiralPath} is created in order for the approach path to reach the correct height. In figure \ref{Fig:SILNorthEastSpiral092307} the spiral function of the lateral path was tested, with the resulting height profile in figure \ref{Fig:SILHeightSpiral092307}. The simulation was performed with a wind disturbance of $9 m/s$ from west, to simulate how the \gls{uav} would perform during the landing plan with wind disturbance The direction of the wind is set such the landing path is directed against the wind, which the optimal direction to land in order to reduce the ground speed of the \gls{uav}. The lateral control system struggles when flying with the wind, however when flying against the wind it's able to stay on the straight line between the way-points. During the turn in the spiral the lateral control system is unable to stay on the circle, thus overshooting the desired path. The longitudinal control system behave similar to the simulation without wind, indicating that as long as the \gls{uav} can fly in the wind the performance from the longitudinal control system would remain the same as with negligible wind conditions.
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.7]{figs/SysPlot/SILNorthEast6juni092307.eps}
-\caption{North-East plot where the approach path enters a spiral in order to find a path to the correct height. The simulation was performed with $9 m/s$ wind from west}
-\label{Fig:SILNorthEastSpiral092307}
-\end{figure}
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.7]{figs/SysPlot/SILHeightSpiral6juni092307.eps}
-\caption{The desired height and \gls{uav} height when executing the landing plan from a height that trigger a spiral path towards the correct height with maximum decent angle $\gamma_{d_{Max}}$. The simulation was performed with $9 m/s$ wind from west}
-\label{Fig:SILHeightSpiral092307}
-\end{figure}
-\subsubsection{Result of simulations}\label{SIL:Results}
-The system performance in a simulation environment is presented, where the success criteria is if the \gls{uav} was within the net acceptance criteria at the time the along track error equalled the distance to the aiming point behind the net position. The acceptance criteria used to indicate if the \gls{uav} would have hit the net is given in table \ref{tb:NetCriteria}, which is related to a net with the dimensions 3 meter height and 5 meter width.
-\begin{table}[H]
-\centering
-\begin{tabular}{| l | l |}
-\hline
-\textbf{Height acceptance}	& \textbf{Cross track error acceptance}	\\ \hline
-$\pm1.5$					& $\pm2.5$								\\ \hline
-\end{tabular}
-\caption{Net hit acceptance criteria}
-\label{tb:NetCriteria}
-\end{table}
-The result from six simulations is given in figure \ref{Fig:SILNetPasing}, with the overall performance of the path following capability of the control system given in table \ref{Tb:SILAverageCrossHeight}. All the simulations of the autonomous landing system gave a result where the \gls{uav} was able to pass the net with a accuracy that is within the acceptance criteria, showing that the system is able to perform autonomous landing. The height difference between the net placement and the start of the landing path was $31.5 m$, where the glide slope angle was set to $6\deg$. A higher glide slope angle would result in the \gls{uav} to build up speed, thus with the current longitudinal control system the angle of the glide slope should not exceed $8\deg$.
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.7]{figs/SysPlot/SILNetPasing.eps}
-\caption{\gls{uav} position at time of net passing during SIL simulation.}
-\label{Fig:SILNetPasing}
-\end{figure}
-\begin{table}[H]
-\centering
-\begin{tabular}{| l | l | l |}
-\hline
-\textbf{Nr.} 	& \textbf{Average height error [m]} 	& \textbf{Average cross track error [m]}  \\ \hline
-$1$				& $-0.3$							& $-3.1$								\\ \hline
-$2$				& $0.7$							& $-4.0$								\\ \hline
-$3$				& $0.2$							& $-3.3$								\\ \hline
-$4$				& $0.5$							& $-1.2$								\\ \hline
-$5$				& $0.4$							& $-2.5$								\\ \hline
-$6$				& $0.2$							& $0.3$								\\ \hline
-\end{tabular}
-\caption{Average cross track error and height error relative to the path.}
-\label{Tb:SILAverageCrossHeight}
-\end{table}
 \section{Navigation system}\label{IMP:NavSys}
 The navigation state control system described in section \ref{S:NavState} is implemented in the DUNE task Navigation, which is used to control the position and velocity information source of the navigation state \gls{imc} message EstimatedState. Depending on the current state of the navigation system the \gls{imc} EstimatedState message will either have position solution form the \gls{rtk-gps} system or the external navigation system. During a short loss of the \gls{rtk-gnss} the external navigation position is compensated with the average difference between the \gls{rtk-gnss} solution and the external navigation solution. The state of the navigation system is monitored through the \gls{imc} message NavSources, which contain the information about the source of the state information, including which alternative navigation system is available for the \gls{uav} navigation system.
 \subsection{RTK-GPS system}\label{ss:RTK-GPS system}
@@ -180,6 +64,137 @@ The navigation source monitor is a plug-in in Neptus used to monitor which navig
 \caption{Navigation source interface}
 \label{Fig:NavsourceInterface}
 \end{figure}
+\section{Landing plan generator}
+The DUNE task LandingPlan is the implementation of the landing plan generation system described in section \ref{Ch:LandingPlan}. The DUNE task receive its plan parameter through a \gls{api}, which is a \gls{imc} message called LandingPlanGeneration. The task is triggered by the event a LandingPlanGeneration message is consumed, which results in the generation of the approach and landing path. Together the paths form the landing plan. The \gls{api} can be accessed from Neptus through the plug-in LandMayLayer, enabling a graphical interface to be used for net placement.
+\subsection{Landing plan generation API}
+The landing plan generation \gls{api} is a \gls{imc} message used to structure the input parameter used to create the landing plan. With the \gls{api} the desired path parameter can be set, in addition to behaviour setting used to create a specific landing plan. The \gls{api} can be used to set the rotation direction of the start and finish turning circle, by setting the "Automatic" flag to false. In addition a loiter manoeuvre can be added to the landing path, which act as a waiting manoeuvre. The behaviour settings in the \gls{api} are listed in table \ref{Tb:DubinConfig}, with the entire \gls{api} listed in appendix \ref{AP:APIIMC}.
+\begin{table}[H]
+\centering
+\begin{tabular}{| p{2.7cm} | p{6cm} |}
+\hline
+\textbf{Parameter name} 							& \textbf{Description} \\ \hline
+ Automatic (boolean)								& If true a standard path where the shortest Dubins path is chosen as the approach path. Otherwise a user specific path is chosen \\ \hline
+Start circle turning counter clockwise (boolean)	& If true the start turning circle is created with a turning direction which is counter clockwise. Otherwise clockwise. Require Automatic==false \\ \hline
+Finish circle turning counter clockwise (boolean)	& If true the finish turning circle is created with a turning direction which is counter clockwise. Otherwise clockwise. Require Automatic==false \\ \hline
+Wait at loiter (boolean)							& If true a unlimited loiter is included into the landing plan. \\ \hline
+
+\end{tabular}
+\caption{Landing plan behaviour setting in Landing plan generation \gls{api}}
+\label{Tb:DubinConfig}
+\end{table}
+\subsubsection{Neptus API graphical interface}
+In Neptus the plug-in LandmapLayer, which is an altered version of the Neptus plug-in developed in the master thesis \citep{Froelich}, is used to configure the landing plan generation \gls{api}. The alteration in the plug-in includes new parameters, the inclusion of the \gls{imc} message LandingPlanGeneration and the ability to manually write the global position coordinates of the net. The \gls{api} graphical interface which is used in Neptus is shown in figure \ref{Fig:LandMapLayer}. The LandmapLayer plug-in works by first placing the net in Neptus, continued by setting the desired parameters of the landing plan in the graphical interface.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.6]{figs/LandMapLayer.png}
+\caption{Graphical interface for the landing plan  generator \gls{api} in Neptus}
+\label{Fig:LandMapLayer}
+\end{figure}
+\subsection{Approach path}
+The approach path described in section \ref{SS:LandingApproach} is implemented in the DUNE task LandingPlan, where the start position of the approach path is the initial position of the fixed wing \gls{uav} at the time the LandingPlanGeneration message is sent. The final position of the approach path is the first $\textbf{WP}$ in the landing path. Figure \ref{Fig:FlowChartApproach} shows the structure of the creation of the approach path in the landing plan. The creation is trigger by the consumption of a LandingPlanGeneration message, which is extracted in order gain access to the landing plan parameters. 
+
+The creation of the approach path is designed to enable the user to specify the rotation direction of the start and finish turning circles. This design choice was made such that the user has a guaranty of the turning direction in both circles, which is not given when calculating the shortest Dubins path. Thus the two mode have different guaranties, such that the landing plan generator becomes more flexible. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{figs/ApproachPath.png}
+\caption{Flow chart of approach path creation}
+\label{Fig:FlowChartApproach}
+\end{figure}
+The approach path is created as a FollowPath manoeuvre, which is a manoeuvre where each point in the manoeuvre is defined relative to a fixed reference position. This manoeuvre is suited for more complex manoeuvres, which is the reason it's used in the approach path. The task configuration parameter "Distance Between Arc Segments" is used to specify the distance between each point in both the turning circles, thus given the total number of segments in the circles. The parameter can be used to increase the performance of the lateral control system, by continues switching point to create a smoother circle. The default value of the configuration parameters "Distance between Arc Segments" is given in table \ref{Tb:LandingPlanParameter}.
+\begin{table}
+\centering
+\begin{tabular}{| p{5cm} | p{1cm} | p{5cm} |}
+\hline
+\textbf{Configuration parameter name}	& \textbf{Default value}	& \textbf{Description} \\ \hline
+Distance Between Arc Segment			& $ 25 m$					& Distance between each arc segments in the turning circles \\ \hline
+\end{tabular}
+\caption{Configuration parameter for the landing plan}
+\label{Tb:LandingPlanParameter}
+\end{table}
+\subsection{Landing path}
+The landing path described in section \ref{SS:netApproach} is implemented in the DUNE task LandingPlan, where the path is created relative to the position and heading of the net retrieved from the LandingPlanGeneration message. Figure \ref{Fig:FlowChartLanding} shows the system flow for the creation of the landing path. The creation is trigger when the approach path has successfully been created. A option for the landing path is that it includes a loiter manoeuvre at the beginning, which is defined as a circular manoeuvre around a fixed position with a constant radius. The loiter manoeuvre increase the flexibility of the autonomous landing system, by introducing a manoeuvre in which the \gls{uav} can wait for the landing zone to be prepared. In the case of a dynamic net landing the loiter manoeuvre can be used as a waiting manoeuvre as a final check before the \gls{uav} starts to track the position of the net. An other possible application is to apply the loiter manoeuvre in a net landing where the net is carried by multi-copter \glspl{uav}, where the copters can wait on the ground until the fixed wing \gls{uav} enters the loiter manoeuvre.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8]{figs/LandingPath.png}
+\caption{Flow chart of the landing plan generation}
+\label{Fig:FlowChartLanding}
+\end{figure}
+\section{Software in the loop simulation}\label{ss:SILLandingPlan}
+\subsection{Outline of testing}\label{ss:SILOutline}
+The landing plan was verified and test through the use of a Software In the Loop (SIL) simulation, where the landing plan generation code runs as if it's connected to the actual hardware. A SIL simulation is used to verify that the code function as it's design to do. During a SIL simulation Ardupilot enters a simulation mode, where the JSBSim simulator is used as replacement of the actual X8 fixed wing \gls{uav}. The result obtain from a simulation is used as a ideal test case, from which the performance of a flight test can be compeered against. However the current model of the X8 used in the simulation has not been completely verified, such that deviation in results and behaviour is expected. Figure \ref{Fig:LandingPathNeptus} shows a screenshot of a landing plan created in Neptus with the green triangle symbolizing the net placement.
+
+The autonomous landing system flies in the Ardupilot mode FBWA, where the high level control system is implemented in DUNE. The longitudinal control system during SIL simulation of the autonomous landing system is designed and tested in the master thesis \citep{Sigurd}, and the lateral control system was design and implemented as part of the paper \citep{fortuna2015cascaded}. A short description of both control system is presented in appendix \ref{AP:ControlGuidanceSystem}. The low level controllers in Ardupilot used in the SIL simulation are fined tuned for autonomous flight, which allows for ideal test conditions on the performance of the high level controllers. In DUNE the time of arrival factor control when the path control system switches between waypoints, which can be used during turning manoeuvres to force the \gls{uav} to closer follow the path. During the SIL simulation the time of arrival factor is set to $2 s$.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.25]{figs/LandingPathNeptus.png}
+\caption{Path generated from the landing plan generator, with the net placement as a green triangle}
+\label{Fig:LandingPathNeptus}
+\end{figure}
+\subsection{Landing plan generation}
+A landing path was created to simulate a real landing, with the lateral path is shown in figure \ref{Fig:SILNorthEast090145} and the height versus the desired height  shown in figure \ref{Fig:SILHeight6juni090145}. The landing plan is design to fit the operation area in which the fixed wing \gls{uav} can operate during LOS flight operation.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{figs/SysPlot/SILNorthEast6juni090145.eps}
+\caption{North-East plot of a SIL simulation of the autonomous landing system.}
+\label{Fig:SILNorthEast090145}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{figs/SysPlot/SILHeight6juni090145.eps}
+\caption{The desired height and \gls{uav} height when executing the landing plan.}
+\label{Fig:SILHeight6juni090145}
+\end{figure}
+\subsection{Spiral path creation}
+During a landing plan the height at the end of the approach path may not match the start height of the landing path. In those cases the spiral path described in section \ref{pp:SpiralPath} is created in order for the approach path to reach the correct height. In figure \ref{Fig:SILNorthEastSpiral092307} the spiral function of the lateral path was tested, with the resulting height profile in figure \ref{Fig:SILHeightSpiral092307}. The simulation was performed with a wind disturbance of $9 m/s$ from the west of the net position, to simulate how the \gls{uav} would perform during the landing plan with wind disturbance. The direction of the wind is set such that the landing path is directed against the wind, which the optimal direction to land in order to reduce the ground speed of the \gls{uav}. 
+
+The lateral control system struggles when flying with the wind, however when flying against the wind it's able to stay on the straight line between the way-points. This is as expected and makes physical sense as the fundamentals of flying is lift created by air velocity over the wing, where the flaps are used to create steering force based on same principle, i.e. air flow over the wing from front to aft with a certain velocity is required to create any steering force/rotational moment. During the turn in the spiral the lateral control system is unable to stay on the circle, thus overshooting the desired path. The longitudinal control system behave similar to the simulation without wind, indicating that as long as the \gls{uav} can fly in the wind the performance from the longitudinal control system would remain the same as with negligible wind conditions.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{figs/SysPlot/SILNorthEast6juni092307.eps}
+\caption{North-East plot where the approach path enters a spiral in order to find a path to the correct height. The simulation was performed with $9 m/s$ wind from west}
+\label{Fig:SILNorthEastSpiral092307}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{figs/SysPlot/SILHeightSpiral6juni092307.eps}
+\caption{The desired height and \gls{uav} height when executing the landing plan from a height that trigger a spiral path towards the correct height with maximum decent angle $\gamma_{d_{Max}}$. The simulation was performed with $9 m/s$ wind from west}
+\label{Fig:SILHeightSpiral092307}
+\end{figure}
+\subsection{Result of simulations}\label{SIL:Results}
+The system performance in a simulation environment is presented, where the success criteria is if the \gls{uav} was within the net acceptance criteria at the time the along track error equalled the distance to the aiming point behind the net position. The acceptance criteria used to indicate if the \gls{uav} would have hit the net is given in table \ref{tb:NetCriteria}, which is related to a net with the dimensions 3 meter height and 5 meter width.
+\begin{table}[H]
+\centering
+\begin{tabular}{| l | l |}
+\hline
+\textbf{Height acceptance}	& \textbf{Cross track error acceptance}	\\ \hline
+$\pm1.5$					& $\pm2.5$								\\ \hline
+\end{tabular}
+\caption{Net hit acceptance criteria}
+\label{tb:NetCriteria}
+\end{table}
+The result from six simulations is given in figure \ref{Fig:SILNetPasing}, with the overall performance of the path following capability of the control system given in table \ref{Tb:SILAverageCrossHeight}. All the simulations of the autonomous landing system gave a result where the \gls{uav} was able to pass the net with a accuracy that is within the acceptance criteria, showing that the system is able to perform autonomous landing. The height difference between the net placement and the start of the landing path was $31.5 m$, where the glide slope angle was set to $6\deg$. A higher glide slope angle would result in the \gls{uav} to build up speed, thus with the current longitudinal control system the angle of the glide slope should not exceed $8\deg$.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{figs/SysPlot/SILNetPasing.eps}
+\caption{\gls{uav} position at time of net passing during SIL simulation.}
+\label{Fig:SILNetPasing}
+\end{figure}
+\begin{table}[H]
+\centering
+\begin{tabular}{| l | l | l |}
+\hline
+\textbf{Nr.} 	& \textbf{Average height error [m]} 	& \textbf{Average cross track error [m]}  \\ \hline
+$1$				& $-0.3$							& $-3.1$								\\ \hline
+$2$				& $0.7$							& $-4.0$								\\ \hline
+$3$				& $0.2$							& $-3.3$								\\ \hline
+$4$				& $0.5$							& $-1.2$								\\ \hline
+$5$				& $0.4$							& $-2.5$								\\ \hline
+$6$				& $0.2$							& $0.3$								\\ \hline
+\end{tabular}
+\caption{Average cross track error and height error relative to the path.}
+\label{Tb:SILAverageCrossHeight}
+\end{table}
 \section{Summary}
 This chapter has presented the system implementation for the path and navigation system described in chapter \ref{CH:PathNavigation}, as well as presented a mobile sensor unit. The landing plan generator has been tested and verified in a SIL simulation, together with the control system which will be used in experimental flight tests. The results from the SIL simulation shows that the system is capable of performing a autonomous landing, however it's expected a deviation in behaviour due to the use of a X8 model that has not been completely verified. In addition the low level controller in the simulator are fined tuned for autonomous flights, which is not the case of the physical X8. The landing path generator is design to as flexibly as possible when it comes to creating a operational valid landing plan. By having the option of selecting the rotation direction of both the turning circles, a landing plan can be created to suit the surrounding environment to minimize the risk of a crash or the \gls{uav} leave the line of sight. The loiter manoeuvre that included in the landing plan allows a coordination stage, in which the landing zone can be prepared when the \gls{uav} enters the loiter. 
 
