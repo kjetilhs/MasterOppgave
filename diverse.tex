@@ -1,0 +1,186 @@
+\section{Diverse}
+
+%\begin{table}[H]
+%\centering
+%\begin{tabular}{| l | l | l | l | l |}
+%\hline
+%\textbf{Nr.} 	& \textbf{Average height error [m]} 	& \textbf{Average cross track error [m]} & \textbf{Lateral control system - Lookahead distance [m]} &  \textbf{Rotation combination - approach path} \\ \hline
+%$1$				& $1.5$							& $6.1$	&	$ 50 $ 	& Clockwise/ Counter-clockwise							\\ \hline
+%$2$				& $2.6$							& $6.7$	& $ 50 $	& Clockwise/ Counter-clockwise							\\ \hline
+%$3$				& $0.9$							& $5.5$	& $ 50 $	& Clockwise/ Counter-clockwise							\\ \hline
+%$4$				& $0.1$							& $2.8$	& $ 50 $ 	& Counter-clockwise/ Counter-clockwise							\\ \hline
+%$5$				& $1.7$							& $2.0$	& $ 50 $ 	& Counter-clockwise/ Counter-clockwise							\\ \hline
+%$6$				& $1.3$							& $6.8$	& $ 50 $ 	& Counter-clockwise/ Counter-clockwise							\\ \hline
+%$7$				& $1,8$							& $9.1$	& $ 50 $ 	& Counter-clockwise/ Counter-clockwise							\\ \hline
+%$8$				& $1.2$							& $8.2$	& $ 50 $ 	& Counter-clockwise/ Counter-clockwise							\\ \hline
+%$9$				& $1.9$							& $5.9$	& $ 50 $ 	& Counter-clockwise/ Counter-clockwise							\\ \hline
+%$10$			& $1.5$							& $4.4$	& $ 30 $ 	& Counter-clockwise/ Counter-clockwise							\\ \hline
+%$11$			& $1.5$							& $1.4$	& $ 30 $ 	& Counter-clockwise/ Counter-clockwise							\\ \hline
+%Average			& $1.5$							& $5.4$								\\ \hline
+%Variance		& $0.4$							& $6.2$								\\ \hline
+%\end{tabular}
+%\caption{Mean height and cross track error from day 1}
+%\label{tb:Day1HeightCrossTrack}
+%\end{table}
+
+
+%\begin{table}[H]
+%
+%\begin{tabular}{| p{0.5cm} | p{1cm} | p{1cm} | p{2cm} | p{3cm} | p{2.8cm} |}
+%\hline
+%\textbf{Nr.}	& \textbf{Height error - net passing [m]}	& \textbf{Cross track error - net passing [m]}& \textbf{Final approach angle [deg]} & \textbf{Lateral control system - Lookahead distance [m]} &  \textbf{Rotation combination - approach path}\\ \hline
+%$1$				& $2.8$		& $2.1$	& $3$ &	$ 50 $ 	& Clockwise/ Counter-clockwise		\\ \hline
+%$2$				& $2.7$		& $-4.5$ & $0$ & $ 50 $	& Clockwise/ Counter-clockwise			\\ \hline
+%$3$				& $0.9$		& $-1.6$ & $0$ & $ 50 $	& Clockwise/ Counter-clockwise		\\ \hline
+%$4$				& $0.0$		& $5.4$	& $0$ & $ 50 $ 	& Counter-clockwise/ Counter-clockwise				\\ \hline
+%$5$				& $0.8$		& $5.3$	& $0$ & $ 50 $ & Counter-clockwise/ Counter-clockwise					\\ \hline
+%$6$				& $2.1$		& $-1.6$ & $0$ & $ 50 $	& Counter-clockwise/ Counter-clockwise				\\ \hline
+%$7$				& $0.7$		& $2.3$ & $0$ &	$ 50 $ & Counter-clockwise/ Counter-clockwise				\\ \hline
+%$8$				& $-1.5$	& $-5.4$ & $0$ & $ 50 $	& Counter-clockwise/ Counter-clockwise				\\ \hline
+%$9$				& $1.9$		& $0.8$ & $0$ & $ 50 $ & Counter-clockwise/ Counter-clockwise			\\ \hline
+%$10$			& $0.3$	& $1.1$ & $0$ &	$ 30 $ & Counter-clockwise/ Counter-clockwise	\\ \hline
+%$11$			& $-1.3$	& $0.2$ & $0$ & $ 30 $ & Counter-clockwise/ Counter-clockwise\\ \hline
+%\end{tabular}
+%\caption{Table containing the result of each landing attempt}
+%\label{tb:Day1LandingAttempt}
+%\end{table}
+
+
+
+\subsubsection{First plan}\label{sss:Day1FirstPlan}
+The first test of the autonomous landing system was performed with the landing plan parameter listen in appendix \ref{AP:SpecDay1}, which resulted in the path shown in figure \ref{Fig:NorthEast31mai103029}, where the the start position of the landing plan is marked with a circle, the net position with a cross, the desired path as a whole line and the actual flight path as a stippled line. The desired heigh as well as the actual height is shown in figure \ref{Fig:Height31mai103029}. The rotation direction of the start turning circle was chosen to be opposite to the finish turning circle, which resulted in a straight line path between the two turning circles bringing the \gls{uav} into the cross wind. The effect of flying in the cross wind introduced oscillatory motion in the \gls{uav}, which the lateral control system was unable to compensate for. The effect of the oscillatory motion affected the \gls{uav} when entering the finish turning circle, where the result was the \gls{uav} overshooting the desired path. The consequence of the \gls{uav} overshooting the finish turning circle can in the worst case result in the \gls{uav} to leave the line of sight of the pilot, which is a failure when flying in a LOS operation. The \gls{uav} continues to oscillate when flying along the landing path, however the cross track error was within the acceptance criteria listed in table \ref{tb:NetCriteria} at the time the \gls{uav} passed the virtual net.
+
+The longitudinal control system was able to follow it's desired height reference during the approach path, however the \gls{uav} height starts to diverge from the desired height during the landing path. The divergence corresponds to the overshot in the lateral plan, which could be the reason for the divergence. However the desired height from the longitudinal control system was higher then the net center height at the time the \gls{uav} passed the virtual net. The reason behind this behaviour is due to the reference model in the longitudinal control system attempt to create a smooth glide slope towards the aiming position behind the net, which cause the desired height to lag behind the desired path. This behaviour can be removed by setting the final approach angle to zero, thus ensuring that the straight line through the net center has a constant height value.
+\begin{figure}[H]
+	\centering
+		\includegraphics[scale=0.7]{figs/Experiment/NorthEast31mai103029.eps}
+		\caption{North-East plot where the start and finish turning circles have opposite turning directions}
+		\label{Fig:NorthEast31mai103029}
+\end{figure}
+\begin{figure}[H]
+\centering
+		\includegraphics[scale=0.7]{figs/Experiment/Height31mai103029.eps}
+		\caption{Height profile of a landing plan with $3 \deg$ net impact angle}
+		\label{Fig:Height31mai103029}
+\end{figure}
+
+\subsubsection{Path with $\gamma_n = 0$}
+A landing plan with the final approach angle ,$\gamma_n = 0$, was created, where the desired and actual height of the \gls{uav} is shown in figure\ref{Fig:Height31mai31mai105034}. The effect of setting the net impact angle to zero gave a better performance from the longitudinal control system, due to the desired height now converging to the net center height. At the time the \gls{uav} passed the virtual net the hight error with respect the height of the net center was within the height error acceptance.
+\begin{figure}[H]
+\centering
+		\includegraphics[scale=0.7]{figs/Experiment/Height31mai105034.eps}
+		\caption{Height profile of a landing plan with $0 \deg$ net impact angle}
+		\label{Fig:Height31mai31mai105034}
+\end{figure}
+
+\subsubsection{Path with inverted rotation direction in the start circle}
+A landing plan with the rotation direction of the start turning circle inverted with respect to the previous landing plan, as shown in figure \ref{Fig:NorthEast31mai125420}. The result of this alteration was reduced oscillation in the lateral plane for the \gls{uav} when flying along the straight line between the turning circles. The \gls{uav} still experience overshot in the finish turning circle, however the overshooting is reduced due to more stable entry into the finish turning circle.
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{figs/Experiment/NorthEast31mai125420.eps}
+	\caption{North-East plot where the start and finish turning direction have the same turning direction}
+	\label{Fig:NorthEast31mai125420}
+\end{figure}
+
+\subsection{Day 1}
+\subsubsection{Path with reduced lookahead distance in lateral controller}
+In order to further reduce the oscillatory motion in the lateral plan the lookahead distance in the lateral control system was reduced to make the controller more aggressive towards the wind. The effect of this change is shown in figure \ref{Fig:NorthEast31mai131844}, where the oscillatory motion is almost completely removed. However the reduced lookahead distance did not affect the the overshot in the finish turning circle.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{figs/Experiment/NorthEast31mai131844.eps}
+\caption{North-East plot where the lookahead distance of the lateral controller was reduced to increase performance of the autonomous landing system when flying against the wind}
+\label{Fig:NorthEast31mai131844}
+\end{figure}
+By reviewing the desired roll ($\phi_d$ ) and the actual roll ($\phi$) of the \gls{uav} at the time of the final turn, shown in figure \ref{Fig:DesiredRoll131844}, it's observed that the lateral control system decrease the desired roll in the middle of the turn. This happens since the lateral control system only sees the next point on the circle, and not the circle as a whole.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{figs/Experiment/rollDesired131844.eps}
+\caption{The desired roll and actual roll of the \gls{uav} during the finish turning circle}
+\label{Fig:DesiredRoll131844}
+\end{figure}
+
+
+%%%%%%
+%\begin{table}[H]
+%\centering
+%\begin{tabular}{| l | l | l |}
+%\hline
+%\textbf{Nr.} 	& \textbf{Average height error [m]} 	& \textbf{Average cross track error [m]}  \\ \hline
+%$1$				& $1.5$							& $6.1$								\\ \hline
+%$2$				& $2.6$							& $6.7$								\\ \hline
+%$3$				& $0.9$							& $5.5$								\\ \hline
+%$4$				& $0.1$							& $2.8$								\\ \hline
+%$5$				& $1.7$							& $2.0$								\\ \hline
+%$6$				& $1.3$							& $6.8$								\\ \hline
+%$7$				& $1,8$							& $9.1$								\\ \hline
+%$8$				& $1.2$							& $8.2$								\\ \hline
+%$9$				& $1.9$							& $5.9$								\\ \hline
+%$10$			& $1.5$							& $4.4$								\\ \hline
+%$11$			& $1.5$							& $1.4$								\\ \hline
+%Average			& $1.5$							& $5.4$								\\ \hline
+%Variance		& $0.4$							& $6.2$								\\ \hline
+%\end{tabular}
+%\caption{Mean height and cross track error from day 1}
+%\label{tb:Day1HeightCrossTrack}
+%\end{table}
+%
+%\begin{table}[H]
+%
+%\begin{tabular}{| p{0.5cm} | p{3cm} | p{4cm} | p{4cm} |}
+%\hline
+%\textbf{Nr.} & \textbf{Final approach angle [deg]} & \textbf{Lateral control system - Lookahead distance [m]} &  \textbf{Rotation combination - approach path}\\ \hline
+%$1$				& $3$ &	$ 50 $ 	& Clockwise/Counter-clockwise		\\ \hline
+%$2$				& $0$ & $ 50 $	& Clockwise/Counter-clockwise			\\ \hline
+%$3$				& $0$ & $ 50 $	& Clockwise/Counter-clockwise		\\ \hline
+%$4$				& $0$ & $ 50 $ 	& Counter-clockwise/ Counter-clockwise				\\ \hline
+%$5$				& $0$ & $ 50 $ & Counter-clockwise/ Counter-clockwise					\\ \hline
+%$6$				& $0$ & $ 50 $	& Counter-clockwise/ Counter-clockwise				\\ \hline
+%$7$				& $0$ &	$ 50 $ & Counter-clockwise/ Counter-clockwise				\\ \hline
+%$8$				& $0$ & $ 50 $	& Counter-clockwise/ Counter-clockwise				\\ \hline
+%$9$				& $0$ & $ 50 $ & Counter-clockwise/ Counter-clockwise			\\ \hline
+%$10$			& $0$ &	$ 30 $ & Counter-clockwise/ Counter-clockwise	\\ \hline
+%$11$			& $0$ & $ 30 $ & Counter-clockwise/ Counter-clockwise\\ \hline
+%\end{tabular}
+%\caption{Table containing the result of each landing attempt}
+%\label{tb:Day1LandingAttempt}
+%\end{table}
+%
+%\begin{table}[H]
+%\centering
+%\begin{tabular}{| p{0.5cm} | p{1cm} | p{1cm} | p{3.5cm} | p{3cm} | p{1cm} |}
+%\hline
+%\textbf{Nr.}	& \textbf{Height error [m]}	& \textbf{Cross track error [m]}& \textbf{Height acceptance}& \textbf{Cross track error acceptance}	& \textbf{Net hit}\\ \hline
+%$1$				& $2.8$		& $2.1$		& X								& OK									& X					\\ \hline
+%$2$				& $2.7$		& $-4.5$	& X								& X										& X					\\ \hline
+%$3$				& $0.9$		& $-1.6$	& OK							& OK									& OK				\\ \hline
+%$4$				& $0.0$		& $5.4$		& OK							& X										& X					\\ \hline
+%$5$				& $0.8$		& $5.3$		& OK							& X										& X					\\ \hline
+%$6$				& $2.1$		& $-1.6$	& X								& OK									& X					\\ \hline
+%$7$				& $0.7$		& $2.3$		& OK							& OK									& OK				\\ \hline
+%$8$				& $-1.5$	& $-5.4$	& X								& X										& X					\\ \hline
+%$9$				& $1.9$		& $0.8$		& X								& OK									& X					\\ \hline
+%$10$			& $0.3$	& $1.1$		& OK							& OK									& OK				\\ \hline
+%$11$			& $-1.3$	& $0.2$		& OK							& OK									& OK				\\ \hline
+%\end{tabular}
+%\caption{Table containing the result of each landing attempt}
+%\label{tb:Day1LandingAttempt}
+%\end{table}
+%%%%%%
+%\begin{table}
+%\centering
+%\begin{tabular}{| l | l | l | l |}
+%\hline
+%\textbf{Nr.}	&  \textbf{Height acceptance}& \textbf{Cross track error acceptance}	& \textbf{Net hit}\\ \hline
+%$1$				& X								& OK									& X					\\ \hline
+%$2$				& X								& X										& X					\\ \hline
+%$3$				& OK							& OK									& OK				\\ \hline
+%$4$				& OK							& X										& X					\\ \hline
+%$5$				& OK							& X										& X					\\ \hline
+%$6$				& X								& OK									& X					\\ \hline
+%$7$				& OK							& OK									& OK				\\ \hline
+%$8$				& X								& X										& X					\\ \hline
+%$9$				& X								& OK									& X					\\ \hline
+%$10$			& OK							& OK									& OK				\\ \hline
+%$11$			& OK							& OK									& OK				\\ \hline
+%\end{tabular}
+%\end{table}
