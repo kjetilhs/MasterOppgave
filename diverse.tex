@@ -184,3 +184,41 @@ By reviewing the desired roll ($\phi_d$ ) and the actual roll ($\phi$) of the \g
 %$11$			& OK							& OK									& OK				\\ \hline
 %\end{tabular}
 %\end{table}
+
+
+
+
+The longitudinal control system showed a stable performance, however a large average error in the height with respect to the desired height shows a performance that is not acceptable for a autonomous landing system. Compared to the results obtain in the SIL simulation \ref{SIL:Results} where the low level controllers are fined tuned, shows that the performance can be increased by further tuning of the low level pitch controller. This might allow for an increased glide slope angle, which will increase the height difference between the landing net and the start of the landing path or reduce the necessary glide slope length. However the risk with an increased glide slope angle is an increased airspeed, which could result in a large overshot with respect to the desired height. 
+
+The lateral control system performed with satisfying result during the second day when the wind condition was calm, however during the first day it experienced problems when attempting to converge to the straight line between two waypoints. This result differ from the SIL simulation of the autonomous landing system, which was expected due to the mathematical model used to represent the X8 \gls{uav} has not been verified against a physical model of the X8, in addition to the low level controllers not being fined tuned for autonomous flights. The lateral control system  struggeled to avoid overshooting when following the finish turning circle, with some resulting overshot large enough to bring the \gls{uav} to the edged of the operational flight space. During the flight experiments some key factors was identified which resulted in increased performance from the lateral control system. The key factors are listed in table \ref{Tb:KeyAlterationFactorsLateral}.
+\begin{table}[H]
+\begin{itemize}
+\item Reducing the lookahead distance when flying in strong wind conditions.
+\item Creation of a approach path with the same rotation direction in both turning circles.
+\item Reducing the distance between each arc segments in the turning circles.
+\end{itemize}
+\caption{Alteration in the autonomous landing system which resulted in increased performance from the lateral controller}
+\label{Tb:KeyAlterationFactorsLateral}
+\end{table}
+The reduction of the lookahead distance will result in increased performance when against the wind, at the cost of reduced performance when flying in the tail wind. A possible solution to this problem would be to implement the the lookahead distance as a function of the cross track error, which in \citep{fossen2011handbook} section 10.3.2 is given as:
+\begin{equation}
+\Delta(t) = \sqrt{R^2 - e(t)^2}
+\end{equation}
+where $\Delta(t)$ is the lookahead distance, $R$ is the maximum lookahead distance and $e(t)$ is the cross track error. In addition the lateral control system functionality could be expanded to increase the performance during a turning manoeuvre, with the goal of reducing the overshot.
+
+Experimentation with the landing plan parameter showed that both the lateral and longitudinal control system was affected by the choice of parameters. During the first day the rotation direction of the start turning circle brought the \gls{uav} into the cross wind, which caused oscillatory motion in the \gls{uav}. Thus the combination of rotation direction should be considered carefully, with the recommended combination being either counter-clockwise/counter-clockwise or clockwise/clockwise. These combinations will result a smoother transition between the two turning circles, hence reduce the oscillation in the lateral controller. In addition the final approach angle must be zero, in order for the longitudinal control system to output a desire height reference which equals the net center height. Other key landing plan factors with recommended values for increase autonomous landing system performance are listed in table \ref{Tb:RecommmendedLandingPlanParameter}.
+\begin{table}[H]
+\centering
+\begin{tabular}{| l | l |}
+\hline
+\textbf{Parameter name}			&  \textbf{Recommended value} 	\\ \hline
+Time of arrival factor			&	$2 s$						\\ \hline
+Distance between arc segments	&	$10 m$					 	\\ \hline
+Final approach length			&	$100 m$					 	\\ \hline
+Final approach angle			&   $0 \deg$					\\ \hline
+Glide slope angle				&	$6 \deg$				 	\\ \hline
+\end{tabular}
+\caption{Recommended parameter alteration to the landing plan with respect to the plan parameter given in table \ref{AP:TB:landingDay2}, and the task configuration parameter given in table \ref{Tb:LandingPlanParameter}}
+\label{Tb:RecommmendedLandingPlanParameter}
+\end{table}
+The minimum height from which the autonomous landing system could start the landing path from was found to be $56 m$ above the runway at Agdenes airfield when attempting to land from the east. This strain the operation boundaries in which the \gls{uav} operates, since the approach could move the \gls{uav} out of the line of sight of the pilot. An alternative approach from the west is possible, however the typical wind condition on Agdenes is from the west, which would limit the weather window of the autonomous landing system.
