@@ -2,12 +2,15 @@
 \section{Conclusion}
 This thesis has implemented and tested a path and navigation system for autonomous landing of fixed-wing \gls{uav} in a stationary net. The design of the landing plan generation allowed for the generation of landing waypoints, used to create a flyable path for the \gls{uav} from an arbitrary position and direction. The parametrisation of the landing waypoint is accessed through the landing plan generator \gls{api}, which allows for specification of key factors in the creation of the landing plan, e.g. the length of the landing path, decent angle and rotation direction in the approach path.
 
-The navigation system has successfully been integrated with \gls{rtk-gnss}, which has been added as a state in the new navigation state control system implemented in this thesis. The effect of short loss of \gls{rtk-gnss} lock has been mitigated with the implementation of a robust \gls{rtk-gnss} system, which fuse navigation data from an secondary \gls{gnss} system together with the \gls{rtk-gnss} navigation data into a compensator for the external navigation system in the \gls{uav}. The compensator showed that it was able to prevent loss of position accuracy in a short duration after \gls{rtk-gnss} drop out.
+\gls{rtk-gnss} has been integrated with the \gls{uav} navigation system. Mitigation of impacts as a consequence of short loss of \gls{rtk-gnss} lock by implementation of a short loss compensator which fused navigation data from secondary \gls{gnss} system showed to provide the indented robustness and ability to compensate for such for a short loss of \gls{rtk-gnss}, where related limitations are subject for further work. The compensator showed that it was able to prevent loss of position accuracy in a short duration after \gls{rtk-gnss} drop out.
+
+Mitigation of impacts as a consequence of short loss of \gls{rtk-gnss} lock by implementation of a short loss compensator which fused navigation data from secondary \gls{gnss} system showed to provide the indented robustness and ability to compensate for such for a short loss of \gls{rtk-gnss}, where related limitations are subject for further work.
 
 Field experiments at Agdenes of the autonomous landing system was performed with a virtual net placed above the runway. The performance of the control system showed promising results, however the low level controllers must be fined tuned for autonomous flight operation. The navigation system with \gls{rtk-gnss} tested in the field at Agdenes showed excellent result during testing of the autonomous stationary net landing system.
 
 The mobile sensor unit showed excellent performance when used as position reference for the stationary net placement. The functionality of the mobile sensor unit can be expanded to be closer integrated into the autonomous landing system.
 
+The autonomous landing have showed promising results from field test, and with further testing will be capable of safely perform an autonomous landing in a stationary net.
 %From the experimental testing of the autonomous landing system it's concluded that both the lateral and longitudinal control system can be used in the autonomous landing system, however further tuning of the low level controller are required. In addition to further testing of the autonomous landing system in order to determine
 
 
