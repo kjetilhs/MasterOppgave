@@ -1,21 +1,26 @@
 \chapter{Conclusion and recommendation for further work}
 \section{Conclusion}
-This thesis has implemented and tested a path and navigation system for autonomous landing of fixed-wing \gls{uav} in a stationary net. The design of the landing plan generation allowed for the generation of landing waypoints, used to create a flyable path for the \gls{uav} from an arbitrary position and direction. The parametrisation of the landing waypoint is accessed through the landing plan generator \gls{api}, which allows for specification of key factors in the creation of the landing plan, e.g. the length of the landing path, decent angle and rotation direction in the approach path.
+This thesis has implemented and tested a path and navigation system for autonomous landing of fixed-wing \gls{uav} in a stationary net. The design of the landing plan generator allowed for generation of landing waypoints, used to create a flyable path for the \gls{uav} from an arbitrary position and direction. The parametrisation of the landing waypoint is accessed through the landing plan generator \gls{api}, allows for specification of key factors in the creation of the landing plan, e.g. the length of the landing path, decent angle and rotation direction in the approach path.
 
-\gls{rtk-gnss} has been integrated with the \gls{uav} navigation system. Mitigation of impacts as a consequence of short loss of \gls{rtk-gnss} lock by implementation of a short loss compensator which fused navigation data from secondary \gls{gnss} system showed to provide the indented robustness and ability to compensate for such for a short loss of \gls{rtk-gnss}, where related limitations are subject for further work. The compensator showed that it was able to prevent loss of position accuracy in a short duration after \gls{rtk-gnss} drop out.
+The implementation of the navigation state control system allowed for integration of \gls{rtk-gnss} into the \gls{uav} navigation system. Mitigation of impacts as a consequence of short loss of \gls{rtk-gnss} lock by implementation of a short loss compensator which fusing navigation data from secondary \gls{gnss} system showed to provide the indented robustness and ability to compensate for short loss of \gls{rtk-gnss}, where related limitations are subject for further work.
 
-Mitigation of impacts as a consequence of short loss of \gls{rtk-gnss} lock by implementation of a short loss compensator which fused navigation data from secondary \gls{gnss} system showed to provide the indented robustness and ability to compensate for such for a short loss of \gls{rtk-gnss}, where related limitations are subject for further work.
+The creation of the navigation source interface resulted in an excellent overview over the current and available navigation source in the \gls{uav}. 
 
-Field experiments at Agdenes of the autonomous landing system was performed with a virtual net placed above the runway. The performance of the control system showed promising results, however the low level controllers must be fined tuned for autonomous flight operation. The navigation system with \gls{rtk-gnss} tested in the field at Agdenes showed excellent result during testing of the autonomous stationary net landing system.
+Field experiments at Agdenes of the autonomous landing system was performed with a virtual net placed above the runway. The performance of the control system showed promising results, however the low level controllers must be fined tuned for autonomous flight operation. The navigation system with \gls{rtk-gnss} tested in the field at Agdenes showed excellent result during testing of the autonomous stationary net landing system. The operation study on the feasibility of an autonomous landing in a stationary identified spacial limitations which strain the operational space of the gls{uav}, where reduction of the limitations through further testing are subject for further work.  
 
 The mobile sensor unit showed excellent performance when used as position reference for the stationary net placement. The functionality of the mobile sensor unit can be expanded to be closer integrated into the autonomous landing system.
 
 The autonomous landing have showed promising results from field test, and with further testing will be capable of safely perform an autonomous landing in a stationary net.
+
+
+%Mitigation of impacts as a consequence of short loss of \gls{rtk-gnss} lock by implementation of a short loss compensator which fused navigation data from secondary \gls{gnss} system showed to provide the indented robustness and ability to compensate for such for a short loss of \gls{rtk-gnss}, where related limitations are subject for further work.
+
+
+
 %From the experimental testing of the autonomous landing system it's concluded that both the lateral and longitudinal control system can be used in the autonomous landing system, however further tuning of the low level controller are required. In addition to further testing of the autonomous landing system in order to determine
 
 
 %The navigation system with \gls{rtk-gnss} tested in the field at Agdenes showed excellent result during testing of the autonomous stationary net landing system.
-
 
 
 %The implementation of the landing plan generator presented in Ch. \ref{Ch:Implementation} showed that the landing path generator can be configure through the use of the \gls{api} in the form of the \gls{imc} message LandingPlanGeneration, which ensures that the parameters used to create a landing plan is available in the fixed structure of the \gls{imc} protocol. Further the Software In the Loop (SIL) simulation of the autonomous landing system presented in section \ref{ss:SILLandingPlan} showed the the presented system is capable of performing a autonomous landing in a stationary net with a landing plan created from a arbitrary location. The testing of the control system used in the autonomous landing system showed that during a simulation the control system is able to pass through the net with acceptable precision.

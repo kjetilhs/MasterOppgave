@@ -28,7 +28,7 @@ r
 \end{bmatrix}\label{eq:kinematicsAttitude}
 \end{align}
 \end{subequations}
-where $\mathbf{R}(\mathbf{\Theta})_{Body}^{NED}$ is the rotation matrix from the body frame to the NED frame, with $\mathbf{\Theta} = \begin{bmatrix}
+where $\mathbf{R}(\mathbf{\Theta})_{Body}^{NED}$ is the rotation matrix from the body frame to the \gls{ned} frame, with $\mathbf{\Theta} = \begin{bmatrix}
 \phi & \theta & \psi
 \end{bmatrix}^T.$ The transformation matrix $\mathbf{T}(\mathbf{\Theta}_{nb})$ is given in \citep{fossen2011handbook} as:
 \begin{equation}
@@ -149,22 +149,37 @@ Further the path tangential for a straight line path is given as:
 \psi(\varpi) = \atan2(a_y,a_x)
 \end{equation}
 which shows that the path-tangential for a straight line path is discontinues as seen in figure \ref{Fig:Path-tangential}. This defines a straight line path with the smoothness of $G^0$, which allows the path to be used in a path following system, however with discontinuity in the path-tangential. A straight line path is shown in  figure \ref{Fig:StraightLinePath}.
+%\begin{figure}[H]
+%\centering
+%\includegraphics[scale=0.5]{figs/TheoryPlot/TangentialStraight.eps}
+%\caption{Path-tangential to a straight line path}
+%\label{Fig:Path-tangential}
+%\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=0.5\textwidth]{figs/TheoryPlot/StraightLine.eps}
+%\caption{Straight line path}
+%\label{Fig:StraightLinePath}
+%\end{figure}
+
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{figs/TheoryPlot/TangentialStraight.eps}
-\caption{Path-tangential to a straight line path}
-\label{Fig:Path-tangential}
-\end{figure}
-\begin{figure}[H]
-\includegraphics[width=0.5\textwidth]{figs/TheoryPlot/StraightLine.eps}
+\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width=\textwidth]{figs/TheoryPlot/StraightLine.eps}
 \caption{Straight line path}
 \label{Fig:StraightLinePath}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+		\includegraphics[width=\textwidth]{figs/TheoryPlot/TangentialStraight.eps}
+		\caption{Path-tangential to a straight line path}
+		\label{Fig:Path-tangential}
+\end{subfigure}
+\caption{Straight line path with path tangential}
+\label{Fig:StraightLine}
 \end{figure}
+
 \subsection{Dubins path}\label{S:DubinsPath}
 An alternative to a straight line path is a path constructed by straight lines and circle, like the Dubins path proposed in the paper \citep{dubins1957curves}. This paper showed that the shortest possible path for a particle that moved with unit speed with maximum curvature would consist of two circles and a straight line which is tangential to both circles.
-
-
- 
 
 A Dubins path which is constructed with the final orientation fixed has four ways to be constructed, which are determined by the rotation directions. The four rotation combination with fixed finish orientation are given in table \ref{Tb:DubinsTurningDirection}.
 \begin{table}[H]
@@ -267,9 +282,9 @@ where $d_t = ||\mathbf{P}_N-\mathbf{P}_{\chi}||_2$, $\phi_s$ and $\phi_f$ is the
 \psi = \atan2(1,-tan(\phi))
 \end{equation}
 which determine that the path-tangential is continues, which makes Dubins path $G^1$. The path-tangential for Dubins path is shown in figure \ref{Fig:Path-tangentialDubin}.
-\begin{figure}
+\begin{figure}[H]
 \centering
-\includegraphics[scale=0.3]{figs/TheoryPlot/tangentialDubin.eps}
+\includegraphics[scale=0.7]{figs/TheoryPlot/tangentialDubin.eps}
 \caption{Path-tangential for a Dubins path}
 \label{Fig:Path-tangentialDubin}
 \end{figure}
