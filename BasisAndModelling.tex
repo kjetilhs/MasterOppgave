@@ -1,6 +1,6 @@
 \chapter{Basis and modelling}
 \section{UAV model}
-A fixed wing \gls{uav} model is presented in \citep{beard2012small}, which contain the kinetic equations of a general \gls{mav}. The kinetic equations used to described a general \gls{mav} can represent a fixed wing \gls{uav} given that the size of the \gls{uav} is small enough, which is the case with the \gls{uav} used in this thesis. First the kinematic equations used to describe a \gls{mav} are given as:
+A fixed wing \gls{uav} model is presented in \citep{beard2012small}, which contain the kinetic equations of a general \gls{mav}. The kinetic equations used to described a general \gls{mav} can represent a fixed wing \gls{uav} given that the size of the \gls{uav} is small enough, which is the case with the \gls{uav} used in this thesis. The kinematic equations used to describe a \gls{mav} is given as:
 \begin{subequations}
 \label{eq:kinematics}
 \begin{align}\label{eq:kinematicsPosition}
@@ -38,7 +38,7 @@ where $\mathbf{R}(\mathbf{\Theta})_{Body}^{NED}$ is the rotation matrix from the
 0 & \frac{\sin(\phi)}{\cos(\theta)} & \frac{\cos(\phi)}{\cos(\theta)}
 \end{bmatrix}
 \end{equation}
-The kinetic equations presented from \citep{beard2012small} is given in the body frame, which is a frame fixed to the body of the vehicle and rotated relative to an inertia frame, e.q the Earth center. The kinetic equations are given as:
+The kinetic equations presented from \citep{beard2012small} are given in the body frame, which is a frame fixed to the body of the vehicle and rotated relative to an inertia frame, e.q the Earth center. The kinetic equations are given as:
 \begin{subequations}
 \label{eq:kinetics}
 \begin{align}
@@ -79,9 +79,9 @@ C_y(\beta,p,r,\delta_a,\delta_r) \notag\\
  \end{bmatrix}
 \end{align}
 \end{subequations}
-where $\rho$ is the air density in $kg/m^3$,$mg$ is the weight of the \gls{mav}, $S$ is the platform area of the \gls{mav} wing, $C_i$ are nondimensional aerodynamic coefficients and $V_a$ is the speed of the \gls{mav} through the surrounding air. $\alpha$ and $\beta$ is the attack and side slip angle respectfully. $F_{Drag}$ is the drag force acting on the fuselage, and $F_{Lift}$ is the lift force. $\mathbf{R}(\alpha)_{Stability}^{Body}$ are the rotation matrix from the stability frame to the body frame. The stability frame is orientated with respect to the \gls{mav} movement through the surrounding air, which is defined as a standard rotation around the y-axis of the body frame. $S_{Prop}$ is the area swept out by the propeller, and $K_{Motor}$,$K_{T_p}$ and $K_\Omega$ are propeller specific constants. The control surface on the \gls{mav} is defined into two groups; the wings and the rudder. On the rudder $\delta_e$ controls the elevator deflection and $\delta_r$ the rudder deflection. For the wings $\delta_a$ is the control input from the aileron deflection, while $\delta_t$ is the throttle control input.
+where $\rho$ is the air density in $kg/m^3$,$mg$ is the weight of the \gls{mav}, $S$ is the platform area of the \gls{mav} wing, $C_i$ are nondimensional aerodynamic coefficients and $V_a$ is the speed of the \gls{mav} through the surrounding air. $\alpha$ and $\beta$ is the attack and side slip angle respectfully. $F_{Drag}$ is the drag force acting on the fuselage, and $F_{Lift}$ is the lift force. $\mathbf{R}(\alpha)_{Stability}^{Body}$ is the rotation matrix from the stability frame to the body frame. The stability frame is orientated with respect to the \gls{mav} movement through the surrounding air, which is defined as a standard rotation around the y-axis of the body frame. $S_{Prop}$ is the area swept out by the propeller, and $K_{Motor}$,$K_{T_p}$ and $K_\Omega$ are propeller specific constants. The control surface on the \gls{mav} is defined into two groups; the wings and the rudder. On the rudder $\delta_e$ controls the elevator deflection and $\delta_r$ the rudder deflection. For the wings $\delta_a$ is the control input from the aileron deflection, while $\delta_t$ is the throttle control input.
 \section{Landing path modelling}
-A landing path can be view as a path following problem, which is the \gls{uav} attempts to follow a desired path without a time demand. A minimum requirement for a path is that the path is connected, where the connection level can be described by the path smoothness. Smoothness can be described with parametric continuity, which is denoted $C^n$ were n is the degree of smoothness. The order of n implies that the n first parametric derivatives match at a common point for two subsequent paths \citep{barsky1989geometric}. Geometric continuity is a relaxed form of parametric continuity in which discontinuousness in speed is allowed. A table \ref{TB:SmoothnessDescriptions} of geometric and parametric continuity lists the requirement for each smoothness level, which is based definitions presented in \citep{barsky1989geometric}. Geometric continuity is sufficient for a path following system, which is the main focus of this thesis. Geometric continuity is denoted as $G^n$ were n is the order of continuity.
+A landing path can be viewed as a path following problem, which is the \gls{uav} attempts to follow a desired path without a time demand. A minimum requirement for a path is that the path segments are connected, where the connection level can be described by the path smoothness. Smoothness can be described with parametric continuity, which is denoted $C^n$ were n is the degree of smoothness. The order of n implies that the n first parametric derivatives match at a common point for two subsequent paths \citep{barsky1989geometric}. Geometric continuity is a relaxed form of parametric continuity in which discontinuity in speed is allowed. Table \ref{TB:SmoothnessDescriptions} of geometric and parametric continuity, lists the requirement for each smoothness level, which is based on definitions presented in \citep{barsky1989geometric}. Geometric continuity is sufficient for a path following system, which is the main focus of this thesis. Geometric continuity is denoted as $G^n$ were n is the order of continuity.
 \begin{table}[H]
 \begin{center}
 \begin{tabular}{| l | l |}
@@ -106,7 +106,7 @@ P_s(x_s,y_s,z_s,\theta_s,\psi_s) \xrightarrow{r(\varpi)} P_f(x_f,y_f,z_f,\theta_
 where the subscripts $s$ and $f$ denotes the start pose and finish pose respectfully with $r(\varpi)$ as the path and $\varpi$ the path variable.
 
 \subsection{Straight lines}
-The simplest path from $P_s$ and $P_f$ is a straight line path between the poses. A straight line path is given, where for for simplicity and without loss of generality the path is reduced to a 2 dimensional case: 
+The simplest path from $P_s$ and $P_f$ is a straight line path between the poses. A straight line path is given. For simplicity and without loss of generality the path is reduced to a 2 dimensional case: 
 \begin{subequations}
 \begin{align}
 & x(\varpi) = a_x\varpi + b_x \\
@@ -148,7 +148,7 @@ Further the path tangential for a straight line path is given as:
 \begin{equation}
 \psi(\varpi) = \atan2(a_y,a_x)
 \end{equation}
-which shows that the path-tangential for a straight line path is discontinues, as seen in figure \ref{Fig:Path-tangential}. That define a straight line path with the smoothness of $G^0$, which allows the path to be used in a path following system, however with discontinuity in the path-tangential. A straight line path is shown in  figure \ref{Fig:StraightLinePath}.
+which shows that the path-tangential for a straight line path is discontinues as seen in figure \ref{Fig:Path-tangential}. This defines a straight line path with the smoothness of $G^0$, which allows the path to be used in a path following system, however with discontinuity in the path-tangential. A straight line path is shown in  figure \ref{Fig:StraightLinePath}.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{figs/TheoryPlot/TangentialStraight.eps}
@@ -161,7 +161,7 @@ which shows that the path-tangential for a straight line path is discontinues, a
 \label{Fig:StraightLinePath}
 \end{figure}
 \subsection{Dubins path}\label{S:DubinsPath}
-An alternative to a straight line path is a path constructed by straight lines and circle, like the Dubins path proposed in the paper \citep{dubins1957curves}, which showed that the shortest possible path for a particle that moved with unit speed with maximum curvature would consist of two circles and a straight line which is tangential to both circles.
+An alternative to a straight line path is a path constructed by straight lines and circle, like the Dubins path proposed in the paper \citep{dubins1957curves}. This paper showed that the shortest possible path for a particle that moved with unit speed with maximum curvature would consist of two circles and a straight line which is tangential to both circles.
 
 
  
@@ -181,11 +181,11 @@ Left to left \\ \hline
 \caption{Turning direction for Dubins path with fixed final orientation}
 \label{Tb:DubinsTurningDirection}
 \end{table}
-The equations used to construct a Dubins path are found in \citep{tsourdos2010cooperative} section 2.2.1, with a constructed path shown in figure \ref{Fig:DubinsPath}. In figure \ref{Fig:DubinsPath} the whole line is the path, with the doted lines used express the parameter used to construct the path.
+The equations used to construct a Dubins path are found in \citep{tsourdos2010cooperative} section 2.2.1, with a constructed path shown in figure \ref{Fig:DubinsPath}. In figure \ref{Fig:DubinsPath} the whole line is the path, where the doted lines used express the parameter used to construct the path.
 \begin{figure}[H]
 \def\svgwidth{\textwidth} % Defining the width since Inkscape hasn't done this yet in the .pdf_tex file
 \input{InkFig/DubinsPath.pdf_tex}
-\caption{The whole line is the Dubins path, while the doted lines are used to express the parameter used to construct the path}
+\caption{The whole line is the Dubins path, while the doted lines are used to express the parameters used to construct the path}
 \label{Fig:DubinsPath}
 \end{figure}
 Dubins path is constructed by first determine the start and finish turning circle center. The centres are found with the equations:
@@ -197,7 +197,7 @@ X_{cf} &= X_f - R_f\cos(\psi_f \pm \frac{\pi}{2}) \\
 Y_{cf} &= Y_f - R_f\sin(\psi_f \pm \frac{\pi}{2})
 \end{align}
 \end{subequations}
-where $R_s$ and $R_f$ is the radius of the start and final turning circle respectfully, with $\psi_s$ and $\psi_f$ the start and finish orientation. The centres for the start and finish turning circle are defined as:
+where $R_s$ and $R_f$ are the radius of the start and final turning circle respectfully, with $\psi_s$ and $\psi_f$ as the start and finish orientation. The centres for the start and finish turning circles are defined as:
 
 \begin{align}
 & \mathbf{O}_{cs} =
@@ -258,18 +258,18 @@ y_{P_N}
 \end{bmatrix}
 \end{align}
 \end{subequations}
-The length of the Dubins path is calculated in three parts. The first the is the arc length from the start pose to the exit tangent point, then the length of the straight line before the arc length from the entry point to the finish pose. The length of the path is given as: 
+The length of the Dubins path is the sum of the length of the two circle arcs and the straight line, given as:
 \begin{equation}
 d = R_s\phi_s + d_t + R_f\phi_f
 \end{equation}
-where $d_t = ||\mathbf{P}_N-\mathbf{P}_{\chi}||_2$, $\phi_s$ and $\phi_f$ is the arc angle for the start and finish circle respectfully. The path-tangential of the Dubins path is given as:
+where $d_t = ||\mathbf{P}_N-\mathbf{P}_{\chi}||_2$, $\phi_s$ and $\phi_f$ is the arc angle for the start and finish circle respectively. The path-tangential of the Dubins path is given as:
 \begin{equation}
 \psi = \atan2(1,-tan(\phi))
 \end{equation}
 which determine that the path-tangential is continues, which makes Dubins path $G^1$. The path-tangential for Dubins path is shown in figure \ref{Fig:Path-tangentialDubin}.
 \begin{figure}
 \centering
-\includegraphics[scale=0.5]{figs/TheoryPlot/tangentialDubin.eps}
+\includegraphics[scale=0.3]{figs/TheoryPlot/tangentialDubin.eps}
 \caption{Path-tangential for a Dubins path}
 \label{Fig:Path-tangentialDubin}
 \end{figure}
