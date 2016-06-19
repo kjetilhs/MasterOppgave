@@ -44,7 +44,7 @@
 % \selectlanguage{english} % Change to 'norsk' if you are writing in Norwegian
 % \input{problem_description}
 \includepdf[pages={1}]{Masterdescription.pdf}
-% \cleardoublepage
+ \cleardoublepage
 
 %% There must be an abstract in English, even though the main text is in Norwegian
 \selectlanguage{english}
@@ -53,14 +53,14 @@
 \cleardoublepage
 
 %% Only for the master's thesis; if the main text is in English and you can write Norwegian, there must be an abstract in Norwegian as well.
-% \selectlanguage{norsk}
-% \include{abstract_norwegian}
-% \cleardoublepage
+ \selectlanguage{norsk}
+ \include{abstract_norwegian}
+ \cleardoublepage
 
 \selectlanguage{english}% Change to 'norsk' if you are writing in Norwegian
 
 \include{preface}
-%\cleardoublepage
+\cleardoublepage
 
 % similarly you may add a separate acknowledgments page
 
@@ -112,7 +112,7 @@
 %% include here the other chapters
 
 \renewcommand*{\bibname}{References}
-\bibliographystyle{plainnat}
+\bibliographystyle{abbrvnat}
 \bibliography{main}
 
 %% Uncomment the following if you have any appendix

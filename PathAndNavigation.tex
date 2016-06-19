@@ -1,7 +1,7 @@
 \chapter{Path and navigation}\label{CH:PathNavigation}
 This chapter contain the system description of the landing plan generator and the navigation system.
 \section{Landing plan}\label{Ch:LandingPlan}
-The landing plan consists of two main parts; the landing path and the approach path. The landing path is a straight line path orientated with respect to a reference position, which in this system is the position of the net. The approach path is designed as a lateral Dubins path and a longitudinal straight line path, and ensures that the \gls{uav} is able to enter the landing path at the correct height with the correct orientation.
+The landing plan consists of two main parts; the landing path and the approach path. The landing path is a straight line path orientated with respect to a reference position, in this system the position of the stationary net. The approach path is designed as a lateral Dubins path and a longitudinal straight line path, ensuring that the \gls{uav} is able to enter the landing path at the correct height with the correct orientation.
 \subsection{Landing Path}\label{SS:netApproach}
 The landing path is inspired by the work done in \citep{Skulstad&Syversen} where waypoints were used to create a straight line path towards the net. The proposed landing path proved successful and the same landing path design is used in this thesis. The decent angle of the straight line path should be kept small to avoid build up in speed. The trade off is that the start height of the landing path must be above any obstacles that is around the landing area. A waypoint is here defined as:
 \begin{equation}
@@ -11,7 +11,7 @@ y \\
 z
 \end{bmatrix}
 \end{equation}
-where $x,y,z \in \Bbb R^3$. The straight line path is constructed relative to the net as shown in figure \ref{Fig:LandingPhase}, with way-points given as:
+where $x,y,z \in \Bbb R^3$. The straight line path is constructed relative to the net as shown in figure \ref{Fig:LandingPhase}, with waypoints given as:
 \begin{subequations}
 \begin{align}
 &\mathbf{WP4} = 
@@ -40,7 +40,7 @@ a3 \\
 \end{bmatrix}
 \end{align}
 \end{subequations}
-where the description of the parameters used is given in table \ref{Tb:Approach Parameters}. The net is placed between the fourth and third way points, where the fourth waypoint is used as a aiming position for the \gls{uav} and avoid transitional behaviour from switching waypoint before hitting the net.
+where the description of the parameters used is given in table \ref{Tb:Approach Parameters}. The net is placed between the fourth and third waypoints, where the fourth waypoint is used as a aiming position for the \gls{uav} and avoid transitional behaviour from switching waypoint before hitting the net.
 \begin{table}[H]
 \begin{center}
     \begin{tabular}{ | l | l |}
@@ -83,40 +83,40 @@ The lateral path is constructed with the equations presented in section \ref{S:D
 		\label{Fig:LateralPath}
 \end{figure}
 
-The construction of the lateral path consists of two arc with a straight line between the arcs. The arcs are constructed by first finding the entry and exit angle with respect to the inertia frame, defined as $\psi_0$ and $\psi_1$ respectfully:
+The construction of the lateral path consists of two arcs and a straight line. The arcs are constructed by first finding the entry and exit angle with respect to the inertia frame, defined as $\psi_0$ and $\psi_1$ respectfully:
 \begin{subequations}
 \begin{align}
 \psi_0 &= \begin{cases}
-\atan2(Y_s-Y_{cs},X_s-X_{cs}) & \text{if start circle} \\
-\atan2(Y_{P_N}-Y_{cf},X_{P_N}-X_{cf}) & \text{otherwise}
+\atan2(Y_s-Y_{cs},X_s-X_{cs}), & \text{if start circle} \\
+\atan2(Y_{P_N}-Y_{cf},X_{P_N}-X_{cf}), & \text{otherwise}
 \end{cases}\\
 \psi_1 &= \begin{cases}
-\atan2(Y_{P_\chi}-Y_{cs},X_{P_{\chi}}-X_{cs}) & \text{if start circle} \\
-\atan2(Y_{f}-Y_{cf},X_{f}-X_{cf}) & \text{otherwise}
+\atan2(Y_{P_\chi}-Y_{cs},X_{P_{\chi}}-X_{cs}), & \text{if start circle} \\
+\atan2(Y_{f}-Y_{cf},X_{f}-X_{cf}), & \text{otherwise}
 \end{cases}
 \end{align}
 \end{subequations}
 Further the turn angle must be defined, which is the difference between $\psi_1$ and $\psi_0$. The periodic behaviour of the unit circle must be respected, in addition to the rotation direction. The maximum turning angle is given as:
 \begin{equation}
 \psi_{max} = \begin{cases}
--|\psi_1 - \psi_0| & \text{if counter clockwise rotation and } \psi_1 - \psi_0 \leq 0 \\
--(2\pi - |\psi_1-\psi_0|) & \text{ if counter clockwise rotation and } \psi_1 - \psi_0 > 0 \\
-|\psi_1 - \psi_0| & \text{if clockwise rotation and } \psi_1 - \psi_0 \geq 0 \\
-(2\pi - |\psi_1-\psi_0|) & \text{ if clockwise rotation and } \psi_1 - \psi_0 < 0
+-|\psi_1 - \psi_0|, & \text{if counter clockwise rotation and } \psi_1 - \psi_0 \leq 0 \\
+-(2\pi - |\psi_1-\psi_0|), & \text{ if counter clockwise rotation and } \psi_1 - \psi_0 > 0 \\
+|\psi_1 - \psi_0|, & \text{if clockwise rotation and } \psi_1 - \psi_0 \geq 0 \\
+(2\pi - |\psi_1-\psi_0|), & \text{ if clockwise rotation and } \psi_1 - \psi_0 < 0
 \end{cases}
 \end{equation}
 where $|\psi_1-\psi_0| \in(-\pi,\pi]$. From the maximum turning angle the angle step and number of angle segments in the arc can be determined:
 \begin{subequations}
 \begin{align}
-h &= \text{sign}\frac{d_{arc}}{R} \\
-N &= \ceil[\Bigg]{\frac{\text{sign}(\psi_{max})\psi_{max}}{|h|}} + 1
+h &= \text{sign}(\psi_{max})\frac{d_{arc}}{R} \\
+N &= \ceil[\Bigg]{\frac{|\psi_{max}|}{|h|}} + 1
 \end{align}
 \end{subequations}
-where $h$ is arc angle step and $N$ the total number of steps in the arc. The step angle must have the same sign as $\psi_{max}$ to ensure the correct rotation direction. Continuing the heading function $\psi(\varpi)$ can be defined as:
+where $h$ is arc angle step, $d_{arc}$ is the distance between each arc segments, $R$ is the radius of the turning circle and $N$ the total number of steps in the arc. The step angle must have the same sign as $\psi_{max}$ to ensure the correct rotation direction. Continuing the heading function $\psi(\varpi)$ can be defined as:
 \begin{equation}
 \psi(\varpi) = \begin{cases}
-\psi_{max} & \varpi = N-1 \\
-\varpi h & \text{otherwise}
+\psi_{max}, & \varpi = N-1 \\
+\varpi h, & \text{otherwise}
 \end{cases}
 \end{equation}
 where $\varpi = 1,...,N-1$. Finally the arc path can be defined as:
@@ -136,29 +136,29 @@ A summary of the lateral path is:
 \end{bmatrix} + R_s\begin{bmatrix}
 \cos(\psi_{0} + \psi(\varpi)) \\
 \sin(\psi_{0} + \psi(\varpi)) \\
-\end{bmatrix} & \text{Start circle} \\
+\end{bmatrix}, &  \text{if } 1\leq i \leq N_s \\
 \begin{bmatrix}
 \mathbf{O}_{cf} \\
 \end{bmatrix} + R_f\begin{bmatrix}
 \cos(\psi_{0} + \psi(\varpi)) \\
 \sin(\psi_{0} + \psi(\varpi)) \\
-\end{bmatrix} & \text{Finish circle}
+\end{bmatrix}, & \text{if } N_s< i \leq N_f
 \end{cases}
 \end{equation}
 where $i \in [1,...,N_s + N_f]$ with $N_s$ and $N_f$ as the number of segments in the start and finish circle respectfully.
 \subsubsection{Longitudinal path}
-The longitudinal path is designed as a straight line path along the lateral path, which fused together with the lateral path forms a spiral path towards the landing path. The approach path hold a constant decent angle until the correct height is reached, which is defined as the start height for the landing path. The approach decent angle is then adjusted in order for the correct height to be reach. The approach decent angle is defined as:
+The longitudinal path is designed as a straight line path along the lateral path fusing together with the lateral path to form a spiral path towards the landing path. The approach path hold a constant decent angle until the correct height is reached, which is defined as the start height for the landing path. The approach decent angle is then adjusted in order for the correct height to be reach. The approach decent angle is defined as:
 \begin{equation}
 \gamma_d = \begin{cases}
-\atan2(\Delta z,||\mathbf{p}(i+1)-\mathbf{p}(i)||_2) & \text{if } \atan2(\Delta z,||\mathbf{p}(i+1)-\mathbf{p}(i)||_2)\leq \gamma_{d_{Max}} \\
-\gamma_{d_{Max}}										& \text{otherwise}
+\atan2(\Delta z,||\mathbf{p}(i+1)-\mathbf{p}(i)||_2), & \text{if } \atan2(\Delta z,||\mathbf{p}(i+1)-\mathbf{p}(i)||_2)\leq \gamma_{d_{Max}} \\
+\gamma_{d_{Max}},										& \text{otherwise}
 \end{cases}
 \end{equation}
 where $\gamma_{d_{Max}}$ is the maximum decent angle for the approach path, and $\Delta z$ is defined as:
 \begin{equation}
 \Delta z = z_d-z(i)
 \end{equation}
-where $z_d$ is the $z$ component in $WP1$. Finally the longitudinal path is included into the approach path, which is given as:
+where $z_d$ is the $z$ component in $\textbf{WP1}$. Finally the longitudinal path is included into the approach path, which is given as:
 \begin{equation}
 \mathbf{r}(i) = \begin{bmatrix}
 \mathbf{p}(i) \\
@@ -176,7 +176,7 @@ x(i) & y(i)
 		\label{Fig:HeightProfile}
 \end{figure}
 \subsubsection{Spiral path}\label{pp:SpiralPath}
-In the case where the approach path has yet to reach the correct heigh at the end of the combined lateral and longitudinal path, a new spiral path is created in order for the approach path to reach the height of the landing path. The spiral path is designed to have the same turning radius, turning direction and decent angle as the approach path. The longitudinal path continues along the spiral until the correct height can be reached with and decent angle equal or less then $\gamma_{d_{Max}}$. Continuing an arc is created such that the path ends with the correct heading. The arc has the same rotation direction as the lateral path, with start point where the correct height was reached and end point of the start of the landing path. The complete approach path combined with the landing path is shown in figure \ref{Fig:LateralPath}.
+In the case where the approach path has yet to reach the correct heigh at the end of the combined lateral and longitudinal path, a new spiral path is created in order for the approach path to reach the height of the landing path. The spiral path is designed to have the same turning radius, turning direction and decent angle as the approach path. The longitudinal path continues along the spiral until the correct height can be reached with and decent angle equal or less then $\gamma_{d_{Max}}$. Continuing an arc is created such that the path ends with the correct heading. The arc has the same rotation direction as the lateral path, with start position where the correct height was reached and end position of the start of the landing path. The complete approach path combined with the landing path is shown in figure \ref{Fig:LateralPath}.
 \begin{figure}[H]
 	\centering
 		\includegraphics[scale=0.7]{figs/SysPlot/LandingPath.eps}
@@ -186,18 +186,18 @@ In the case where the approach path has yet to reach the correct heigh at the en
 \section{Navigation system}
 The navigation system consists of two position and velocity measurement system, where one is a high accurate positioning system and the other a reliable backup system. The high accurate positioning system apply \gls{rtk-gnss}, which is able to provide high accurate position solution. The backup positioning system consists of a standard package of standalone \gls{gps} and \gls{imu} together with a Kalman filter, which is a proven reliable system in Ardupilot together with a Pixhawk. Ardupilot and Pixhawk are explained further in section \ref{ss:Pixhawk} and section \ref{ss:ardupilot}. The \gls{rtk-gnss} is subject to drop out, which must be handled by the navigation system. A state switch controller has been created to handle the state switching between \gls{rtk-gnss} and the external navigation data. A short drop out of the \gls{rtk-gnss} could be resolved by fusing data from the external navigation source together with previous position solutions from the \gls{rtk-gnss} and create a compensator for the external navigation system. The compensator can then be used to achieve the same accuracy as the \gls{rtk-gnss} for a short period.
 \subsection{Position estimation RTK-GPS}\label{ss:rtk-gps}
-\acrfull{rtk-gnss} is in \citep{misra2011global} section 7.2.2 defined as a rover that receive raw \gls{gnss} measurements from a reference receiver which is transmitted over a radio link. A key feature with \gls{rtk-gnss} is that the rover is able to estimate the integer ambiguities while moving. The reference receiver is usually defined as a base station and the integer ambiguity is the uncertainty of the number of whole phase cycles between the receiver and a satellite. With the measurements from the base station the rover is able to calculated the distance between itself and the base station, referred to as a baseline. The length of the baseline affects the accuracy of the \gls{rtk-gnss} solution due to increased effect of atmospheric disturbance, which is further described in \ref{Ss:Atmosphere}. With a short baseline, e.g. $1-2 km$ the atmospheric condition can be considered equal for the base station and the rover, which keeps the solution  at centimetre level accuracy. The concept of \gls{rtk-gnss} is depicted in figure \ref{figure:RTK}.
+\acrfull{rtk-gnss} is in \citep{misra2011global} section 7.2.2 defined as a rover that receive raw \gls{gnss} measurements from a reference receiver which is transmitted over a radio link. A key feature with \gls{rtk-gnss} is that the rover is able to estimate the integer ambiguities while moving. The reference receiver is usually defined as a base station and the integer ambiguity is the uncertainty of the number of whole phase cycles between the receiver and a satellite. With the measurements from the base station the rover is able to calculated the distance between itself and the base station, referred to as a baseline. The length of the baseline affects the accuracy of the \gls{rtk-gnss} solution due to increased effect of atmospheric disturbance, further described in \ref{Ss:Atmosphere}. With a short baseline, e.g. $1-2 km$ the atmospheric condition can be considered equal for the base station and the rover, keeping the solution at centimetre level accuracy. The concept of \gls{rtk-gnss} is depicted in figure \ref{figure:RTK}.
 \begin{figure}[H]
 	\centering
 		\includegraphics[width=0.7\textwidth]{figs/DGPS.png}
 		\caption{Concept figure of \acrfull{rtk-gnss}}
 		\label{figure:RTK}
 \end{figure}
-The ability for the rover to resolve the integer ambiguity is a key feature in \gls{rtk-gnss}. A well used method was presented in the article \citep{teunissen1994new} which decorrelate the integer ambiguities such that an efficient computation of the least square estimate can be performed. The search method is further explained in \citep{teunissen1995least}. An estimate of the integer ambiguity with sufficient high degree of certainty is referred to as a FIX solution, otherwise referred to as a FLOAT solution. When the solution is categorised as FIX the accuracy of the solution is considered on centimetre level, while with a FLOAT solution the accuracy is at a decimetre level. However when a FIX solution is lost, the solution accuracy will not immediately degrade to FLOAT level.
+The ability for the rover to resolve the integer ambiguity is a key feature in \gls{rtk-gnss}. A well used method was presented in the article \citep{teunissen1994new} which decorrelate the integer ambiguities such that an efficient computation of the least square estimate can be performed. The search method is further explained in \citep{teunissen1995least}. An estimate of the integer ambiguity with sufficient high degree of certainty is referred to as a FIX solution, otherwise referred to as a FLOAT solution. When the solution is categorised as FIX the accuracy of the solution is considered on centimetre level, while with a FLOAT solution the accuracy is at a decimetre level. When a FIX solution is lost, the solution accuracy will not immediately degrade to FLOAT level.
 
-In \gls{rtk-gnss} the position of the base station must be resolved. This can be achieved by either knowing the position beforehand defined as a kinematic configuration. If the base station position is unknown the \gls{rtk-gnss} solver calculates the position on the fly defined as a moving baseline configuration. The unknown position is then calculated as a standalone \gls{gnss} receiver, with the accuracy that entails. Therefore the \gls{rtk-gnss} system with a moving baseline configuration can never have better global accuracy then what it will get with a single receiver. The advantage with the moving baseline configuration is that the base station is allowed to move, and with \gls{rtk-gnss} the relative position between the rover and base station can be determined in real time. The advantage with kinematic mode is that it can give a more accurate position estimate, however this require that the base station is known and stationary.
+In \gls{rtk-gnss} the position of the base station must be resolved. This can be achieved by either knowing the position beforehand, defined as a kinematic configuration, or the base station position is unknown and \gls{rtk-gnss} system calculates the position on the fly, defined as a moving baseline configuration. The unknown position is then calculated as a standalone \gls{gnss} receiver, with the accuracy that entails. Therefore the \gls{rtk-gnss} system with a moving baseline configuration can never have better global accuracy then what it will get with a single receiver. The advantage with the moving baseline configuration is that the base station is allowed to move, and with \gls{rtk-gnss} the relative position between the rover and base station can be determined in real time. The advantage with kinematic mode is that it can give a more accurate position estimate.
 \subsection{Error sources}
-In order to get high accuracy in the position estimation the different error sources must be identified and removed if possible. This section will identify some of the most significant error sources that can affect the \gls{gnss} signal and how to remove or mitigate them in the estimation.
+In order to get high accuracy in the position estimation the error sources must be identified and removed if possible. This section will identify some of the most significant error sources that can affect the \gls{gnss} signal and how to remove or mitigate them in the estimation.
 \subsubsection{Clock error}
 There is drift in both the satellite clock and the receiver clock \citep{misra2011global}. The atomic clock in the satellites makes the clock drift negligible from the user perspective. The receiver clock tend to drift and if not taken into account will cause large deviations in the position estimate from the true position. This error is removed by including a fourth satellite in the position computation. The satellite clock error is given in the satellite message.
 \subsubsection{Ionospheric and tropospheric delays}\label{Ss:Atmosphere}
@@ -211,7 +211,7 @@ The tropospheric delay is a function of the local temperature, pressure and rela
 One of the primary source of error in in a \gls{gnss} receiver is multipath \citep{misra2011global}. Multipath happens when the satellite signal is reflected by a nearby surface before if reaches the \gls{gnss} antenna. The delay introduced in the signal can make the receiver believe that its position is several meters away form its true position. The easiest way to mitigated multipath is to place the antenna at an open location with no tall structures nearby. The effect can also be mitigated by choosing an antenna with good multipath rejection capability. Multipath error is uncorrelated between receivers, thus the local receiver must be able to correct for multipath error locally.
 
 \subsection{Navigation state control system}\label{S:NavState}
-The navigation state control system manage the current state of the navigation system, which controls the \gls{rtk-gnss} usage and is responsible for dispatching the current state of the \gls{uav} to the rest of the DUNE system. A state diagram of the navigation state control system is shown in figure \ref{Fig:NavState}, which show the state interaction, trigger events and state entry actions. The entry actions ensure that only functionality that is connected to the current state is active      and that monitors are updated with the state switch. The navigation state control system is designed to function without \gls{rtk-gnss} available, which makes the navigation system independent from the \gls{rtk-gnss} system. This is a requirement for the navigation system since it should function in a \gls{uav} where \gls{rtk-gnss} is not present.
+The navigation state control system manage the current state of the navigation system, by controlling the \gls{rtk-gnss} usage and is responsible for dispatching the current state of the \gls{uav} to the rest of the DUNE system. A state diagram of the navigation state control system is shown in figure \ref{Fig:NavState}, which show the state interaction, trigger events and state entry actions. The entry actions ensure that only functionality that is connected to the current state is active      and that monitors are updated with the state switch. The navigation state control system is designed to function without \gls{rtk-gnss} available. This makes the navigation system independent from the \gls{rtk-gnss} system, which is a requirement for the navigation system since it should function in a \gls{uav} where \gls{rtk-gnss} is not present.
 
 \begin{figure}[H]
 \includegraphics[scale=0.18]{figs/NavigationStateControl.png}
@@ -234,7 +234,8 @@ In order for the navigation system to switch state into "Rtk ready" the \gls{rtk
 \label{Tb:StateDescription}
 \end{table}
 \subsubsection{Short loss of \gls{rtk-gnss}}\label{ss:ShortLoss}
-The short \gls{rtk-gnss} loss compensator is design to prevent loss of position accuracy in the \gls{uav} navigation system during \gls{rtk-gnss} drop out. The compensator is based on that the position solution from the external navigation system is almost constant with respect to the \gls{rtk-gnss} solution. As seen in figure \ref{Fig:RTKExternal} the position of the \gls{rtk-gnss} and the external navigation system remain close to each other, given that the \gls{rtk-gnss} has a FIX solution. 
+The short \gls{rtk-gnss} loss compensator is design to prevent loss of position accuracy in the \gls{uav} navigation system during \gls{rtk-gnss} drop out. The compensator is based on that the position solution from the external navigation system is almost constant with respect to the \gls{rtk-gnss} solution. As seen in figure \ref{Fig:RTKExternal} the position of the \gls{rtk-gnss} and the external navigation system remain close to each other, given that the \gls{rtk-gnss} has a FIX solution.
+\newpage 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.8]{figs/Experiment/RtkExternal.png}
@@ -251,9 +252,9 @@ The slow moving difference between the \gls{rtk-gnss} and external navigation sy
 Therefore the average difference between the \gls{rtk-gnss} position solution and the external navigation system should be able to move the external navigation position solution closer to the \gls{rtk-gnss} position solution. The short loss compensator is given as:
 \begin{align}
 \mathbf{e}(n) &= \mathbf{p}_1(n) - \mathbf{p}_2(n)\\
-\mathbf{\delta} &= \frac{1}{N}\sum_{n=0}^N(\mathbf{e}(n))
+\mathbf{\delta} &= \frac{1}{N}\sum_{n=1}^N(\mathbf{e}(n))
 \end{align}
-where $\mathbf{p}_1(n)$ and $\mathbf{p}_2(n)$ is the position solution sample for the \gls{rtk-gnss} system and the external navigation system respectfully. $N$ is the total number of samples with $n\in [0,N-1]$ as the counting variable. Adding $\mathbf{\delta}$ to the external navigation position with the assumption of slow varying bias between the two position solution gives:
+where $\mathbf{p}_1(n)$ and $\mathbf{p}_2(n)$ is the position solution sample for the \gls{rtk-gnss} system and the external navigation system respectfully. $N$ is the total number of samples with $n\in [1,N]$ as the counting variable. Adding $\mathbf{\delta}$ to the external navigation position with the assumption of slow varying bias between the two position solution gives:
 \begin{equation}
 \mathbf{p}_2(t) + \mathbf{\delta} \rightarrow \mathbf{p}_1(t)
 \end{equation}
